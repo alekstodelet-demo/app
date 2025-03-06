@@ -1,0 +1,90 @@
+CREATE TABLE invoice_status
+(
+    id               SERIAL PRIMARY KEY,
+    created_at       TIMESTAMP,
+    updated_at       TIMESTAMP,
+    created_by       INTEGER,
+    updated_by       INTEGER,
+    name             VARCHAR,
+    code             VARCHAR,
+    description      VARCHAR,
+    name_kg          VARCHAR,
+    description_kg   VARCHAR,
+    text_color       VARCHAR,
+    background_color VARCHAR
+);
+
+CREATE TABLE application_invoice
+(
+    id             SERIAL PRIMARY KEY,
+    application_id INTEGER NOT NULL,
+    status_id      INTEGER NOT NULL,
+    created_at     TIMESTAMP,
+    updated_at     TIMESTAMP,
+    created_by     INTEGER,
+    updated_by     INTEGER,
+    sum            DOUBLE PRECISION,
+    nds            INTEGER,
+    nsp            INTEGER,
+    discount       INTEGER,
+    total_sum      INTEGER
+);
+
+ALTER TABLE application_paid_invoice
+    ADD COLUMN invoice_id INTEGER;
+ALTER TABLE application_payment
+    ADD COLUMN invoice_id INTEGER;
+
+UPDATE "S_DocumentTemplate"
+SET code = 'agreement'
+WHERE name = 'Договор'; -- 10
+UPDATE "S_DocumentTemplate"
+SET code = 'invoice_for_payment'
+WHERE name = 'Счет на оплату'; -- 14
+UPDATE "S_DocumentTemplate"
+SET code = 'individual_agreement'
+WHERE name = 'Договор физ.лица'; -- 33
+
+INSERT INTO invoice_status (name, code)
+VALUES ('Создан', 'created');
+INSERT INTO invoice_status (name, code)
+VALUES ('Отменен', 'canceled');
+
+
+
+INSERT INTO public."S_DocumentTemplate" (name, code) VALUES ('Дополнительный счет', 'additional_invoice_for_payment');
+
+INSERT INTO public."S_DocumentTemplateTranslation" (template, "idDocumentTemplate", "idLanguage")
+VALUES ('<p style="text-align:justify;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ГУ «Бишкекглавархитектура»<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Тел: +996 312 318109<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;E-mail: bga.kg@mail.ru<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Дата:&nbsp;<span class="placeholder">{Сегодняшняя дата}</span></p><p style="text-align:center;"><br><span style="background-color:rgb(255,255,255);color:rgb(0,0,0);font-size:21px;">ДОПОЛНИТЕЛЬНЫЙ СЧЕТ К ОПЛАТЕ №<span class="placeholder">{Номер заявки}</span></span></p><p style="text-align:center;"><span style="background-color:rgb(255,255,255);color:rgb(0,0,0);"><span class="placeholder">{Название услуги в заявке}</span></span></p><p>&nbsp;</p><figure class="table"><table style="border-style:none;"><tbody><tr><td style="border-style:none;height:13.55pt;padding:0cm 0.5pt;vertical-align:top;width:258.2pt;">Получатель:</td><td style="border-style:none;height:13.55pt;padding:0cm 0.5pt;vertical-align:top;width:201pt;">Банковские реквизиты получателя:</td></tr><tr><td style="border-style:none;height:76.85pt;padding:0cm 0.5pt;vertical-align:top;width:258.2pt;">ГУ «Бишкекглавархитектура»&nbsp;<br>Адрес: 720017, КР, Чуйская область, Ленинский&nbsp;<br>район, г.Бишкек, ул.Чокморова, дом 185&nbsp;<br>Тел.: +996 312 318109&nbsp;<br>ИНН: 00709199210188</td><td style="border-style:none;height:76.85pt;padding:0cm 0.5pt;vertical-align:top;width:201pt;">ГУ «Бишкекглавархитектура» Счет: KGS 1299003230459626&nbsp;<br>Банк: ОАО «Элдик Банк»&nbsp;<br>Адрес: г. Бишкек, ул.&nbsp;Московская&nbsp;80/1<br>БИК: 129001</td></tr><tr><td style="border-style:none;height:21.9pt;padding:0cm 0.5pt;vertical-align:bottom;width:258.2pt;">Плательщик:</td><td style="border-style:none;height:21.9pt;padding:0cm 0.5pt;vertical-align:bottom;width:201pt;">Банковские реквизиты плательщика:</td></tr><tr><td style="border-style:none;height:56.6pt;padding:0cm 0.5pt;vertical-align:top;width:258.2pt;"><span class="placeholder">{Фио заказчика заявки}</span><br>ИНН:&nbsp;<span class="placeholder">{ИНН заказчика заявки}</span><br>Адрес:&nbsp;<br>УГНС: &nbsp;<br><span class="placeholder">{Тел. заказчика}</span></td><td style="border-style:none;height:56.6pt;padding:0cm 0.5pt;vertical-align:bottom;width:201pt;">Счет:&nbsp;<br>Банк:&nbsp;<br>Адрес:&nbsp;<br>Тел.:&nbsp;<br>БИК:</td></tr></tbody></table></figure><p>&nbsp;</p><figure class="table"><table><thead><tr><th style="padding:10px;">№</th><th style="padding:10px;">Наименование услуги/работы</th><th style="padding:10px;">Сумма</th></tr></thead><tbody><tr><td style="padding:10px;"><p style="text-align:center;">1</p></td><td>Оплата по договору №<span class="placeholder">{Номер заявки}</span>&nbsp;от&nbsp;<span class="placeholder">{Сегодняшняя дата}</span>&nbsp;г. по выполнению работ:<br><span class="placeholder">{Название услуги в заявке}</span>&nbsp;<span class="placeholder">{Описание работ}</span>&nbsp;/&nbsp;<span class="placeholder">{Адрес объекта заявки}</span></td><td style="padding:10px;"><span class="placeholder">{Общая сумма}</span></td></tr><tr><td><p style="text-align:center;">&nbsp;</p></td><td>Ранее оплачено</td><td><p style="text-align:center;"><span class="placeholder">{Оплаченная сумма}</span></p></td></tr><tr><td style="padding:10px;">&nbsp;</td><td style="padding:10px;">Итого к оплате</td><td style="padding:10px;"><p style="text-align:center;"><span class="placeholder">{Разница}</span></p></td></tr></tbody></table></figure><p><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Всего наименований 1, на сумму&nbsp;<span class="placeholder">{Разница}</span>&nbsp;.</p><p style="text-align:center;">__________________ / ________________________</p><p style="text-align:center;"><br><span class="placeholder">{Сегодняшняя дата}</span></p><p>&nbsp;</p>',
+        (select id from "S_DocumentTemplate" where code = 'additional_invoice_for_payment'),
+        (select id from "Language" where code = 'ru'));
+
+INSERT INTO public."S_Query" (name, code, query)
+VALUES ('Оплаченная сумма и разница', 'paid_remaining_sum', e'SELECT CONCAT(FLOOR(COALESCE(pay.total_sum, 0)), \'с. \',
+              ROUND((COALESCE(pay.total_sum, 0) - FLOOR(COALESCE(pay.total_sum, 0))) * 100), \'т.\')   AS allsum,
+
+       CONCAT(FLOOR(COALESCE(api.total_paid, 0)), \'с. \',
+              ROUND((COALESCE(api.total_paid, 0) - FLOOR(COALESCE(api.total_paid, 0))) * 100), \'т.\') AS total_paid,
+
+       CONCAT(FLOOR(COALESCE(pay.total_sum, 0) - COALESCE(api.total_paid, 0)), \'с. \',
+              ROUND((COALESCE(pay.total_sum, 0) - COALESCE(api.total_paid, 0) -
+                     FLOOR(COALESCE(pay.total_sum, 0) - COALESCE(api.total_paid, 0))) * 100), \'т.\')  AS remaining_sum
+
+FROM (SELECT application_id, SUM(sum) AS total_sum
+      FROM application_payment
+      WHERE application_id = @application_id
+      GROUP BY application_id) pay
+         LEFT JOIN
+     (SELECT application_id, SUM(sum) AS total_paid
+      FROM application_paid_invoice
+      WHERE application_id = @application_id
+      GROUP BY application_id) api
+     ON pay.application_id = api.application_id;');
+
+INSERT INTO public."S_PlaceHolderTemplate" (name, value, "idPlaceholderType", "idQuery")
+VALUES ('Оплаченная сумма', 'total_paid', (SELECT id FROM "S_PlaceHolderType" WHERE code = 'text'),
+        (SELECT id FROM "S_Query" WHERE code = 'paid_remaining_sum'));
+
+INSERT INTO public."S_PlaceHolderTemplate" (name, value, "idPlaceholderType", "idQuery")
+VALUES ('Разница', 'remaining_sum', (SELECT id FROM "S_PlaceHolderType" WHERE code = 'text'),
+        (SELECT id FROM "S_Query" WHERE code = 'paid_remaining_sum'));
