@@ -19,13 +19,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
-    <ProjectReference Include="..\AuthLibrary\AuthLibrary.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Files\" />
     <Folder Include="jsons\" />
+    <Folder Include="wwwroot\Files\" />
   </ItemGroup>
 
 </Project>

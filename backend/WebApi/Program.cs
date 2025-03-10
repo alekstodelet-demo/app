@@ -1,7 +1,5 @@
 using Application.Repositories;
 using Application.UseCases;
-using AuthLibrary;
-using Domain.Entities;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -23,14 +21,14 @@ namespace WebApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            var botToken = builder.Configuration["Logging:Token"];
-            var chatId = builder.Configuration["Logging:Channel"];
-
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.Telegram(token: botToken, chatId: chatId, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
-                .CreateLogger();
-
-            Log.Warning("Starting web host");
+            // var botToken = builder.Configuration["Logging:Token"];
+            // var chatId = builder.Configuration["Logging:Channel"];
+            //
+            // Log.Logger = new LoggerConfiguration()
+            //     .WriteTo.Telegram(token: botToken, chatId: chatId, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
+            //     .CreateLogger();
+            //
+            // Log.Warning("Starting web host");
 
             // Add services to the container.
             builder.Host.UseSerilog();
@@ -47,7 +45,6 @@ namespace WebApi
             builder.Services.AddScoped<DapperDbContext>();
             builder.Services.AddScoped<IDbConnection>(provider =>
                 provider.GetService<DapperDbContext>()!.CreateConnection());
-            builder.Services.AddScoped<MariaDbContext>();
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddHttpClient();
@@ -72,7 +69,6 @@ namespace WebApi
                 });
 
             builder.Services.AddHttpContextAccessor();
-            builder.Services.AddScoped<AuthService>();
 
             builder.Services.Configure<FormOptions>(options =>
             {
@@ -86,24 +82,9 @@ namespace WebApi
             {
                 options.Limits.MaxRequestBodySize = int.MaxValue;
             });
-            builder.Services
-                .AddScoped<IS_DocumentTemplateTranslationRepository, S_DocumentTemplateTranslationRepository>();
-            builder.Services.AddScoped<IS_DocumentTemplateRepository, S_DocumentTemplateRepository>();
-            builder.Services
-                .AddScoped<IS_TemplateDocumentPlaceholderRepository, S_TemplateDocumentPlaceholderRepository>();
-            builder.Services.AddScoped<IS_DocumentTemplateTypeRepository, S_DocumentTemplateTypeRepository>();
-            builder.Services.AddScoped<IS_PlaceHolderTemplateRepository, S_PlaceHolderTemplateRepository>();
-            builder.Services.AddScoped<IS_QueriesDocumentTemplateRepository, S_QueriesDocumentTemplateRepository>();
-            builder.Services.AddScoped<IS_PlaceHolderTypeRepository, S_PlaceHolderTypeRepository>();
-            builder.Services.AddScoped<IS_QueryRepository, S_QueryRepository>();
-            builder.Services.AddScoped<S_DocumentTemplateTranslationUseCases>();
-            builder.Services.AddScoped<S_DocumentTemplateUseCases>();
-            builder.Services.AddScoped<S_TemplateDocumentPlaceholderUseCases>();
-            builder.Services.AddScoped<S_DocumentTemplateTypeUseCases>();
-            builder.Services.AddScoped<S_PlaceHolderTemplateUseCases>();
-            builder.Services.AddScoped<S_QueriesDocumentTemplateUseCases>();
-            builder.Services.AddScoped<S_PlaceHolderTypeUseCases>();
-            builder.Services.AddScoped<S_QueryUseCases>();
+            builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+            
+            builder.Services.AddScoped<ServiceUseCases>();
 
             var app = builder.Build();
 

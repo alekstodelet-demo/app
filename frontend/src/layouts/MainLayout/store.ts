@@ -1,6 +1,3 @@
-import { notification } from "constants/notification";
-import i18n from "i18n";
-import MainStore from "MainStore";
 import { makeAutoObservable, runInAction } from "mobx";
 
 interface EmployeeResponse {
@@ -10,7 +7,6 @@ interface EmployeeResponse {
 
 class NewStore {
   drawerOpened = false;
-  notifications: notification[] = [];
   curentUserName = '';
   last_name = '';
   employee_id = 0;

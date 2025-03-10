@@ -1,5 +1,4 @@
 import { SnackbarOrigin } from "@mui/material";
-import { RoleCode, RoleMenu, RoleMenuHeader } from "constants/constant";
 import i18n from "i18n";
 import { makeAutoObservable, runInAction, toJS } from "mobx";
 import printJS from "print-js";
@@ -100,61 +99,6 @@ class NewStore {
     if (position) {
       this.positionSnackbar = position;
     }
-  }
-
-  createMenuFromRole() {
-    let pageMenu = pages.children;
-    if (this.isAdmin) {
-      this.menu = pageMenu;
-      return;
-    }
-    else {
-      const menuItems = this.myRoles.flatMap(role =>
-        RoleMenu[role].flatMap(i => {
-          const objectMenu = pageMenu.find(pageItem => pageItem.id === i.group);
-          if (objectMenu?.children) {
-            return objectMenu.children.filter(child => i.rows.includes(child.id));
-          }
-          return []
-        })
-      ).filter(Boolean);
-      this.menu = menuItems.reduce((acc, item) => {
-        let find = acc.find((f) => f.id === item.id);
-        if (!find) {
-          acc.push({ ...item });
-        }
-        return acc;
-      }, [])
-        ;
-    }
-  }
-
-  crateHeaderMenu() {
-    let pageMenu = pages.children;
-
-    runInAction(() => {
-      if (this.isAdmin) {
-        this.menuHeader = [];
-        return;
-      } else {
-        const menuItems = this.myRoles.flatMap(role => {
-          return RoleMenuHeader[role].flatMap(i => {
-            const objectMenu = pageMenu.find(pageItem => pageItem.id === i.group);
-            if (objectMenu?.children) {
-              return objectMenu.children.filter(child => i.rows.includes(child.id));
-
-            }
-          })
-        }
-        ).filter(Boolean);
-        this.menuHeader = menuItems.reduce((acc, item) => {
-          if (!acc.some((menuItem) => menuItem.id === item.id)) {
-            acc.push(item);
-          }
-          return acc;
-        }, []);
-      }
-    })
   }
 
   openErrorDialog = (message: string, title?: string) => {

@@ -97,9 +97,8 @@ const Header = observer(({ handleLeftDrawerToggle }) => {
       <Box sx={{ flexGrow: 1 }} />
       <Box sx={{ flexGrow: 1 }} />
 
-      {/* notification & profile */}
       <LanguageSection style={{ marginLeft: '0px' }} />
-      <NotificationSection lengthNotify={store.notifications.length} />
+      <NotificationSection lengthNotify={store.notifications?.length} />
       <ProfileSection />
     </>
   );
