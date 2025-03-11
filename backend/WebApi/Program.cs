@@ -21,14 +21,14 @@ namespace WebApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            // var botToken = builder.Configuration["Logging:Token"];
-            // var chatId = builder.Configuration["Logging:Channel"];
-            //
-            // Log.Logger = new LoggerConfiguration()
-            //     .WriteTo.Telegram(token: botToken, chatId: chatId, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
-            //     .CreateLogger();
-            //
-            // Log.Warning("Starting web host");
+            var botToken = builder.Configuration["Logging:Token"];
+            var chatId = builder.Configuration["Logging:Channel"];
+            
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Telegram(token: botToken, chatId: chatId, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
+                .CreateLogger();
+            
+            Log.Warning("Starting web host");
 
             // Add services to the container.
             builder.Host.UseSerilog();

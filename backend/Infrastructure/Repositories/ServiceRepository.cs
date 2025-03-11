@@ -116,6 +116,7 @@ namespace Infrastructure.Repositories
         {
             try
             {
+                
                 var model = new 
                 {
                     Name = domain.Name,
@@ -124,7 +125,11 @@ namespace Infrastructure.Repositories
                     Description = domain.Description,
                     DayCount = domain.DayCount,
                     WorkflowId = domain.WorkflowId,
-                    Price = domain.Price
+                    Price = domain.Price,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                    CreatedBy = 1,
+                    UpdatedBy = 1,
                 };
 
                 var sql = @"INSERT INTO service(name, short_name, code, description, day_count, workflow_id,

@@ -4,6 +4,7 @@ using Domain.Entities;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using WebApi.Dtos;
 
 namespace WebApi.Controllers
@@ -18,10 +19,12 @@ namespace WebApi.Controllers
         where TUpdateRequestDto : class
     {
         protected readonly TService _service;
-
-        protected BaseController(TService service)
+        private readonly ILogger _logger;
+        
+        protected BaseController(TService service, ILogger logger)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
         
         [HttpGet]
@@ -143,8 +146,15 @@ namespace WebApi.Controllers
             return BadRequest(CreateErrorResponse(result));
         }
 
-        private static object CreateErrorResponse(IResultBase result) =>
-            new
+        [NonAction]
+        private object CreateErrorResponse(IResultBase result)
+        {
+            _logger.LogWarning("Request failed with errors: {Errors}", 
+                JsonConvert.SerializeObject(result.Errors, Formatting.Indented, new JsonSerializerSettings 
+                { 
+                    NullValueHandling = NullValueHandling.Ignore 
+                }));
+            return new
             {
                 Errors = result.Errors.Select(e => new
                 {
@@ -152,5 +162,7 @@ namespace WebApi.Controllers
                     Code = e.Metadata.TryGetValue("ErrorCode", out var code) ? code?.ToString() : "UNKNOWN"
                 })
             };
+        }
+
     }
 }

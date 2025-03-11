@@ -12,8 +12,9 @@ namespace WebApi.Controllers
     public class ServiceController : BaseController<IServiceUseCases, Service, GetServiceResponse, CreateServiceRequest, UpdateServiceRequest>
     {
         private readonly IServiceUseCases _serviceUseCases;
+        
 
-        public ServiceController(IServiceUseCases serviceUseCases) : base(serviceUseCases)
+        public ServiceController(IServiceUseCases serviceUseCases, ILogger<ServiceController> logger) : base(serviceUseCases, logger)
         {
             _serviceUseCases = serviceUseCases;
         }
