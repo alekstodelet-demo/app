@@ -84,7 +84,7 @@ namespace WebApi
             });
             builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
             
-            builder.Services.AddScoped<ServiceUseCases>();
+            builder.Services.AddScoped<IServiceUseCases, ServiceUseCases>();
 
             var app = builder.Build();
 

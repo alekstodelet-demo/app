@@ -8,13 +8,13 @@ using Application.Models;
 using System;
 using Infrastructure.FillLogData;
 using System.Data.Common;
+using FluentResults;
 
 
 namespace Infrastructure.Repositories
 {
     public class ServiceRepository : IServiceRepository
     {
-
         private IDbTransaction? _dbTransaction;
         private IDbConnection _dbConnection;
 
@@ -28,140 +28,217 @@ namespace Infrastructure.Repositories
             _dbTransaction = dbTransaction;
         }
 
-        public async Task<List<Service>> GetAll()
+        public async Task<Result<List<Service>>> GetAll()
         {
             try
             {
-                var sql =
-                    @"SELECT service.id, service.name, short_name, code, description, day_count, workflow_id, price, workflow.name as workflow_name, service.is_active
-                                FROM service 
-                                    left join workflow on workflow.id = service.workflow_id
-                                ORDER BY service.name";
+                var sql = @"SELECT id AS ""Id"",
+                                   name AS ""Name"",
+                                   short_name AS ""ShortName"",
+                                   code AS ""Code"",
+                                   description AS ""Description"",
+                                   day_count AS ""DayCount"",
+                                   workflow_id AS ""WorkflowId"",
+                                   price AS ""Price"",
+                                   name_kg AS ""NameKg"",
+                                   name_long AS ""NameLong"",
+                                   name_long_kg AS ""NameLongKg"",
+                                   name_statement AS ""NameStatement"",
+                                   name_statement_kg AS ""NameStatementKg"",
+                                   name_confirmation AS ""NameConfirmation"",
+                                   name_confirmation_kg AS ""NameConfirmationKg"",
+                                   is_active AS ""IsActive"",
+                                   created_at AS ""CreatedAt"",
+                                   created_by AS ""CreatedBy"", 
+                                   updated_at AS ""UpdatedAt"", 
+                                   updated_by AS ""UpdatedBy"", 
+                                   description_kg AS ""DescriptionKg"", 
+                                   text_color AS ""TextColor"", 
+                                   background_color AS ""BackgroundColor"" 
+                            FROM service;";
                 var models = await _dbConnection.QueryAsync<Service>(sql, transaction: _dbTransaction);
-                return models.ToList();
+                return Result.Ok(models.ToList());
             }
             catch (Exception ex)
             {
-                throw new RepositoryException("Failed to get Service", ex);
+                return Result.Fail(new ExceptionalError("Failed to get Service", ex)
+                    .WithMetadata("ErrorCode", "FETCH_ALL_FAILED"));
             }
         }
 
-        public async Task<Service> GetOneByID(int id)
+        public async Task<Result<Service>> GetOneByID(int id)
         {
             try
             {
-                var sql =
-                    "SELECT id, name, short_name, code, description, day_count, workflow_id, price FROM service WHERE id=@Id";
+                var sql = @"SELECT id AS ""Id"",
+                                   name AS ""Name"",
+                                   short_name AS ""ShortName"",
+                                   code AS ""Code"",
+                                   description AS ""Description"",
+                                   day_count AS ""DayCount"",
+                                   workflow_id AS ""WorkflowId"",
+                                   price AS ""Price"",
+                                   name_kg AS ""NameKg"",
+                                   name_long AS ""NameLong"",
+                                   name_long_kg AS ""NameLongKg"",
+                                   name_statement AS ""NameStatement"",
+                                   name_statement_kg AS ""NameStatementKg"",
+                                   name_confirmation AS ""NameConfirmation"",
+                                   name_confirmation_kg AS ""NameConfirmationKg"",
+                                   is_active AS ""IsActive"",
+                                   created_at AS ""CreatedAt"",
+                                   created_by AS ""CreatedBy"", 
+                                   updated_at AS ""UpdatedAt"", 
+                                   updated_by AS ""UpdatedBy"", 
+                                   description_kg AS ""DescriptionKg"", 
+                                   text_color AS ""TextColor"", 
+                                   background_color AS ""BackgroundColor"" 
+                            FROM service WHERE id=@Id;";
                 var model = await _dbConnection.QuerySingleOrDefaultAsync<Service>(sql, new { Id = id },
                     transaction: _dbTransaction);
 
                 if (model == null)
                 {
-                    throw new RepositoryException($"Service with ID {id} not found.", null);
+                    return Result.Fail(new ExceptionalError($"Service with ID {id} not found.", null)
+                        .WithMetadata("ErrorCode", "NOT_FOUND"));
                 }
 
-                return model;
+                return Result.Ok(model);
             }
             catch (Exception ex)
             {
-                throw new RepositoryException("Failed to get Service", ex);
+                return Result.Fail(new ExceptionalError("Failed to get Service", ex)
+                    .WithMetadata("ErrorCode", "FETCH_ONE_FAILED"));
             }
         }
 
-        public async Task<int> Add(Service domain)
+        public async Task<Result<int>> Add(Service domain)
         {
             try
             {
-                var model = new Service
+                var model = new 
                 {
-                    name = domain.name,
-                    short_name = domain.short_name,
-                    code = domain.code,
-                    description = domain.description,
-                    day_count = domain.day_count,
-                    workflow_id = domain.workflow_id,
-                    price = domain.price,
+                    Name = domain.Name,
+                    ShortName = domain.ShortName,
+                    Code = domain.Code,
+                    Description = domain.Description,
+                    DayCount = domain.DayCount,
+                    WorkflowId = domain.WorkflowId,
+                    Price = domain.Price
                 };
 
-                var sql =
-                    "INSERT INTO service(name, short_name, code, description, day_count, workflow_id, price, created_at, updated_at, created_by, updated_by) VALUES " +
-                    "(@name, @short_name, @code, @description, @day_count, @workflow_id, @price, @created_at, @updated_at, @created_by, @updated_by) RETURNING id";
+                var sql = @"INSERT INTO service(name, short_name, code, description, day_count, workflow_id,
+                                                price, created_at, updated_at, created_by, updated_by) 
+                            VALUES (@Name, @ShortName, @Code, @Description, @DayCount, @WorkflowId, @Price,
+                                    @CreatedAt, @UpdatedAt, @CreatedBy, @UpdatedBy) RETURNING id";
                 var result = await _dbConnection.ExecuteScalarAsync<int>(sql, model, transaction: _dbTransaction);
-                return result;
+                return Result.Ok(result);
             }
             catch (Exception ex)
             {
-                throw new RepositoryException("Failed to add Service", ex);
+                return Result.Fail(new ExceptionalError("Failed to add Service", ex)
+                    .WithMetadata("ErrorCode", "ADD_FAILED"));
             }
         }
 
-        public async Task Update(Service domain)
+        public async Task<Result> Update(Service domain)
         {
             try
             {
-                var model = new Service
+                var model = new 
                 {
-                    id = domain.id,
-                    name = domain.name,
-                    short_name = domain.short_name,
-                    code = domain.code,
-                    description = domain.description,
-                    day_count = domain.day_count,
-                    workflow_id = domain.workflow_id,
-                    price = domain.price,
+                    Id = domain.Id,
+                    Name = domain.Name,
+                    ShortName = domain.ShortName,
+                    Code = domain.Code,
+                    Description = domain.Description,
+                    DayCount = domain.DayCount,
+                    WorkflowId = domain.WorkflowId,
+                    Price = domain.Price
                 };
 
-                var sql = "UPDATE service SET name = @name, short_name = @short_name, code = @code," +
-                          " description = @description, day_count = @day_count, workflow_id = @workflow_id, " +
-                          "price = @price, updated_at = @updated_at, updated_by = @updated_by WHERE id = @id";
+                var sql = "UPDATE service SET name = @Name, short_name = @ShortName, code = @Code," +
+                          " description = @Description, day_count = @DayCount, workflow_id = @WorkflowId, " +
+                          "price = @Price, updated_at = @UpdatedAt, updated_by = @UpdatedBy WHERE id = @Id";
                 var affected = await _dbConnection.ExecuteAsync(sql, model, transaction: _dbTransaction);
                 if (affected == 0)
                 {
-                    throw new RepositoryException("Not found", null);
+                    return Result.Fail(new ExceptionalError("Not found", null)
+                        .WithMetadata("ErrorCode", "NOT_FOUND"));
                 }
+                return Result.Ok();
             }
             catch (Exception ex)
             {
-                throw new RepositoryException("Failed to update Service", ex);
+                return Result.Fail(new ExceptionalError("Failed to update Service", ex)
+                    .WithMetadata("ErrorCode", "UPDATE_FAILED"));
             }
         }
 
-        public async Task<PaginatedList<Service>> GetPaginated(int pageSize, int pageNumber)
+        public async Task<Result<PaginatedList<Service>>> GetPaginated(int pageSize, int pageNumber)
         {
             try
             {
-                var sql = "SELECT * FROM service OFFSET @pageSize * (@pageNumber - 1) Limit @pageSize;";
+                var sql = @"SELECT id AS ""Id"",
+                                   name AS ""Name"",
+                                   short_name AS ""ShortName"",
+                                   code AS ""Code"",
+                                   description AS ""Description"",
+                                   day_count AS ""DayCount"",
+                                   workflow_id AS ""WorkflowId"",
+                                   price AS ""Price"",
+                                   name_kg AS ""NameKg"",
+                                   name_long AS ""NameLong"",
+                                   name_long_kg AS ""NameLongKg"",
+                                   name_statement AS ""NameStatement"",
+                                   name_statement_kg AS ""NameStatementKg"",
+                                   name_confirmation AS ""NameConfirmation"",
+                                   name_confirmation_kg AS ""NameConfirmationKg"",
+                                   is_active AS ""IsActive"",
+                                   created_at AS ""CreatedAt"",
+                                   created_by AS ""CreatedBy"", 
+                                   updated_at AS ""UpdatedAt"", 
+                                   updated_by AS ""UpdatedBy"", 
+                                   description_kg AS ""DescriptionKg"", 
+                                   text_color AS ""TextColor"", 
+                                   background_color AS ""BackgroundColor"" 
+                            FROM service
+                            OFFSET @pageSize * (@pageNumber - 1) Limit @pageSize;";
                 var models = await _dbConnection.QueryAsync<Service>(sql, new { pageSize, pageNumber },
                     transaction: _dbTransaction);
 
-                var sqlCount = "SELECT Count(*) FROM service";
+                var sqlCount = @"SELECT Count(*) FROM service";
                 var totalItems = await _dbConnection.ExecuteScalarAsync<int>(sqlCount, transaction: _dbTransaction);
 
                 var domainItems = models.ToList();
 
-                return new PaginatedList<Service>(domainItems, totalItems, pageNumber, pageSize);
+                return Result.Ok(new PaginatedList<Service>(domainItems, totalItems, pageNumber, pageSize));
             }
             catch (Exception ex)
             {
-                throw new RepositoryException("Failed to get Service", ex);
+                return Result.Fail(new ExceptionalError("Failed to get Service", ex)
+                    .WithMetadata("ErrorCode", "FETCH_PAGINATED_FAILED"));
             }
         }
 
-        public async Task Delete(int id)
+        public async Task<Result> Delete(int id)
         {
             try
             {
-                var sql = "DELETE FROM service WHERE id = @Id";
+                var sql = @"DELETE FROM service WHERE id = @Id";
                 var affected = await _dbConnection.ExecuteAsync(sql, new { Id = id }, transaction: _dbTransaction);
 
                 if (affected == 0)
                 {
-                    throw new RepositoryException("Service not found", null);
+                    return Result.Fail(new ExceptionalError("Service not found", null)
+                        .WithMetadata("ErrorCode", "NOT_FOUND"));
                 }
+                return Result.Ok();
             }
             catch (Exception ex)
             {
-                throw new RepositoryException("Failed to delete Service", ex);
+                return Result.Fail(new ExceptionalError("Failed to delete Service", ex)
+                    .WithMetadata("ErrorCode", "DELETE_FAILED"));
             }
         }
     }
