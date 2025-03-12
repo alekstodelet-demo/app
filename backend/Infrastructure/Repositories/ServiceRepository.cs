@@ -39,7 +39,7 @@ namespace Infrastructure.Repositories
                                    description AS ""Description"",
                                    day_count AS ""DayCount"",
                                    workflow_id AS ""WorkflowId"",
-                                   price AS ""Price"",
+                                   price_ AS ""Price"",
                                    name_kg AS ""NameKg"",
                                    name_long AS ""NameLong"",
                                    name_long_kg AS ""NameLongKg"",
