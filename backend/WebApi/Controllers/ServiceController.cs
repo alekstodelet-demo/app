@@ -14,7 +14,6 @@ namespace WebApi.Controllers
     {
         private readonly IServiceUseCases _serviceUseCases;
 
-
         public ServiceController(IServiceUseCases serviceUseCases,
             ILogger<BaseController<IServiceUseCases, Service, GetServiceResponse, CreateServiceRequest,
                 UpdateServiceRequest>> logger)

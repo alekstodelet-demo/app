@@ -1,4 +1,11 @@
 {
+  "authorization": {
+    "login": "Логин",
+    "email": "Адрес электронной почты",
+    "password": "Пароль",
+    "signIn": "Вход",
+    "forgotPassword": "Забыли пароль?"
+  },
   "ServiceListView": {
     "Service": "Услуги",
     "entityTitle": "Услуги",

@@ -13,6 +13,9 @@ namespace Infrastructure.Data
         private readonly IServiceProvider _serviceProvider;
         private IDbTransaction _dbTransaction;
         private IServiceRepository? _serviceRepository;
+        private IApplicationObjectRepository? _applicationObjectRepository;
+        private IApplicationRepository? _applicationRepository;
+        private IArchObjectRepository? _archObjectRepository;
         private IHostEnvironment _appEnvironment;
         
         public UnitOfWork(DapperDbContext context, IHostEnvironment appEnvironment, IServiceProvider serviceProvider)
@@ -34,6 +37,45 @@ namespace Infrastructure.Data
                     _serviceRepository.SetTransaction(_dbTransaction);
                 }
                 return _serviceRepository;
+            }
+        }
+        
+        public IApplicationObjectRepository ApplicationObjectRepository
+        {
+            get
+            {
+                if (_applicationObjectRepository == null)
+                {
+                    _applicationObjectRepository = new ApplicationObjectRepository(_dbConnection);
+                    _applicationObjectRepository.SetTransaction(_dbTransaction);
+                }
+                return _applicationObjectRepository;
+            }
+        }
+        
+        public IApplicationRepository ApplicationRepository
+        {
+            get
+            {
+                if (_applicationRepository == null)
+                {
+                    _applicationRepository = new ApplicationRepository(_dbConnection);
+                    _applicationRepository.SetTransaction(_dbTransaction);
+                }
+                return _applicationRepository;
+            }
+        }
+        
+        public IArchObjectRepository ArchObjectRepository
+        {
+            get
+            {
+                if (_archObjectRepository == null)
+                {
+                    _archObjectRepository = new ArchObjectRepository(_dbConnection);
+                    _archObjectRepository.SetTransaction(_dbTransaction);
+                }
+                return _archObjectRepository;
             }
         }
 

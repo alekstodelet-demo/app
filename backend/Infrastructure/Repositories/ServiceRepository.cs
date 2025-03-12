@@ -2,14 +2,8 @@
 using Dapper;
 using Domain.Entities;
 using Application.Repositories;
-using Infrastructure.Data.Models;
-using Application.Exceptions;
 using Application.Models;
-using System;
-using Infrastructure.FillLogData;
-using System.Data.Common;
 using FluentResults;
-
 
 namespace Infrastructure.Repositories
 {
@@ -127,9 +121,9 @@ namespace Infrastructure.Repositories
                     WorkflowId = domain.WorkflowId,
                     Price = domain.Price,
                     CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now,
                     CreatedBy = 1,
-                    UpdatedBy = 1,
+                    UpdatedAt = DateTime.Now,
+                    UpdatedBy = 1
                 };
 
                 var sql = @"INSERT INTO service(name, short_name, code, description, day_count, workflow_id,
@@ -159,7 +153,9 @@ namespace Infrastructure.Repositories
                     Description = domain.Description,
                     DayCount = domain.DayCount,
                     WorkflowId = domain.WorkflowId,
-                    Price = domain.Price
+                    Price = domain.Price,
+                    UpdatedAt = DateTime.Now,
+                    UpdatedBy = 1,
                 };
 
                 var sql = "UPDATE service SET name = @Name, short_name = @ShortName, code = @Code," +
