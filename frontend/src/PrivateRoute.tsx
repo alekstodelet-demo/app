@@ -10,9 +10,7 @@ const PrivateRoute = observer(() => {
   const accessToken = localStorage.getItem("token");
 
   useEffect(() => {
-    if (!(location.pathname.includes("/user") || location.pathname === "/")) {
-    }
-  }, [location.pathname, accessToken]);
+  }, [accessToken]);
 
   if (!accessToken) {
     return <Navigate to="/login" state={{ from: location }} replace />;

@@ -49,7 +49,7 @@ const ServiceAddEditView: FC<ServiceProps> = observer((props) => {
               id="id_ServiceSaveButton"
               onClick={() => {
                 store.onSaveClick((id: number) => {
-                  navigate(`/user/Service/addedit?id=${store.id}`);
+                  navigate("/user/ArchObject");
                 });
               }}
             >
@@ -59,7 +59,7 @@ const ServiceAddEditView: FC<ServiceProps> = observer((props) => {
           <Box m={2}>
             <CustomButton
               color={"secondary"}
-              sx={{color:"white", backgroundColor: "red !important"}}
+              sx={{ color: "white", backgroundColor: "red !important" }}
               variant="contained"
               id="id_ServiceCancelButton"
               onClick={() => navigate("/user/Service")}

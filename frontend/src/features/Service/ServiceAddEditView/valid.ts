@@ -1,50 +1,30 @@
-import {
-  CheckEmptyTextField, CheckIsNumber
-} from "components/ValidationHelper";
-import store from "./store";
+import * as yup from "yup";
 
-export const validate = (event: { target: { name: string; value: any } }) => {
-  let name = "";
-  if (event.target.name === "name") {
-    let nameErrors = [];
-    CheckEmptyTextField(event.target.value, nameErrors);
-    name = nameErrors.join(", ");
-    store.errorname = name;
+export const schema = yup.object().shape({
+  name: yup.string().required("Обязательное поле"),
+});
+
+export const validateField = async (name: string, value: any) => {
+  try {
+    const schemas = yup.object().shape({
+      [name]: schema.fields[name],
+    });
+    await schemas.validate({ [name]: value }, { abortEarly: false });
+    return { isValid: true, error: "" };
+  } catch (validationError) {
+    return { isValid: false, error: validationError.errors[0] };
   }
+};
 
-  let description = "";
-  if (event.target.name === "description") {
-    let descriptionErrors = [];
-
-    description = descriptionErrors.join(", ");
-    store.errordescription = description;
+export const validate = async (data: any) => {
+  try {
+    await schema.validate(data, { abortEarly: false });
+    return { isValid: true, errors: {} };
+  } catch (validationErrors) {
+    let errors: any = {};
+    validationErrors.inner.forEach((error: any) => {
+      errors[error.path] = error.message;
+    });
+    return { isValid: false, errors };
   }
-
-  let code = "";
-  if (event.target.name === "code") {
-    let codeErrors = [];
-
-    code = codeErrors.join(", ");
-    store.errorcode = code;
-  }
-
-  let day_count = "";
-  if (event.target.name === "day_count") {
-    let day_countErrors = [];
-    CheckIsNumber(event.target.value, day_countErrors);
-    day_count = day_countErrors.join(", ");
-    store.errorday_count = day_count;
-  }
-  let price = "";
-  if (event.target.name === "price") {
-    let priceErrors = [];
-    CheckIsNumber(event.target.value, priceErrors);
-    price = priceErrors.join(", ");
-    store.errorprice = price;
-  }
-
-
-  const canSave = true && name === "" && description === "" && code === "" && day_count === "" && price === "";
-
-  return canSave;
 };

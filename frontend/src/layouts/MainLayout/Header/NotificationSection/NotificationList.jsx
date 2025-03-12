@@ -3,26 +3,17 @@ import PropTypes from 'prop-types';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import ListItemText from '@mui/material/ListItemText';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
-
-// project-import
 import Chip from 'ui-component/extended/Chip';
-
-// assets
-import { IconBrandTelegram, IconBuildingStore, IconMailbox, IconPhoto } from '@tabler/icons-react';
-import User1 from 'assets/images/users/user-round.svg';
+import { IconBuildingStore } from '@tabler/icons-react';
 import { observer } from 'mobx-react';
 import store from './../../store'
 import dayjs from 'dayjs';
@@ -81,25 +72,6 @@ const NotificationList = observer(() => {
     height: 28
   };
   const now = dayjs();
-  // displayNotifications = (date) => {
-  //   return notifications.map(notification => {
-  //     const createdAt = dayjs(notification.created_at);
-  //     const diffMinutes = now.diff(createdAt, 'minute');
-  //     const diffHours = now.diff(createdAt, 'hour');
-  //     const diffDays = now.diff(createdAt, 'day');
-
-  //     let timeFromNow = `${diffMinutes} minutes ago`;
-  //     if (diffMinutes > 60) {
-  //       timeFromNow = `${diffHours} hours ago`;
-  //     }
-  //     if (diffHours > 24) {
-  //       timeFromNow = `${diffDays} days ago`;
-  //     }
-
-  //     return `${notification.title}: ${notification.text} - ${timeFromNow}`;
-  //   });
-  // }
-
 
   return (
     <List
@@ -123,39 +95,6 @@ const NotificationList = observer(() => {
         }
       }}
     >
-      {/* <ListItemWrapper>
-        <ListItem alignItems="center">
-          <ListItemAvatar>
-            <Avatar alt="John Doe" src={User1} />
-          </ListItemAvatar>
-          <ListItemText primary="John Doe" />
-          <ListItemSecondaryAction>
-            <Grid container justifyContent="flex-end">
-              <Grid item xs={12}>
-                <Typography variant="caption" display="block" gutterBottom>
-                  2 min ago
-                </Typography>
-              </Grid>
-            </Grid>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <Grid container direction="column" className="list-container">
-          <Grid item xs={12} sx={{ pb: 2 }}>
-            <Typography variant="subtitle2">It is a long established fact that a reader will be distracted</Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item>
-                <Chip label="Unread" sx={chipErrorSX} />
-              </Grid>
-              <Grid item>
-                <Chip label="New" sx={chipWarningSX} />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </ListItemWrapper>
-      <Divider /> */}
       {store.notifications.map(notification => {
         const createdAt = dayjs(notification.created_at);
         const diffMinutes = now.diff(createdAt, 'minute');

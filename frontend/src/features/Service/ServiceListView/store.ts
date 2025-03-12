@@ -1,8 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import i18n from "i18next";
 import MainStore from "MainStore";
-import { getServices } from "api/Service/useGetServices";
-import { deleteService } from "api/Service/useDeleteService";
+import { getServices, deleteService } from "api/Service";
 import mainStore from "MainStore";
 
 class NewStore {

@@ -129,8 +129,3 @@ span {
     display: none;
   }
 }
-
-.svc-question__content-actions .sv-action--convertTo .sv-action-bar-item__title::after {
-  content: url("assets/images/chevronrating.svg");
-  background-image: none;
-}

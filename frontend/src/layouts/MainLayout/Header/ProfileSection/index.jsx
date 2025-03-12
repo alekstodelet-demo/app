@@ -29,7 +29,6 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
 import UpgradePlanCard from './UpgradePlanCard';
-import User1 from 'assets/images/users/user-round.svg';
 
 // assets
 import { IconLogout, IconSettings } from '@tabler/icons-react';
@@ -45,7 +44,6 @@ const ProfileSection = observer(() => {
 
   const { t } = useTranslation();
   const translate = t;
-  // const store = usestore(); // Using a MobX store for state
 
   const anchorRef = useRef(null);
 
@@ -192,24 +190,6 @@ const ProfileSection = observer(() => {
                           </ListItemIcon>
                           <ListItemText primary={<Typography variant="body2">{translate("common:Account_Settings")}</Typography>} />
                         </ListItemButton>
-                        {/* {(store.head_of_structures.includes("Отдел районных архитекторов")
-                          || store.head_of_structures.includes("Отдел РА - Октябрьский район")
-                          || store.head_of_structures.includes("Отдел РА - Свердловский район")
-                          || store.head_of_structures.includes("Отдел РА - Ленинский район")
-                          || store.head_of_structures.includes("Отдел РА - Первомайский район")) && <ListItemButton
-                            sx={{ borderRadius: `${10}px` }}
-                            selected={store.selectedIndex === 4}
-                            onClick={() => {
-                              MainStore.printDocument(28, {
-                                date_start: dayjs("2024-11-21 00:00:00"), date_end: dayjs("2024-12-12 00:00:00")
-                              })
-                            }}
-                          >
-                            <ListItemIcon>
-                              <IconLogout stroke={1.5} size="1.3rem" />
-                            </ListItemIcon>
-                            <ListItemText primary={<Typography variant="body2">{translate("common:Download_the_report")}</Typography>} />
-                          </ListItemButton>} */}
                         <ListItemButton
                           sx={{ borderRadius: `${10}px` }}
                           selected={store.selectedIndex === 4}

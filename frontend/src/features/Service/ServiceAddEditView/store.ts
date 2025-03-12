@@ -1,10 +1,8 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { validate } from "./valid";
+import { validate, validateField } from "./valid";
 import i18n from "i18next";
 import MainStore from "MainStore";
-import { getService } from "api/Service/useGetService";
-import { createService } from "api/Service/useCreateService";
-import { updateService } from "api/Service/useUpdateService";
+import { getService, createService, updateService } from "api/Service";
 
 class NewStore {
   id = 0;
@@ -16,14 +14,7 @@ class NewStore {
   price = 0;
   workflow_id = 0;
   workflow_name = "";
-  errorname = "";
-  errorshort_name = "";
-  errorcode = "";
-  errordescription = "";
-  errorday_count = "";
-  errorprice = "";
-  errorworkflow_id = "";
-  errorworkflow_name = "";
+  errors: { [key: string]: string } = {};
   Workflows = [];
 
   constructor() {
@@ -41,77 +32,67 @@ class NewStore {
       this.price = 0;
       this.workflow_id = 0;
       this.workflow_name = "";
-      this.errorname = "";
-      this.errorshort_name = "";
-      this.errorcode = "";
-      this.errordescription = "";
-      this.errorday_count = "";
-      this.errorprice = "";
-      this.errorworkflow_id = "";
-      this.errorworkflow_name = "";
+      this.errors = {};
       this.Workflows = [];
     });
   }
 
   handleChange(event) {
-    this[event.target.name] = event.target.value;
-    validate(event);
+    const { name, value } = event.target;
+    (this as any)[name] = value;
+    this.validateField(name, value);
+  }
+
+  async validateField(name: string, value: any) {
+    const { isValid, error } = await validateField(name, value);
+    if (isValid) {
+      this.errors[name] = "";
+    } else {
+      this.errors[name] = error;
+    }
   }
 
   onSaveClick = async (onSaved: (id: number) => void) => {
-    let canSave = true;
-    let event: { target: { name: string; value: any } } = {
-      target: { name: "id", value: this.id },
+    var data = {
+      id: this.id,
+      name: this.name,
+      short_name: this.short_name,
+      code: this.code,
+      description: this.description,
+      day_count: this.day_count,
+      price: this.price,
+      workflow_id: this.workflow_id
     };
-    canSave = validate(event) && canSave;
-    event = { target: { name: "name", value: this.name } };
-    canSave = validate(event) && canSave;
-    event = { target: { name: "description", value: this.description } };
-    canSave = validate(event) && canSave;
-    event = { target: { name: "code", value: this.code } };
-    canSave = validate(event) && canSave;
-    event = { target: { name: "day_count", value: this.day_count } };
-    canSave = validate(event) && canSave;
-    event = { target: { name: "price", value: this.price } };
-    canSave = validate(event) && canSave;
 
-    if (canSave) {
-      try {
-        MainStore.changeLoader(true);
-        var data = {
-          id: this.id,
-          name: this.name,
-          short_name: this.short_name,
-          code: this.code,
-          description: this.description,
-          day_count: this.day_count,
-          price: this.price,
-          workflow_id: this.workflow_id,
-        };
-
-        const response = data.id === 0
-          ? await createService(data)
-          : await updateService(data);
-
-          if (response.status === 201 || response.status === 200) {
-            onSaved(response);
-            console.log(i18n.language)
-            if (data.id === 0) {
-              this.id = response.data.id;
-              MainStore.setSnackbar(i18n.t("message:snackbar.successSave"), "success");
-            } else {
-              MainStore.setSnackbar(i18n.t("message:snackbar.successEdit"), "success");
-            }
-          } else {
-            throw new Error();
-          }
-      } catch (err) {
-        MainStore.setSnackbar(i18n.t("message:somethingWentWrong"), "error");
-      } finally {
-        MainStore.changeLoader(false);
-      }
-    } else {
+    const { isValid, errors } = await validate(data);
+    if (!isValid) {
+      this.errors = errors;
       MainStore.openErrorDialog(i18n.t("message:error.alertMessageAlert"));
+      return;
+    }
+
+    try {
+      MainStore.changeLoader(true);
+      const response = data.id === 0
+        ? await createService(data)
+        : await updateService(data);
+
+      if (response.status === 201 || response.status === 200) {
+        onSaved(response);
+        console.log(i18n.language);
+        if (data.id === 0) {
+          this.id = response.data.id;
+          MainStore.setSnackbar(i18n.t("message:snackbar.successSave"), "success");
+        } else {
+          MainStore.setSnackbar(i18n.t("message:snackbar.successEdit"), "success");
+        }
+      } else {
+        throw new Error();
+      }
+    } catch (err) {
+      MainStore.setSnackbar(i18n.t("message:somethingWentWrong"), "error");
+    } finally {
+      MainStore.changeLoader(false);
     }
   };
 

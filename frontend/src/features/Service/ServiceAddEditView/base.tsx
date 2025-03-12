@@ -45,8 +45,8 @@ const BaseView: FC<ProjectsTableProps> = observer((props) => {
                 <Grid container spacing={3}>
                   <Grid item md={12} xs={12}>
                     <CustomTextField
-                      helperText={store.errorname}
-                      error={store.errorname != ''}
+                      helperText={store.errors.name}
+                      error={!!store.errors.name}
                       id='id_f_Service_name'
                       label={translate('label:ServiceAddEditView.name')}
                       value={store.name}
@@ -56,8 +56,8 @@ const BaseView: FC<ProjectsTableProps> = observer((props) => {
                   </Grid>
                   <Grid item md={12} xs={12}>
                     <CustomTextField
-                      helperText={store.errorshort_name}
-                      error={store.errorshort_name != ''}
+                      helperText={store.errors.short_name}
+                      error={!!store.errors.short_name}
                       id='id_f_Service_short_name'
                       label={translate('label:ServiceAddEditView.short_name')}
                       value={store.short_name}
@@ -67,8 +67,8 @@ const BaseView: FC<ProjectsTableProps> = observer((props) => {
                   </Grid>
                   <Grid item md={12} xs={12}>
                     <CustomTextField
-                      helperText={store.errorcode}
-                      error={store.errorcode !== ''}
+                      helperText={store.errors.code}
+                      error={!!store.errors.code}
                       id='id_f_Service_code'
                       label={translate('label:ServiceAddEditView.code')}
                       value={store.code}
@@ -78,8 +78,8 @@ const BaseView: FC<ProjectsTableProps> = observer((props) => {
                   </Grid>
                   <Grid item md={12} xs={12}>
                     <CustomTextField
-                      helperText={store.errordescription}
-                      error={store.errordescription != ''}
+                      helperText={store.errors.description}
+                      error={!!store.errors.description}
                       id='id_f_Service_description'
                       label={translate('label:ServiceAddEditView.description')}
                       value={store.description}
@@ -89,8 +89,8 @@ const BaseView: FC<ProjectsTableProps> = observer((props) => {
                   </Grid>
                   <Grid item md={12} xs={12}>
                     <CustomTextField
-                      helperText={store.errorday_count}
-                      error={!!store.errorday_count}
+                      helperText={store.errors.day_count}
+                      error={!!store.errors.day_count}
                       id='id_f_Service_day_count'
                       label={translate('label:ServiceAddEditView.day_count')}
                       value={store.day_count}
@@ -100,8 +100,8 @@ const BaseView: FC<ProjectsTableProps> = observer((props) => {
                   </Grid>
                   <Grid item md={12} xs={12}>
                     <CustomTextField
-                      helperText={store.errorprice}
-                      error={store.errorprice != ''}
+                      helperText={store.errors.price}
+                      error={!!store.errors.price}
                       id='id_f_Service_price'
                       label={translate('label:ServiceAddEditView.price')}
                       value={store.price}
@@ -117,8 +117,8 @@ const BaseView: FC<ProjectsTableProps> = observer((props) => {
                       data={store.Workflows}
                       id='id_f_Service_workflow_id'
                       label={translate('label:ServiceAddEditView.workflow_id')}
-                      helperText={store.errorworkflow_id}
-                      error={!!store.errorworkflow_id}
+                      helperText={store.errors.workflow_id}
+                      error={!!store.errors.workflow_id}
                     />
                   </Grid>
                 </Grid>
