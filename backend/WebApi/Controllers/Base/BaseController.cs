@@ -1,15 +1,13 @@
 ﻿using Application.Models;
 using Application.UseCases;
-using Domain.Entities;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace WebApi.Controllers
 {
     [ApiController]
-    // [Authorize]
+    [Authorize]
     public abstract class
         BaseController<TService, TEntity, TResponseDto, TCreateRequestDto, TUpdateRequestDto> : ControllerBase
         where TService : IBaseUseCases<TEntity>
