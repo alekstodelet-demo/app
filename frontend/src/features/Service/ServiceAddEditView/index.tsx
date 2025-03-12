@@ -49,7 +49,7 @@ const ServiceAddEditView: FC<ServiceProps> = observer((props) => {
               id="id_ServiceSaveButton"
               onClick={() => {
                 store.onSaveClick((id: number) => {
-                  navigate("/user/ArchObject");
+                  navigate("/user/Service");
                 });
               }}
             >
