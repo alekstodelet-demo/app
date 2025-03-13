@@ -83,8 +83,14 @@ namespace WebApi
                 options.Limits.MaxRequestBodySize = int.MaxValue;
             });
             builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+            builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
+            builder.Services.AddScoped<IApplicationObjectRepository, ApplicationObjectRepository>();
+            builder.Services.AddScoped<IArchObjectRepository, ArchObjectRepository>();
             
             builder.Services.AddScoped<IServiceUseCases, ServiceUseCases>();
+            builder.Services.AddScoped<IApplicationUseCases, ApplicationUseCases>();
+            builder.Services.AddScoped<IApplicationObjectUseCases, ApplicationObjectUseCases>();
+            builder.Services.AddScoped<IArchObjectUseCases, ArchObjectUseCases>();
 
             var app = builder.Build();
 
