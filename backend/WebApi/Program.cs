@@ -12,6 +12,8 @@ using Serilog;
 using Serilog.Sinks.Telegram;
 using System.Data;
 using System.Text;
+using Application.Services;
+using Infrastructure.Services;
 using WebApi.Middleware;
 
 namespace WebApi
@@ -86,6 +88,8 @@ namespace WebApi
             builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
             builder.Services.AddScoped<IApplicationObjectRepository, ApplicationObjectRepository>();
             builder.Services.AddScoped<IArchObjectRepository, ArchObjectRepository>();
+            builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
             
             builder.Services.AddScoped<IServiceUseCases, ServiceUseCases>();
             builder.Services.AddScoped<IApplicationUseCases, ApplicationUseCases>();

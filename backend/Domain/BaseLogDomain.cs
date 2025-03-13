@@ -9,9 +9,9 @@ namespace Domain
 {
     public class BaseLogDomain
     {
-        public DateTime? created_at { get; set; }
-        public DateTime? updated_at { get; set; }
-        public int? created_by { get; set; }
-        public int? updated_by { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public int? CreatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
     }
 }
