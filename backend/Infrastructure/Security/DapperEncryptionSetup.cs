@@ -27,6 +27,7 @@ namespace Infrastructure.Security
     {
         private static IEncryptionService _encryptionService;
         private static readonly Dictionary<Type, List<PropertyInfo>> _encryptedProperties = new Dictionary<Type, List<PropertyInfo>>();
+        private static readonly AsyncLocal<ExecutionContext> _currentContext = new AsyncLocal<ExecutionContext>();
 
         public static void Initialize(IEncryptionService encryptionService)
         {
@@ -68,12 +69,19 @@ namespace Infrastructure.Security
 
         private bool IsEncryptedProperty()
         {
-            // В реальной реализации необходимо проверить контекст выполнения
-            // и определить, является ли текущее свойство помеченным атрибутом [Encrypted]
-            // Это упрощенная версия для демонстрации
-            
-            // TODO: Реализовать проверку наличия атрибута [Encrypted] для текущего свойства
-            return false;
+            var context = _currentContext.Value;
+            if (context == null)
+                return false;
+        
+            // Get properties for the model if not already cached
+            if (!_encryptedProperties.TryGetValue(context.ModelType, out var properties))
+            {
+                ScanModelForEncryptedProperties(context.ModelType);
+                properties = _encryptedProperties[context.ModelType];
+            }
+    
+            // Check if the current property name matches any encrypted property
+            return properties.Any(p => p.Name == context.PropertyName);
         }
         
         // Метод для сканирования модели и поиска свойств с атрибутом [Encrypted]
@@ -90,9 +98,28 @@ namespace Infrastructure.Security
             _encryptedProperties[modelType] = properties;
         }
 
-        public static IDisposable SetExecutionContext(Type type, string nameName)
+        public static IDisposable SetExecutionContext(Type type, string propertyName)
         {
-            throw new NotImplementedException();
+            var context = new ExecutionContext
+            {
+                ModelType = type,
+                PropertyName = propertyName
+            };
+    
+            _currentContext.Value = context;
+            return context;
         }
+        
+        private class ExecutionContext : IDisposable
+        {
+            public Type ModelType { get; set; }
+            public string PropertyName { get; set; }
+    
+            public void Dispose()
+            {
+                _currentContext.Value = null;
+            }
+        }
+
     }
 }
