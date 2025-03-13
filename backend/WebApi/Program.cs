@@ -102,7 +102,8 @@ namespace WebApi
             builder.Services.AddScoped<IArchObjectUseCases, ArchObjectUseCases>();
 
             var app = builder.Build();
-
+            
+            EncryptedStringTypeHandler.Initialize(app.Services.GetRequiredService<IEncryptionService>());
             app.UseStaticFiles();
             app.UseMiddlewareExtensions();
             
