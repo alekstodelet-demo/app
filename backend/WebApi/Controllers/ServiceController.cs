@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using WebApi.Dtos;
 using Application.UseCases;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace WebApi.Controllers
 {
     [ApiController]
+    [AllowAnonymous]
     [Route("[controller]")]
     public class ServiceController : BaseController<IServiceUseCases, Service, GetServiceResponse, CreateServiceRequest,
         UpdateServiceRequest>

@@ -4,6 +4,7 @@ using Domain.Entities;
 using Application.Repositories;
 using Application.Models;
 using FluentResults;
+using Infrastructure.Data.Models;
 
 namespace Infrastructure.Repositories
 {
@@ -110,8 +111,7 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                
-                var model = new 
+                var model = new ServiceModel
                 {
                     Name = domain.Name,
                     ShortName = domain.ShortName,

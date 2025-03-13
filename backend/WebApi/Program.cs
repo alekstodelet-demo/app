@@ -13,6 +13,7 @@ using Serilog.Sinks.Telegram;
 using System.Data;
 using System.Text;
 using Application.Services;
+using Infrastructure.Security;
 using Infrastructure.Services;
 using WebApi.Middleware;
 
@@ -84,6 +85,10 @@ namespace WebApi
             {
                 options.Limits.MaxRequestBodySize = int.MaxValue;
             });
+            
+            builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
+            builder.Services.AddDapperEncryption();
+            
             builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
             builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
             builder.Services.AddScoped<IApplicationObjectRepository, ApplicationObjectRepository>();

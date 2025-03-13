@@ -42,7 +42,8 @@ class NewStore {
       var data = {
         pin: this.pin,
         tokenId: tokenData.tokenId,
-        signature: tokenData.signature
+        signature: tokenData.signature,
+        DeviceId: 'device_id'
       };
       const response = await auth(data);
 
