@@ -5,6 +5,7 @@ using Application.Repositories;
 using Application.Models;
 using FluentResults;
 using Infrastructure.Data.Models;
+using Infrastructure.Security;
 
 namespace Infrastructure.Repositories
 {
@@ -125,13 +126,15 @@ namespace Infrastructure.Repositories
                     UpdatedAt = DateTime.Now,
                     UpdatedBy = 1
                 };
-
-                var sql = @"INSERT INTO service(name, short_name, code, description, day_count, workflow_id,
+                using (EncryptedStringTypeHandler.SetExecutionContext(typeof(ServiceModel), nameof(ServiceModel.Name)))
+                {
+                    var sql = @"INSERT INTO service(name, short_name, code, description, day_count, workflow_id,
                                                 price, created_at, updated_at, created_by, updated_by) 
                             VALUES (@Name, @ShortName, @Code, @Description, @DayCount, @WorkflowId, @Price,
                                     @CreatedAt, @UpdatedAt, @CreatedBy, @UpdatedBy) RETURNING id";
-                var result = await _dbConnection.ExecuteScalarAsync<int>(sql, model, transaction: _dbTransaction);
-                return Result.Ok(result);
+                    var result = await _dbConnection.ExecuteScalarAsync<int>(sql, model, transaction: _dbTransaction);
+                    return Result.Ok(result);
+                }
             }
             catch (Exception ex)
             {

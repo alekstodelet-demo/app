@@ -89,5 +89,10 @@ namespace Infrastructure.Security
                 
             _encryptedProperties[modelType] = properties;
         }
+
+        public static IDisposable SetExecutionContext(Type type, string nameName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
