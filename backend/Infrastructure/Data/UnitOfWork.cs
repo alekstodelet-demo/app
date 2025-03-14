@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using Application.Repositories;
 using Infrastructure.Repositories;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -17,14 +18,16 @@ namespace Infrastructure.Data
         private IApplicationRepository? _applicationRepository;
         private IArchObjectRepository? _archObjectRepository;
         private IHostEnvironment _appEnvironment;
+        private IConfiguration _configuration;
         
-        public UnitOfWork(DapperDbContext context, IHostEnvironment appEnvironment, IServiceProvider serviceProvider)
+        public UnitOfWork(DapperDbContext context, IHostEnvironment appEnvironment, IServiceProvider serviceProvider, IConfiguration configuration)
         {
             _dbConnection = context.CreateConnection();
             _dbConnection.Open();
             _dbTransaction = _dbConnection.BeginTransaction();
             _appEnvironment = appEnvironment;
             _serviceProvider = serviceProvider;
+            _configuration = configuration;
         }
 
         public IServiceRepository ServiceRepository
@@ -33,7 +36,7 @@ namespace Infrastructure.Data
             {
                 if (_serviceRepository == null)
                 {
-                    _serviceRepository = new ServiceRepository(_dbConnection);
+                    _serviceRepository = new ServiceRepository(_dbConnection, _configuration);
                     _serviceRepository.SetTransaction(_dbTransaction);
                 }
                 return _serviceRepository;

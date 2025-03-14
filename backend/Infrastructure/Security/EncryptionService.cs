@@ -35,28 +35,40 @@ namespace Infrastructure.Security
 
         public string Encrypt(string plainText)
         {
+            Console.WriteLine($"Attempting to encrypt: {plainText}");
+    
             if (string.IsNullOrEmpty(plainText))
                 return plainText;
 
-            using (var aes = Aes.Create())
+            try 
             {
-                aes.Key = _key;
-                aes.IV = _iv;
-
-                var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
-
-                using (var ms = new MemoryStream())
+                using (var aes = Aes.Create())
                 {
-                    using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
-                    {
-                        using (var sw = new StreamWriter(cs))
-                        {
-                            sw.Write(plainText);
-                        }
-                    }
+                    aes.Key = _key;
+                    aes.IV = _iv;
 
-                    return Convert.ToBase64String(ms.ToArray());
+                    var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+
+                    using (var ms = new MemoryStream())
+                    {
+                        using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+                        {
+                            using (var sw = new StreamWriter(cs))
+                            {
+                                sw.Write(plainText);
+                            }
+                        }
+
+                        var encryptedValue = Convert.ToBase64String(ms.ToArray());
+                        Console.WriteLine($"Encrypted value: {encryptedValue}");
+                        return encryptedValue;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Encryption error: {ex.Message}");
+                throw;
             }
         }
 

@@ -31,7 +31,7 @@ namespace Infrastructure.Security
 
         public static void Initialize(IEncryptionService encryptionService)
         {
-            _encryptionService = encryptionService;
+            _encryptionService = encryptionService ?? throw new ArgumentNullException(nameof(encryptionService));
         }
 
         public override string Parse(object value)
@@ -52,14 +52,25 @@ namespace Infrastructure.Security
 
         public override void SetValue(System.Data.IDbDataParameter parameter, string value)
         {
-            // Проверяем, требуется ли шифрование
+            Console.WriteLine($"Encrypting value: {value}"); // Отладочная печать
+    
             if (value == null)
             {
                 parameter.Value = DBNull.Value;
             }
             else if (IsEncryptedProperty())
             {
-                parameter.Value = _encryptionService.Encrypt(value);
+                try 
+                {
+                    var encryptedValue = _encryptionService.Encrypt(value);
+                    Console.WriteLine($"Encrypted value: {encryptedValue}");
+                    parameter.Value = encryptedValue;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Encryption error: {ex.Message}");
+                    throw;
+                }
             }
             else
             {
@@ -70,6 +81,9 @@ namespace Infrastructure.Security
         private bool IsEncryptedProperty()
         {
             var context = _currentContext.Value;
+            
+            Console.WriteLine($"Context is null: {context == null}");
+            
             if (context == null)
                 return false;
         

@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Security.Cryptography;
 using Dapper;
 using Domain.Entities;
 using Application.Repositories;
@@ -6,6 +7,7 @@ using Application.Models;
 using FluentResults;
 using Infrastructure.Data.Models;
 using Infrastructure.Security;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Repositories
 {
@@ -13,10 +15,12 @@ namespace Infrastructure.Repositories
     {
         private IDbTransaction? _dbTransaction;
         private IDbConnection _dbConnection;
+        private IConfiguration _configuration;
 
-        public ServiceRepository(IDbConnection dbConnection)
+        public ServiceRepository(IDbConnection dbConnection, IConfiguration configuration)
         {
             _dbConnection = dbConnection;
+            _configuration = configuration;
         }
 
         public void SetTransaction(IDbTransaction dbTransaction)
@@ -126,18 +130,29 @@ namespace Infrastructure.Repositories
                     UpdatedAt = DateTime.Now,
                     UpdatedBy = 1
                 };
-                using (EncryptedStringTypeHandler.SetExecutionContext(typeof(ServiceModel), nameof(ServiceModel.Name)))
+                // Явно вызываем SetExecutionContext перед выполнением запроса
+                using (var context = EncryptedStringTypeHandler.SetExecutionContext(typeof(ServiceModel), nameof(ServiceModel.Name)))
                 {
                     var sql = @"INSERT INTO service(name, short_name, code, description, day_count, workflow_id,
-                                                price, created_at, updated_at, created_by, updated_by) 
-                            VALUES (@Name, @ShortName, @Code, @Description, @DayCount, @WorkflowId, @Price,
-                                    @CreatedAt, @UpdatedAt, @CreatedBy, @UpdatedBy) RETURNING id";
+                                price, created_at, updated_at, created_by, updated_by) 
+                    VALUES (@Name, @ShortName, @Code, @Description, @DayCount, @WorkflowId, @Price,
+                            @CreatedAt, @UpdatedAt, @CreatedBy, @UpdatedBy) RETURNING id";
+            
+                    // Добавим отладочную информацию
+                    var crypt = new EncryptionService(_configuration);
+                    var testTextCrypt = crypt.Encrypt(model.Name);
+                    var testTextDeCrypt = crypt.Decrypt(testTextCrypt);
+                    var textInModel = model.Name;
+                    Console.WriteLine($"Attempting to insert Name: {model.Name}");
+            
                     var result = await _dbConnection.ExecuteScalarAsync<int>(sql, model, transaction: _dbTransaction);
                     return Result.Ok(result);
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Add method error: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
                 return Result.Fail(new ExceptionalError("Failed to add Service", ex)
                     .WithMetadata("ErrorCode", "ADD_FAILED"));
             }
