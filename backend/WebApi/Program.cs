@@ -17,6 +17,7 @@ using Infrastructure.Security;
 using Infrastructure.Services;
 using WebApi.Middleware;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Configuration;
 
 namespace WebApi
 {
@@ -25,6 +26,9 @@ namespace WebApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            
+            LoggingConfiguration.ConfigureLogging(builder);
+            
             var botToken = builder.Configuration["Logging:Token"];
             var chatId = builder.Configuration["Logging:Channel"];
             
@@ -37,10 +41,10 @@ namespace WebApi
             // Add services to the container.
             builder.Host.UseSerilog();
 
-            // Настройка контроллеров с защитой от XSS
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ XSS
             builder.Services.AddControllers(options =>
             {
-                // Настройка защиты от подделки запросов (CSRF/XSRF)
+                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (CSRF/XSRF)
                 //options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
 
@@ -53,7 +57,7 @@ namespace WebApi
             
             builder.Services.AddLogging();
 
-            // Настройка сессий для двухфакторной аутентификации
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
@@ -64,7 +68,7 @@ namespace WebApi
                 options.Cookie.SameSite = SameSiteMode.Strict;
             });
 
-            // Регистрация сервисов безопасности
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
             builder.Services.Configure<TwoFactorOptions>(builder.Configuration.GetSection("Security:TwoFactor"));
             builder.Services.AddScoped<ITwoFactorService, TwoFactorService>();
@@ -108,7 +112,7 @@ namespace WebApi
             {
                 options.Limits.MaxRequestBodySize = 50 * 1024 * 1024; // 50 MB
 
-                // Настройка HTTPS
+                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ HTTPS
                 options.ListenAnyIP(5001, listenOptions =>
                 {
                     listenOptions.UseHttps("cert.pfx", "secure-password");
@@ -144,13 +148,13 @@ namespace WebApi
 
             app.Use(async (context, next) =>
             {
-                // Предотвращение кликджекинга
+                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                 context.Response.Headers.Append("X-Frame-Options", "DENY");
 
-                // Включение XSS-фильтра в браузерах
+                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ XSS-пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                 context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
 
-                // Запрет MIME-сниффинга
+                // пїЅпїЅпїЅпїЅпїЅпїЅ MIME-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                 context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
 
                 // Content Security Policy
@@ -171,7 +175,7 @@ namespace WebApi
             }
             else
             {
-                // Настройка HSTS только для production
+                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ HSTS пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ production
                 app.UseHsts();
             }
 
@@ -183,7 +187,7 @@ namespace WebApi
 
             app.UseHttpsRedirection();
 
-            // Добавление сессий перед аутентификацией
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             app.UseSession();
 
             app.UseAuthentication();

@@ -13,6 +13,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Serilog" Version="4.0.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
+    <PackageReference Include="Serilog.Sinks.Grafana.Loki" Version="8.3.0" />
     <PackageReference Include="Serilog.Sinks.TelegramClient" Version="2.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
@@ -26,6 +27,7 @@
   <ItemGroup>
     <Folder Include="Files\" />
     <Folder Include="jsons\" />
+    <Folder Include="logs\" />
     <Folder Include="wwwroot\Files\" />
   </ItemGroup>
 
