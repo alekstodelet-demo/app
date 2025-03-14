@@ -32,6 +32,8 @@ namespace WebApi.Controllers
         [Route("GetAll")]
         public virtual async Task<IActionResult> GetAll()
         {
+            _logger.LogInformation("Getting all {EntityType}", typeof(TEntity).Name);
+            
             var result = await _service.GetAll();
             return HandleListDtoResult(result, EntityToDtoMapper);
         }
@@ -40,6 +42,8 @@ namespace WebApi.Controllers
         [Route("GetOneById")]
         public virtual async Task<IActionResult> GetOneById(int id)
         {
+            _logger.LogInformation("Getting {EntityType} with ID {Id}", typeof(TEntity).Name, id);
+            
             var result = await _service.GetOneByID(id);
             return HandleSingleDtoResult(result, EntityToDtoMapper);
         }
@@ -48,6 +52,9 @@ namespace WebApi.Controllers
         [Route("GetPaginated")]
         public virtual async Task<IActionResult> GetPaginated(int pageSize, int pageNumber)
         {
+            _logger.LogInformation("Getting paginated {EntityType} (page {Page}, size {Size})", 
+                typeof(TEntity).Name, pageNumber, pageSize);
+            
             var result = await _service.GetPaginated(pageSize, pageNumber);
             return HandlePaginatedDtoResult(result, EntityToDtoMapper);
         }
@@ -56,6 +63,8 @@ namespace WebApi.Controllers
         [Route("Create")]
         public virtual async Task<IActionResult> Create(TCreateRequestDto requestDto)
         {
+            _logger.LogInformation("Creating new {EntityType}", typeof(TEntity).Name);
+            
             var entity = CreateRequestToEntity(requestDto);
             var result = await _service.Create(entity);
             return HandleResult(result, StatusCodes.Status201Created);
@@ -65,6 +74,8 @@ namespace WebApi.Controllers
         [Route("Update")]
         public virtual async Task<IActionResult> Update(TUpdateRequestDto requestDto)
         {
+            _logger.LogInformation("Updating {EntityType}", typeof(TEntity).Name);
+            
             var entity = UpdateRequestToEntity(requestDto);
             var result = await _service.Update(entity);
             return HandleResult(result);
@@ -74,6 +85,8 @@ namespace WebApi.Controllers
         [Route("Delete")]
         public virtual async Task<IActionResult> Delete(int id)
         {
+            _logger.LogInformation("Deleting {EntityType} with ID {Id}", typeof(TEntity).Name, id);
+            
             var result = await _service.Delete(id);
             return HandleResult(result, StatusCodes.Status204NoContent);
         }
