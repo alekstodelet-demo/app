@@ -177,47 +177,90 @@ namespace WebApi.Controllers
         [HttpPost("validate")]
         public async Task<IActionResult> ValidateTwoFactor([FromBody] ValidateTwoFactorRequest request)
         {
+            // Валидация входных данных
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                _logger.LogWarning("Invalid two-factor validation request");
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = "Некорректные данные запроса"
+                });
             }
 
-            var userRepository = _unitOfWork.UserRepository;
-            var userResult = await userRepository.GetByEmail(request.Email);
-
-            if (userResult.IsFailed)
+            try
             {
-                _logger.LogWarning("Failed login attempt for non-existent user: {Email}", request.Email);
-                return BadRequest("Invalid credentials");
+                var userRepository = _unitOfWork.UserRepository;
+                var userResult = await userRepository.GetByEmail(request.Email);
+
+                // Проверка существования пользователя
+                if (userResult.IsFailed)
+                {
+                    _logger.LogWarning("Two-factor validation attempt for non-existent user: {Email}", request.Email);
+                    return NotFound(new
+                    {
+                        Success = false,
+                        Message = "Пользователь не найден"
+                    });
+                }
+
+                var user = userResult.Value;
+
+                // Проверка включения двухфакторной аутентификации
+                if (!user.TwoFactorEnabled)
+                {
+                    _logger.LogInformation("Two-factor attempt for user without 2FA: {Email}", request.Email);
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = "Двухфакторная аутентификация не включена"
+                    });
+                }
+
+                // Проверка наличия секретного ключа
+                if (string.IsNullOrEmpty(user.TwoFactorSecret))
+                {
+                    _logger.LogError("2FA enabled but secret is missing for user: {Email}", request.Email);
+                    return StatusCode(500, new
+                    {
+                        Success = false,
+                        Message = "Ошибка конфигурации"
+                    });
+                }
+
+                // Проверка кода
+                var twoFactorService = _twoFactorService;
+                var isValid = twoFactorService.ValidateTotpCode(user.TwoFactorSecret, request.Code);
+
+                if (!isValid)
+                {
+                    _logger.LogWarning("Invalid 2FA code for user: {Email}", request.Email);
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = "Неверный код подтверждения"
+                    });
+                }
+
+                // Успешная валидация
+                _logger.LogInformation("Successful 2FA validation for user: {Email}", request.Email);
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Код подтверждения успешно проверен",
+                    RequiresTwoFactor = true
+                });
             }
-
-            var user = userResult.Value;
-
-            if (!user.TwoFactorEnabled)
+            catch (Exception ex)
             {
-                _logger.LogInformation("User does not have 2FA enabled: {Email}", request.Email);
-                return Ok(new ApiResponse<object> { Success = true, Data = new { RequiresTwoFactor = false } });
+                // Обработка непредвиденных ошибок
+                _logger.LogError(ex, "Unexpected error during two-factor validation for email: {Email}", request.Email);
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "Внутренняя ошибка сервера"
+                });
             }
-
-            if (string.IsNullOrEmpty(user.TwoFactorSecret))
-            {
-                _logger.LogError("2FA enabled but secret is missing for user: {Email}", request.Email);
-                return StatusCode(500, "Server configuration error");
-            }
-
-            var isValid = _twoFactorService.ValidateTotpCode(user.TwoFactorSecret, request.Code);
-            if (!isValid)
-            {
-                _logger.LogWarning("Invalid 2FA code provided for user: {Email}", request.Email);
-                return BadRequest("Invalid two-factor authentication code");
-            }
-
-            _logger.LogInformation("2FA validation successful for user: {Email}", request.Email);
-            return Ok(new ApiResponse<object>
-            {
-                Success = true,
-                Data = new { RequiresTwoFactor = true, IsValid = true }
-            });
         }
     }
 }

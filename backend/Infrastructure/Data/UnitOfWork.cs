@@ -17,6 +17,7 @@ namespace Infrastructure.Data
         private IApplicationObjectRepository? _applicationObjectRepository;
         private IApplicationRepository? _applicationRepository;
         private IArchObjectRepository? _archObjectRepository;
+        private IUserRepository? _userRepository;
         private IHostEnvironment _appEnvironment;
         private IConfiguration _configuration;
         
@@ -79,6 +80,19 @@ namespace Infrastructure.Data
                     _archObjectRepository.SetTransaction(_dbTransaction);
                 }
                 return _archObjectRepository;
+            }
+        }
+
+        public IUserRepository UserRepository
+        {
+            get
+            {
+                if (_userRepository == null)
+                {
+                    _userRepository = new UserRepository(_dbConnection, _configuration);
+                    _userRepository.SetTransaction(_dbTransaction);
+                }
+                return _userRepository;
             }
         }
 

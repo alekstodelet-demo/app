@@ -29,4 +29,10 @@
     <Folder Include="wwwroot\Files\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="cert.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
