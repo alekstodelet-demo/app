@@ -100,21 +100,10 @@ namespace Infrastructure.Security
                     }
                 }
             }
-            catch (CryptographicException)
+            catch (Exception ex)
             {
-                // Логирование ошибки расшифровки, но не раскрытие деталей
-                return null;
-            }
-        }
-
-        // Вспомогательный метод для генерации ключей (использовать только при установке приложения)
-        public static (string key, string iv) GenerateNewKeys()
-        {
-            using (var aes = Aes.Create())
-            {
-                aes.GenerateKey();
-                aes.GenerateIV();
-                return (Convert.ToBase64String(aes.Key), Convert.ToBase64String(aes.IV));
+                // TODO Логирование ошибки расшифровки, но не раскрытие деталей
+                return "";
             }
         }
     }

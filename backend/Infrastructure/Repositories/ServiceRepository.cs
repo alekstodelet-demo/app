@@ -15,12 +15,12 @@ namespace Infrastructure.Repositories
     {
         private IDbTransaction? _dbTransaction;
         private IDbConnection _dbConnection;
-        private IConfiguration _configuration;
+        private EncryptionService _crypt;
 
         public ServiceRepository(IDbConnection dbConnection, IConfiguration configuration)
         {
             _dbConnection = dbConnection;
-            _configuration = configuration;
+            _crypt = new EncryptionService(configuration);
         }
 
         public void SetTransaction(IDbTransaction dbTransaction)
@@ -57,7 +57,10 @@ namespace Infrastructure.Repositories
                                    background_color AS ""BackgroundColor"" 
                             FROM service;";
                 var models = await _dbConnection.QueryAsync<Service>(sql, transaction: _dbTransaction);
-                return Result.Ok(models.ToList());
+        
+                var results = models.Select(model => DecryptServiceModel(model)).ToList();
+                
+                return Result.Ok(results);
             }
             catch (Exception ex)
             {
@@ -102,8 +105,10 @@ namespace Infrastructure.Repositories
                     return Result.Fail(new ExceptionalError($"Service with ID {id} not found.", null)
                         .WithMetadata("ErrorCode", "NOT_FOUND"));
                 }
+                
+                var result = DecryptServiceModel(model);
 
-                return Result.Ok(model);
+                return Result.Ok(result);
             }
             catch (Exception ex)
             {
@@ -116,38 +121,19 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                var model = new ServiceModel
-                {
-                    Name = domain.Name,
-                    ShortName = domain.ShortName,
-                    Code = domain.Code,
-                    Description = domain.Description,
-                    DayCount = domain.DayCount,
-                    WorkflowId = domain.WorkflowId,
-                    Price = domain.Price,
-                    CreatedAt = DateTime.Now,
-                    CreatedBy = 1,
-                    UpdatedAt = DateTime.Now,
-                    UpdatedBy = 1
-                };
-                // Явно вызываем SetExecutionContext перед выполнением запроса
-                using (var context = EncryptedStringTypeHandler.SetExecutionContext(typeof(ServiceModel), nameof(ServiceModel.Name)))
-                {
-                    var sql = @"INSERT INTO service(name, short_name, code, description, day_count, workflow_id,
+                var model = EncryptServiceModel(domain);
+                model.CreatedAt = DateTime.Now;
+                model.CreatedBy = 1;
+                model.UpdatedAt = DateTime.Now;
+                model.UpdatedBy = 1;
+                
+                var sql = @"INSERT INTO service(name, short_name, code, description, day_count, workflow_id,
                                 price, created_at, updated_at, created_by, updated_by) 
                     VALUES (@Name, @ShortName, @Code, @Description, @DayCount, @WorkflowId, @Price,
                             @CreatedAt, @UpdatedAt, @CreatedBy, @UpdatedBy) RETURNING id";
-            
-                    // Добавим отладочную информацию
-                    var crypt = new EncryptionService(_configuration);
-                    var testTextCrypt = crypt.Encrypt(model.Name);
-                    var testTextDeCrypt = crypt.Decrypt(testTextCrypt);
-                    var textInModel = model.Name;
-                    Console.WriteLine($"Attempting to insert Name: {model.Name}");
-            
-                    var result = await _dbConnection.ExecuteScalarAsync<int>(sql, model, transaction: _dbTransaction);
-                    return Result.Ok(result);
-                }
+
+                var result = await _dbConnection.ExecuteScalarAsync<int>(sql, model, transaction: _dbTransaction);
+                return Result.Ok(result);
             }
             catch (Exception ex)
             {
@@ -162,19 +148,9 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                var model = new 
-                {
-                    Id = domain.Id,
-                    Name = domain.Name,
-                    ShortName = domain.ShortName,
-                    Code = domain.Code,
-                    Description = domain.Description,
-                    DayCount = domain.DayCount,
-                    WorkflowId = domain.WorkflowId,
-                    Price = domain.Price,
-                    UpdatedAt = DateTime.Now,
-                    UpdatedBy = 1,
-                };
+                var model = EncryptServiceModel(domain);
+                model.UpdatedAt = DateTime.Now;
+                model.UpdatedBy = 1;
 
                 var sql = "UPDATE service SET name = @Name, short_name = @ShortName, code = @Code," +
                           " description = @Description, day_count = @DayCount, workflow_id = @WorkflowId, " +
@@ -185,6 +161,7 @@ namespace Infrastructure.Repositories
                     return Result.Fail(new ExceptionalError("Not found", null)
                         .WithMetadata("ErrorCode", "NOT_FOUND"));
                 }
+
                 return Result.Ok();
             }
             catch (Exception ex)
@@ -229,7 +206,9 @@ namespace Infrastructure.Repositories
                 var sqlCount = @"SELECT Count(*) FROM service";
                 var totalItems = await _dbConnection.ExecuteScalarAsync<int>(sqlCount, transaction: _dbTransaction);
 
-                var domainItems = models.ToList();
+                var results = models.Select(model => DecryptServiceModel(model)).ToList();
+
+                var domainItems = results;
 
                 return Result.Ok(new PaginatedList<Service>(domainItems, totalItems, pageNumber, pageSize));
             }
@@ -252,6 +231,7 @@ namespace Infrastructure.Repositories
                     return Result.Fail(new ExceptionalError("Service not found", null)
                         .WithMetadata("ErrorCode", "NOT_FOUND"));
                 }
+
                 return Result.Ok();
             }
             catch (Exception ex)
@@ -259,6 +239,36 @@ namespace Infrastructure.Repositories
                 return Result.Fail(new ExceptionalError("Failed to delete Service", ex)
                     .WithMetadata("ErrorCode", "DELETE_FAILED"));
             }
+        }
+        
+        private ServiceModel EncryptServiceModel(Service model)
+        {
+            return new ServiceModel
+            {
+                Id = model.Id,
+                Name = _crypt.Encrypt(model.Name), // Шифруем Name
+                ShortName = model.ShortName,
+                Code = model.Code,
+                Description = model.Description,
+                DayCount = model.DayCount,
+                WorkflowId = model.WorkflowId,
+                Price = model.Price
+            };
+        }
+        
+        private Service DecryptServiceModel(Service model)
+        {
+            return new Service
+            {
+                Id = model.Id,
+                Name = _crypt.Decrypt(model.Name), // Расшифровываем Name
+                ShortName = model.ShortName,
+                Code = model.Code,
+                Description = model.Description,
+                DayCount = model.DayCount,
+                WorkflowId = model.WorkflowId,
+                Price = model.Price
+            };
         }
     }
 }

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.UseCases;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Newtonsoft.Json;
 
 namespace WebApi.Dtos
 {
+    [JsonObject(NamingStrategyType = null)]
     public class GetServiceResponse
     {
         [JsonProperty("id")] 
@@ -17,15 +11,15 @@ namespace WebApi.Dtos
         [JsonProperty("name")] 
         public string? Name { get; set; }
         [JsonProperty("short_name")] 
-        public string? ShortName { get; set; }
+        public string? short_name { get; set; }
         [JsonProperty("code")] 
         public string? Code { get; set; }
         [JsonProperty("description")] 
         public string? Description { get; set; }
         [JsonProperty("day_count")] 
-        public int? DayCount { get; set; }
+        public int? day_count { get; set; }
         [JsonProperty("workflow_id")] 
-        public int? WorkflowId { get; set; }
+        public int? workflow_id { get; set; }
         [JsonProperty("price")] 
         public decimal? Price { get; set; }
         
@@ -35,11 +29,11 @@ namespace WebApi.Dtos
             {
                 Id = domain.Id,
                 Name = domain.Name,
-                ShortName = domain.ShortName,
+                short_name = domain.ShortName,
                 Code = domain.Code,
                 Description = domain.Description,
-                DayCount = domain.DayCount,
-                WorkflowId = domain.WorkflowId,
+                day_count = domain.DayCount,
+                workflow_id = domain.WorkflowId,
                 Price = domain.Price
             };
         }
