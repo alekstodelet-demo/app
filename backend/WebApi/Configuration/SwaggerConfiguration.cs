@@ -47,13 +47,12 @@ namespace WebApi.Configuration
 
         public static void UseVersionedSwagger(this WebApplication app, IApiVersionDescriptionProvider provider)
         {
+            // Make sure basic Swagger middleware is registered
             app.UseSwagger();
+    
             app.UseSwaggerUI(options =>
             {
-                // Get latest API version
-                var latestVersion = provider.ApiVersionDescriptions.Last();
-        
-                // Build Swagger endpoints for each version
+                // Build a swagger endpoint for each discovered API version
                 foreach (var description in provider.ApiVersionDescriptions)
                 {
                     options.SwaggerEndpoint(
@@ -61,7 +60,7 @@ namespace WebApi.Configuration
                         description.GroupName.ToUpperInvariant());
                 }
         
-                // Set the latest version as default
+                // Set swagger UI settings
                 options.RoutePrefix = "swagger";
                 options.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List);
                 options.DefaultModelsExpandDepth(-1);

@@ -2,6 +2,7 @@
 using Serilog.Events;
 using Serilog.Formatting.Json;
 using Serilog.Sinks.Grafana.Loki;
+using Serilog.Sinks.Telegram;
 
 namespace WebApi.Configuration
 {
@@ -10,6 +11,8 @@ namespace WebApi.Configuration
         public static void ConfigureLogging(WebApplicationBuilder builder)
         {
             var lokiUrl = builder.Configuration["Logging:Loki:Url"];
+            var botToken = builder.Configuration["Logging:Token"];
+            var chatId = builder.Configuration["Logging:Channel"];
             
             // Create Serilog logger configuration
             var loggerConfig = new LoggerConfiguration()
@@ -41,6 +44,14 @@ namespace WebApi.Configuration
                         new LokiLabel { Key = "env", Value = builder.Environment.EnvironmentName }
                     },
                     restrictedToMinimumLevel: LogEventLevel.Information);
+            }
+            
+            if (!string.IsNullOrEmpty(botToken) && !string.IsNullOrEmpty(chatId))
+            {
+                loggerConfig = loggerConfig.WriteTo.Telegram(
+                    token: botToken,
+                    chatId: chatId,
+                    restrictedToMinimumLevel: LogEventLevel.Warning);
             }
             
             // Create and set the logger

@@ -20,7 +20,7 @@ namespace WebApi.Middleware
             IHostEnvironment environment)
         {
             _next = next;
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _environment = environment;
         }
         
@@ -85,7 +85,7 @@ namespace WebApi.Middleware
                     CreateErrorResponse("Internal Server Error", "UNEXPECTED_ERROR", 
                         _environment.IsDevelopment() ? exception.Message : "An unexpected error occurred."))
             };
-
+            
             LogException(exception, statusCode, errorResponse);
             await WriteErrorResponseAsync(context, statusCode, errorResponse);
         }

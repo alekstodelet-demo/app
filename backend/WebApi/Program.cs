@@ -32,13 +32,6 @@ namespace WebApi
             
             LoggingConfiguration.ConfigureLogging(builder);
             
-            var botToken = builder.Configuration["Logging:Token"];
-            var chatId = builder.Configuration["Logging:Channel"];
-            
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.Telegram(token: botToken, chatId: chatId, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning)
-                .CreateLogger();
-            
             Log.Warning("Starting web host");
 
             // Add services to the container.
@@ -194,6 +187,7 @@ namespace WebApi
 
             if (app.Environment.IsDevelopment())
             {
+                app.UseSwagger(); // Add this line before UseVersionedSwagger
                 app.UseVersionedSwagger(app.Services.GetRequiredService<IApiVersionDescriptionProvider>());
             }
             else
