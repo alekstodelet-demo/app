@@ -2,11 +2,13 @@ using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Dtos;
 using Application.UseCases;
+using Asp.Versioning;
 using Domain.Entities;
 
 
 namespace WebApi.Controllers
 {
+    [ApiVersion("1.0")]
     [ApiController]
     [Route("[controller]")]
     public class ArchObjectController : BaseController<IArchObjectUseCases, ArchObject, GetArchObjectResponse,

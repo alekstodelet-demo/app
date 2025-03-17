@@ -1,16 +1,17 @@
-using FluentResults;
-using Microsoft.AspNetCore.Mvc;
-using WebApi.Dtos;
 using Application.UseCases;
+using Asp.Versioning;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using WebApi.Dtos;
 
-
-namespace WebApi.Controllers
+namespace WebApi.Controllers.V1
 {
+    [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
     [ApiController]
     [AllowAnonymous]
-    [Route("[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ServiceController : BaseController<IServiceUseCases, Service, GetServiceResponse, CreateServiceRequest,
         UpdateServiceRequest>
     {

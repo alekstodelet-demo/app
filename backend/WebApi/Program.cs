@@ -13,6 +13,7 @@ using Serilog.Sinks.Telegram;
 using System.Data;
 using System.Text;
 using Application.Services;
+using Asp.Versioning.ApiExplorer;
 using Infrastructure.Security;
 using Infrastructure.Services;
 using WebApi.Middleware;
@@ -40,6 +41,8 @@ namespace WebApi
 
             // Add services to the container.
             builder.Host.UseSerilog();
+            
+            builder.Services.ConfigureApiVersioning();
 
             // ��������� ������������ � ������� �� XSS
             builder.Services.AddControllers(options =>
@@ -53,7 +56,7 @@ namespace WebApi
             builder.Services.AddCors();
 
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.ConfigureSwagger();
             
             builder.Services.AddLogging();
 
@@ -111,7 +114,7 @@ namespace WebApi
             builder.WebHost.UseKestrel(options =>
             {
                 options.Limits.MaxRequestBodySize = 50 * 1024 * 1024; // 50 MB
-
+            
                 // ��������� HTTPS
                 options.ListenAnyIP(5001, listenOptions =>
                 {
@@ -170,8 +173,7 @@ namespace WebApi
 
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseVersionedSwagger(app.Services.GetRequiredService<IApiVersionDescriptionProvider>());
             }
             else
             {

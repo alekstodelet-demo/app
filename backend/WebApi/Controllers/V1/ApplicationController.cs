@@ -2,12 +2,14 @@ using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Dtos;
 using Application.UseCases;
+using Asp.Versioning;
 using Domain.Entities;
 
 namespace WebApi.Controllers
 {
+    [ApiVersion("1.0")]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ApplicationController : BaseController<IApplicationUseCases, Domain.Entities.Application,
         GetApplicationResponse, CreateApplicationRequest, UpdateApplicationRequest>
     {
