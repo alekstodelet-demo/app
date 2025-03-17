@@ -50,13 +50,21 @@ namespace WebApi.Configuration
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                // Построение конечной точки Swagger для каждой версии API
+                // Get latest API version
+                var latestVersion = provider.ApiVersionDescriptions.Last();
+        
+                // Build Swagger endpoints for each version
                 foreach (var description in provider.ApiVersionDescriptions)
                 {
                     options.SwaggerEndpoint(
                         $"/swagger/{description.GroupName}/swagger.json",
                         description.GroupName.ToUpperInvariant());
                 }
+        
+                // Set the latest version as default
+                options.RoutePrefix = "swagger";
+                options.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List);
+                options.DefaultModelsExpandDepth(-1);
             });
         }
     }

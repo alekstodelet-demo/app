@@ -5,7 +5,7 @@ using Application.UseCases;
 using Asp.Versioning;
 using Domain.Entities;
 
-namespace WebApi.Controllers
+namespace WebApi.Controllers.V1
 {
     [ApiVersion("1.0")]
     [ApiController]
