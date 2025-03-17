@@ -39,5 +39,23 @@ namespace WebApi.Controllers.V1
         {
             return requestDto.ToDomain();
         }
+        
+        // POST требует CSRF токен
+        [HttpPost]
+        [ValidateAntiForgeryToken] // Явно указываем необходимость CSRF валидации
+        public IActionResult SubmitForm([FromBody] object formData)
+        {
+            // Этот метод будет выполнен только если в запросе есть валидный CSRF токен
+            return Ok(new { Message = "Form submitted successfully" });
+        }
+
+        // Этот метод использует API интеграцию и не требует CSRF токена
+        [HttpPost("api-integration")]
+        [IgnoreAntiforgeryToken] // Явно отключаем CSRF проверку
+        public IActionResult ApiIntegration([FromBody] object data)
+        {
+            // Для API взаимодействий, защищенных другими средствами (JWT, API-ключи)
+            return Ok(new { Message = "API integration successful" });
+        }
     }
 }

@@ -19,6 +19,7 @@ using Infrastructure.Services;
 using WebApi.Middleware;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Configuration;
+using WebApi.Filters;
 
 namespace WebApi
 {
@@ -47,11 +48,12 @@ namespace WebApi
             // ��������� ������������ � ������� �� XSS
             builder.Services.AddControllers(options =>
             {
-                // ��������� ������ �� �������� �������� (CSRF/XSRF)
-                //options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                // Добавление глобального фильтра для проверки CSRF токенов
+                options.Filters.Add<ValidateAntiforgeryTokenFilter>();
+    
+                // Дополнительно можно включить проверку модели
+                options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
             });
-
-            builder.Services.AddControllers();
 
             builder.Services.AddCors();
 
@@ -59,6 +61,19 @@ namespace WebApi
             builder.Services.ConfigureSwagger();
             
             builder.Services.AddLogging();
+            
+            builder.Services.AddAntiforgery(options =>
+            {
+                // Настройка генерации токенов для защиты от CSRF
+                options.HeaderName = "X-XSRF-TOKEN"; // Имя заголовка, в котором клиент должен передавать токен
+                options.Cookie.Name = "XSRF-TOKEN";  // Имя cookie, в котором хранится токен
+                options.Cookie.HttpOnly = false;     // JavaScript должен иметь доступ к токену
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Требуем HTTPS
+                options.Cookie.SameSite = SameSiteMode.Strict; // Ограничиваем доступ только с того же сайта
+                options.SuppressXFrameOptionsHeader = false;   // Добавляем X-Frame-Options header
+            });
+            
+            builder.Services.AddMemoryCache();
 
             // ��������� ������ ��� ������������� ��������������
             builder.Services.AddDistributedMemoryCache();
@@ -115,10 +130,17 @@ namespace WebApi
             {
                 options.Limits.MaxRequestBodySize = 50 * 1024 * 1024; // 50 MB
             
-                // ��������� HTTPS
+                var certPath = builder.Configuration["Security:Certificates:PfxPath"];
+                var certPassword = builder.Configuration["Security:Certificates:Password"];
+                
+                if (string.IsNullOrEmpty(certPath) || string.IsNullOrEmpty(certPassword))
+                {
+                    throw new InvalidOperationException("HTTPS certificate path or password is not configured.");
+                }
+
                 options.ListenAnyIP(5001, listenOptions =>
                 {
-                    listenOptions.UseHttps("cert.pfx", "secure-password");
+                    listenOptions.UseHttps(certPath, certPassword);
                 });
             });
 
@@ -127,7 +149,6 @@ namespace WebApi
                 options.Limits.MaxRequestBodySize = int.MaxValue;
             });
             
-            builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
             builder.Services.AddDapperEncryption();
             
             builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
@@ -180,6 +201,10 @@ namespace WebApi
                 // ��������� HSTS ������ ��� production
                 app.UseHsts();
             }
+            
+            app.UseCsrfProtection();
+            
+            app.UseRateLimiting();
 
             app.UseCors(x => x
                 .AllowAnyMethod()

@@ -1,5 +1,5 @@
 import { API_URL } from "constants/config";
-
+import CsrfHelper from './csrf-helper';
 import axios from "axios";
 import MainStore from "MainStore";
 
@@ -7,6 +7,8 @@ const http = axios.create({
   baseURL: API_URL,
   withCredentials: true,
 });
+
+CsrfHelper.setupAxios(http);
 
 const SetupInterceptors = (http) => {
   http.interceptors.request.use(
