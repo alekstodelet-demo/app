@@ -40,7 +40,7 @@ namespace Infrastructure.Repositories
                                    deadline AS ""Deadline"", 
                                    arch_object_id AS ""ArchObjectId"", 
                                    work_description AS ""WorkDescription"", 
-                                   arch_object.name AS ""ArchObjectName"",
+                                   ao.name AS ""ArchObjectName"",
                                    is_paid AS ""IsPaid"", 
                                    number AS ""Number""
                             FROM application a

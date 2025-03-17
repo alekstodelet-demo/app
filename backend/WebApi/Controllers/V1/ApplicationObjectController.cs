@@ -4,6 +4,7 @@ using WebApi.Dtos;
 using Application.UseCases;
 using Asp.Versioning;
 using Domain.Entities;
+using WebApi.Services;
 
 
 namespace WebApi.Controllers.V1
@@ -15,12 +16,12 @@ namespace WebApi.Controllers.V1
         GetApplicationObjectResponse, CreateApplicationObjectRequest, UpdateApplicationObjectRequest>
     {
         private readonly IApplicationObjectUseCases _ApplicationObjectUseCases;
-
+        private readonly ILoggingService _loggingService;
 
         public ApplicationObjectController(IApplicationObjectUseCases ApplicationObjectUseCases,
             ILogger<BaseController<IApplicationObjectUseCases, ApplicationObject, GetApplicationObjectResponse,
-                CreateApplicationObjectRequest, UpdateApplicationObjectRequest>> logger)
-            : base(ApplicationObjectUseCases, logger)
+                CreateApplicationObjectRequest, UpdateApplicationObjectRequest>> logger, ILoggingService loggingService)
+            : base(ApplicationObjectUseCases, logger, loggingService)
         {
             _ApplicationObjectUseCases = ApplicationObjectUseCases;
         }

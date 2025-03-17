@@ -11,6 +11,7 @@ namespace WebApi.Controllers
     [ApiController]
     [Authorize]
     public abstract class
+        
         BaseController<TService, TEntity, TResponseDto, TCreateRequestDto, TUpdateRequestDto> : ControllerBase
         where TService : IBaseUseCases<TEntity>
         where TEntity : class
@@ -78,10 +79,21 @@ namespace WebApi.Controllers
         [Route("GetPaginated")]
         public virtual async Task<IActionResult> GetPaginated(int pageSize, int pageNumber)
         {
+            var stopwatch = Stopwatch.StartNew();
             _logger.LogInformation("Getting paginated {EntityType} (page {Page}, size {Size})", 
                 typeof(TEntity).Name, pageNumber, pageSize);
             
             var result = await _service.GetPaginated(pageSize, pageNumber);
+
+            if (_loggingService != null)
+            {
+                var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+                _loggingService.LogPerformanceMetric(
+                    $"Getting paginated {typeof(TEntity).Name}",
+                    elapsedMilliseconds,
+                    new Dictionary<string, object> { }
+                );
+            }
             return HandlePaginatedDtoResult(result, EntityToDtoMapper);
         }
 
