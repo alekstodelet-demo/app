@@ -4,6 +4,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Dtos;
+using WebApi.Services;
 
 namespace WebApi.Controllers.V1
 {
@@ -16,11 +17,12 @@ namespace WebApi.Controllers.V1
         UpdateServiceRequest>
     {
         private readonly IServiceUseCases _serviceUseCases;
+        private readonly ILoggingService _loggingService;
 
         public ServiceController(IServiceUseCases serviceUseCases,
             ILogger<BaseController<IServiceUseCases, Service, GetServiceResponse, CreateServiceRequest,
-                UpdateServiceRequest>> logger)
-            : base(serviceUseCases, logger)
+                UpdateServiceRequest>> logger, ILoggingService loggingService)
+            : base(serviceUseCases, logger, loggingService)
         {
             _serviceUseCases = serviceUseCases;
         }

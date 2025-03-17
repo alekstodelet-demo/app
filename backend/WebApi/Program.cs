@@ -20,6 +20,7 @@ using WebApi.Middleware;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Configuration;
 using WebApi.Filters;
+using WebApi.Services;
 
 namespace WebApi
 {
@@ -160,6 +161,8 @@ namespace WebApi
             builder.Services.AddScoped<IApplicationUseCases, ApplicationUseCases>();
             builder.Services.AddScoped<IApplicationObjectUseCases, ApplicationObjectUseCases>();
             builder.Services.AddScoped<IArchObjectUseCases, ArchObjectUseCases>();
+            builder.Services.AddScoped<IAlertService, AlertService>();
+            builder.Services.AddScoped<ILoggingService, LoggingService>();
 
             var app = builder.Build();
             
