@@ -50,9 +50,6 @@ namespace WebApi
             {
                 // Добавление глобального фильтра для проверки CSRF токенов
                 options.Filters.Add<ValidateAntiforgeryTokenFilter>();
-    
-                // Дополнительно можно включить проверку модели
-                options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
             });
 
             builder.Services.AddCors();

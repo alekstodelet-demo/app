@@ -29,6 +29,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
+        [IgnoreAntiforgeryToken]
         [Route("GetAll")]
         public virtual async Task<IActionResult> GetAll()
         {
