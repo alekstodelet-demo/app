@@ -1,29 +1,19 @@
-import { FC, useEffect } from 'react';
-import {
-  Container,
-} from '@mui/material';
-import PageGrid from 'components/PageGrid';
-import { observer } from "mobx-react"
-import store from "./store"
+import React, { FC, useEffect } from 'react';
+import { observer } from "mobx-react";
 import { useTranslation } from 'react-i18next';
 import { GridColDef } from '@mui/x-data-grid';
-import PopupGrid from 'components/PopupGrid';
-import ServicePopupForm from './../ServiceAddEditView/popupForm';
+import BaseListView from 'components/common/BaseListView';
+import ServicePopupForm from '../ServiceAddEditView/popupForm';
+import store from "./store";
 
-type ServiceListViewProps = {};
-
-
-const ServiceListView: FC<ServiceListViewProps> = observer((props) => {
+/**
+ * Service list view component that displays all services
+ */
+const ServiceListView: FC = observer(() => {
   const { t } = useTranslation();
   const translate = t;
 
-  useEffect(() => {
-    store.loadServices()
-    return () => {
-      store.clearStore()
-    }
-  }, [])
-
+  // Define grid columns
   const columns: GridColDef[] = [
     {
       field: 'name',
@@ -62,48 +52,32 @@ const ServiceListView: FC<ServiceListViewProps> = observer((props) => {
     }
   ];
 
-  let type1: string = 'form';
-  let component = null;
-  switch (type1) {
-    case 'form':
-      component = <PageGrid
-        title={translate("label:ServiceListView.entityTitle")}
-        onDeleteClicked={(id: number) => store.deleteService(id)}
-        columns={columns}
-        data={store.data}
-        tableName="Service" />
-      break
-    case 'popup':
-      component = <PopupGrid
-        title={translate("label:ServiceListView.entityTitle")}
-        onDeleteClicked={(id: number) => store.deleteService(id)}
-        onEditClicked={(id: number) => store.onEditClicked(id)}
-        columns={columns}
-        data={store.data}
-        tableName="Service" />
-      break
-  }
-
-
   return (
-    <Container maxWidth='xl' style={{ marginTop: 30 }}>
-      {component}
-
+    <BaseListView
+      title={translate("label:ServiceListView.entityTitle")}
+      columns={columns}
+      data={store.data}
+      tableName="Service"
+      onDeleteClicked={(id) => store.deleteService(id)}
+      onEditClicked={(id) => store.onEditClicked(id)}
+      store={{
+        loadData: store.loadServices,
+        clearStore: store.clearStore
+      }}
+      viewMode="form"
+    >
+      {/* Popup form for editing/creating services */}
       <ServicePopupForm
         openPanel={store.openPanel}
         id={store.currentId}
         onBtnCancelClick={() => store.closePanel()}
         onSaveClick={() => {
-          store.closePanel()
-          store.loadServices()
+          store.closePanel();
+          store.loadServices();
         }}
       />
-
-    </Container>
+    </BaseListView>
   );
-})
+});
 
-
-
-
-export default ServiceListView
+export default ServiceListView;

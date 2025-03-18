@@ -1,18 +1,38 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { runInAction } from "mobx";
 import i18n from "i18next";
-import MainStore from "MainStore";
+import BaseStore from 'core/stores/BaseStore';
 import { getServices, deleteService } from "api/Service";
-import mainStore from "MainStore";
+import { Service } from "constants/Service";
+import MainStore from "../../../MainStore";
 
-class NewStore {
-  data = [];
-  openPanel = false;
-  currentId = 0;
+/**
+ * Store for managing Service list data and operations
+ */
+class ServiceListStore extends BaseStore {
+  data: Service[] = [];
+  openPanel: boolean = false;
+  currentId: number = 0;
 
   constructor() {
-    makeAutoObservable(this);
+    super();
   }
 
+  /**
+   * Clear store state to initial values
+   */
+  clearStore() {
+    super.clearStore(); // Call parent's clearStore first
+    runInAction(() => {
+      this.data = [];
+      this.currentId = 0;
+      this.openPanel = false;
+    });
+  }
+
+  /**
+   * Handle edit button click
+   * @param id - Service ID to edit
+   */
   onEditClicked(id: number) {
     runInAction(() => {
       this.openPanel = true;
@@ -20,6 +40,9 @@ class NewStore {
     });
   }
 
+  /**
+   * Close the edit panel
+   */
   closePanel() {
     runInAction(() => {
       this.openPanel = false;
@@ -27,55 +50,46 @@ class NewStore {
     });
   }
 
+  /**
+   * Load all services from the API
+   */
   loadServices = async () => {
-    try {
-      MainStore.changeLoader(true);
-      const response = await getServices();
-      if ((response.status === 201 || response.status === 200) && response?.data !== null) {
-        this.data = response.data;
-      } else {
-        throw new Error();
+    this.apiCall(
+      getServices,
+      (data) => {
+        if (Array.isArray(data)) {
+          runInAction(() => {
+            this.data = data;
+          });
+        }
       }
-    } catch (err) {
-      MainStore.setSnackbar(i18n.t("message:somethingWentWrong"), "error");
-    } finally {
-      MainStore.changeLoader(false);
-    }
+    );
   };
 
+  /**
+   * Delete a service by ID
+   * @param id - Service ID to delete
+   */
   deleteService = (id: number) => {
-    MainStore.openErrorConfirm(
+    this.showConfirmDialog(
       i18n.t("areYouSure"),
       i18n.t("delete"),
       i18n.t("no"),
       async () => {
-        try {
-          MainStore.changeLoader(true);
-          const response = await deleteService(id);
-          if (response.status === 201 || response.status === 200) {
+        this.apiCall(
+          () => deleteService(id),
+          () => {
             this.loadServices();
-            MainStore.setSnackbar(i18n.t("message:snackbar.successDelete"));
-          }  else {
-            throw new Error();
+            this.showSuccessSnackbar(i18n.t("message:snackbar.successDelete"));
+          },
+          (err) => {
+            MainStore.openErrorDialog(i18n.t("message:error.documentIsAlreadyInUse"));
           }
-        } catch (err) {
-          mainStore.openErrorDialog(i18n.t("message:error.documentIsAlreadyInUse"))
-        } finally {
-          MainStore.changeLoader(false);
-          MainStore.onCloseConfirm();
-        }
-      },
-      () => MainStore.onCloseConfirm()
+        );
+        MainStore.onCloseConfirm();
+      }
     );
-  };
-
-  clearStore = () => {
-    runInAction(() => {
-      this.data = [];
-      this.currentId = 0;
-      this.openPanel = false;
-    });
   };
 }
 
-export default new NewStore();
+export default new ServiceListStore();
