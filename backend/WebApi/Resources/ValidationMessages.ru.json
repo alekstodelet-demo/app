@@ -1,0 +1,78 @@
+﻿{
+  // General validation messages
+  "Field_Required": "Это поле обязательно для заполнения.",
+  "Field_MinLength": "Это поле должно содержать не менее {0} символов.",
+  "Field_MaxLength": "Это поле должно содержать не более {0} символов.",
+  "Field_Range": "Значение должно быть между {0} и {1}.",
+  "Field_Email": "Введите корректный адрес электронной почты.",
+  "Field_Numeric": "Введите корректное число.",
+  "Field_Date": "Введите корректную дату.",
+  "Field_Future": "Введите дату в будущем.",
+  "Field_Positive": "Введите положительное число.",
+  "Field_Regex": "Это поле содержит недопустимые символы.",
+
+  // Common validation messages
+  "ID_Required": "Идентификатор обязателен.",
+  "ID_Positive": "Идентификатор должен быть положительным числом.",
+  "Name_Required": "Название обязательно.",
+  "Name_MaxLength": "Название не должно превышать {0} символов.",
+  "Code_Required": "Код обязателен.",
+  "Code_Format": "Код должен состоять только из заглавных букв, цифр и знаков подчеркивания.",
+  "Code_MaxLength": "Код не должен превышать {0} символов.",
+  "Description_MaxLength": "Описание не должно превышать {0} символов.",
+
+  // Service validation messages
+  "Service_Name_Required": "Название сервиса обязательно.",
+  "Service_Name_MaxLength": "Название сервиса не должно превышать {0} символов.",
+  "Service_ShortName_MaxLength": "Короткое название не должно превышать {0} символов.",
+  "Service_Code_Required": "Код сервиса обязателен.",
+  "Service_Code_Format": "Код сервиса должен состоять только из заглавных букв, цифр и знаков подчеркивания.",
+  "Service_Code_MaxLength": "Код сервиса не должен превышать {0} символов.",
+  "Service_DayCount_Positive": "Количество дней должно быть положительным числом или нулем.",
+  "Service_Price_Positive": "Цена должна быть положительным числом или нулем.",
+
+  // Application validation messages
+  "Application_CustomerId_Required": "Идентификатор клиента обязателен.",
+  "Application_ServiceId_Required": "Идентификатор сервиса обязателен.",
+  "Application_StatusId_Required": "Идентификатор статуса обязателен.",
+  "Application_WorkflowId_Required": "Идентификатор рабочего процесса обязателен.",
+  "Application_Number_MaxLength": "Номер не должен превышать {0} символов.",
+  "Application_CustomerName_MaxLength": "Имя клиента не должно превышать {0} символов.",
+  "Application_CustomerPin_MaxLength": "ПИН клиента не должен превышать {0} символов.",
+  "Application_Deadline_Future": "Срок сдачи должен быть в будущем.",
+  "Application_CustomerAddress_MaxLength": "Адрес клиента не должен превышать {0} символов.",
+  "Application_CustomerOkpo_MaxLength": "ОКПО не должен превышать {0} символов.",
+  "Application_CustomerDirector_MaxLength": "Имя директора не должно превышать {0} символов.",
+
+  // ArchObject validation messages
+  "ArchObject_Address_Required": "Адрес обязателен.",
+  "ArchObject_Address_MaxLength": "Адрес не должен превышать {0} символов.",
+  "ArchObject_Name_MaxLength": "Название не должно превышать {0} символов.",
+  "ArchObject_Identifier_MaxLength": "Идентификатор не должен превышать {0} символов.",
+  "ArchObject_DistrictId_Positive": "Идентификатор района должен быть положительным числом.",
+  "ArchObject_Description_MaxLength": "Описание не должно превышать {0} символов.",
+  "ArchObject_XCoordinate_Range": "Долгота должна быть в диапазоне от -180 до 180.",
+  "ArchObject_YCoordinate_Range": "Широта должна быть в диапазоне от -90 до 90.",
+
+  // ApplicationObject validation messages
+  "ApplicationObject_ApplicationId_Required": "Идентификатор заявки обязателен.",
+  "ApplicationObject_ArchObjectId_Required": "Идентификатор архитектурного объекта обязателен.",
+
+  // Auth validation messages
+  "PIN_Required": "ПИН обязателен.",
+  "PIN_MinLength": "ПИН должен содержать не менее {0} символов.",
+  "PIN_MaxLength": "ПИН не должен превышать {0} символов.",
+  "TokenId_Required": "Идентификатор токена обязателен.",
+  "TokenId_MaxLength": "Идентификатор токена не должен превышать {0} символов.",
+  "Signature_Required": "Подпись обязательна.",
+  "Signature_MaxLength": "Подпись не должна превышать {0} символов.",
+  "DeviceId_MaxLength": "Идентификатор устройства не должен превышать {0} символов.",
+  "RefreshToken_Required": "Токен обновления обязателен.",
+  "RefreshToken_MinLength": "Токен обновления должен содержать не менее {0} символов.",
+  "RefreshToken_MaxLength": "Токен обновления не должен превышать {0} символов.",
+  "TwoFactorCode_Required": "Код подтверждения обязателен.",
+  "TwoFactorCode_Length": "Код подтверждения должен содержать ровно 6 цифр.",
+  "TwoFactorCode_Format": "Код подтверждения должен содержать только цифры.",
+  "Email_Required": "Email обязателен.",
+  "Email_Format": "Введите корректный адрес электронной почты."
+}

@@ -1,0 +1,78 @@
+﻿{
+  // General validation messages
+  "Field_Required": "This field is required.",
+  "Field_MinLength": "This field must be at least {0} characters long.",
+  "Field_MaxLength": "This field must not exceed {0} characters.",
+  "Field_Range": "This field must be between {0} and {1}.",
+  "Field_Email": "Please enter a valid email address.",
+  "Field_Numeric": "Please enter a valid number.",
+  "Field_Date": "Please enter a valid date.",
+  "Field_Future": "Please enter a future date.",
+  "Field_Positive": "Please enter a positive number.",
+  "Field_Regex": "This field contains invalid characters.",
+
+  // Common validation messages
+  "ID_Required": "ID is required.",
+  "ID_Positive": "ID must be a positive number.",
+  "Name_Required": "Name is required.",
+  "Name_MaxLength": "Name must not exceed {0} characters.",
+  "Code_Required": "Code is required.",
+  "Code_Format": "Code must consist of uppercase letters, numbers, and underscores only.",
+  "Code_MaxLength": "Code must not exceed {0} characters.",
+  "Description_MaxLength": "Description must not exceed {0} characters.",
+
+  // Service validation messages
+  "Service_Name_Required": "Service name is required.",
+  "Service_Name_MaxLength": "Service name must not exceed {0} characters.",
+  "Service_ShortName_MaxLength": "Short name must not exceed {0} characters.",
+  "Service_Code_Required": "Service code is required.",
+  "Service_Code_Format": "Service code must consist of uppercase letters, numbers, and underscores only.",
+  "Service_Code_MaxLength": "Service code must not exceed {0} characters.",
+  "Service_DayCount_Positive": "Day count must be a positive number or zero.",
+  "Service_Price_Positive": "Price must be a positive number or zero.",
+
+  // Application validation messages
+  "Application_CustomerId_Required": "Customer ID is required.",
+  "Application_ServiceId_Required": "Service ID is required.",
+  "Application_StatusId_Required": "Status ID is required.",
+  "Application_WorkflowId_Required": "Workflow ID is required.",
+  "Application_Number_MaxLength": "Number must not exceed {0} characters.",
+  "Application_CustomerName_MaxLength": "Customer name must not exceed {0} characters.",
+  "Application_CustomerPin_MaxLength": "Customer PIN must not exceed {0} characters.",
+  "Application_Deadline_Future": "Deadline must be a valid future date.",
+  "Application_CustomerAddress_MaxLength": "Customer address must not exceed {0} characters.",
+  "Application_CustomerOkpo_MaxLength": "OKPO must not exceed {0} characters.",
+  "Application_CustomerDirector_MaxLength": "Director name must not exceed {0} characters.",
+
+  // ArchObject validation messages
+  "ArchObject_Address_Required": "Address is required.",
+  "ArchObject_Address_MaxLength": "Address must not exceed {0} characters.",
+  "ArchObject_Name_MaxLength": "Name must not exceed {0} characters.",
+  "ArchObject_Identifier_MaxLength": "Identifier must not exceed {0} characters.",
+  "ArchObject_DistrictId_Positive": "District ID must be a positive number.",
+  "ArchObject_Description_MaxLength": "Description must not exceed {0} characters.",
+  "ArchObject_XCoordinate_Range": "Longitude must be between -180 and 180.",
+  "ArchObject_YCoordinate_Range": "Latitude must be between -90 and 90.",
+
+  // ApplicationObject validation messages
+  "ApplicationObject_ApplicationId_Required": "Application ID is required.",
+  "ApplicationObject_ArchObjectId_Required": "Architectural object ID is required.",
+
+  // Auth validation messages
+  "PIN_Required": "PIN is required.",
+  "PIN_MinLength": "PIN must be at least {0} characters long.",
+  "PIN_MaxLength": "PIN must not exceed {0} characters.",
+  "TokenId_Required": "Token ID is required.",
+  "TokenId_MaxLength": "Token ID must not exceed {0} characters.",
+  "Signature_Required": "Signature is required.",
+  "Signature_MaxLength": "Signature must not exceed {0} characters.",
+  "DeviceId_MaxLength": "Device ID must not exceed {0} characters.",
+  "RefreshToken_Required": "Refresh token is required.",
+  "RefreshToken_MinLength": "Refresh token must be at least {0} characters long.",
+  "RefreshToken_MaxLength": "Refresh token must not exceed {0} characters.",
+  "TwoFactorCode_Required": "Verification code is required.",
+  "TwoFactorCode_Length": "Verification code must be exactly 6 digits.",
+  "TwoFactorCode_Format": "Verification code must contain only digits.",
+  "Email_Required": "Email is required.",
+  "Email_Format": "Please enter a valid email address."
+}

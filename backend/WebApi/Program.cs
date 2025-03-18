@@ -11,15 +11,19 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Sinks.Telegram;
 using System.Data;
+using System.Globalization;
 using System.Text;
 using Application.Services;
 using Asp.Versioning.ApiExplorer;
 using Infrastructure.Security;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Localization;
 using WebApi.Middleware;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using WebApi.Configuration;
 using WebApi.Filters;
+using WebApi.Resources;
 using WebApi.Services;
 
 namespace WebApi
@@ -83,6 +87,38 @@ namespace WebApi
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.Cookie.SameSite = SameSiteMode.Strict;
             });
+            
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+            
+            builder.Services.AddValidation();
+            
+            builder.Services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new List<CultureInfo>
+                {
+                    new CultureInfo("en"),
+                    new CultureInfo("ru"),
+                    new CultureInfo("ky")
+                };
+
+                options.DefaultRequestCulture = new RequestCulture("ru");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+    
+                // Добавляем провайдеры для определения культуры
+                options.RequestCultureProviders = new List<IRequestCultureProvider>
+                {
+                    new QueryStringRequestCultureProvider(),
+                    new CookieRequestCultureProvider(),
+                    new AcceptLanguageHeaderRequestCultureProvider()
+                };
+            });
+            
+            builder.Services.AddSingleton<IValidationLocalizerService, ValidationLocalizerService>();
+            
+            builder.Services.AddHttpContextAccessor();
+            
+            builder.Services.AddLocalizationServices();
 
             // ����������� �������� ������������
             builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
@@ -203,7 +239,12 @@ namespace WebApi
                 app.UseHsts();
             }
             
+            var localizationOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(localizationOptions.Value);
+            
             app.UseCsrfProtection();
+            
+            app.UseLocalizationConfiguration();
             
             app.UseRateLimiting();
             

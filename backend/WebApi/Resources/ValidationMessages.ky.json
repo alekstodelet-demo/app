@@ -1,0 +1,78 @@
+﻿{
+  // General validation messages
+  "Field_Required": "Бул талаа толтурулушу керек.",
+  "Field_MinLength": "Бул талаа кеминде {0} символдон турушу керек.",
+  "Field_MaxLength": "Бул талаа {0} символдон ашпашы керек.",
+  "Field_Range": "Маани {0} жана {1} аралыгында болушу керек.",
+  "Field_Email": "Туура электрондук почта дарегин киргизиңиз.",
+  "Field_Numeric": "Туура сан киргизиңиз.",
+  "Field_Date": "Туура датаны киргизиңиз.",
+  "Field_Future": "Келечектеги датаны киргизиңиз.",
+  "Field_Positive": "Оң сан киргизиңиз.",
+  "Field_Regex": "Бул талаада жараксыз символдор бар.",
+
+  // Common validation messages
+  "ID_Required": "Идентификатор талап кылынат.",
+  "ID_Positive": "Идентификатор оң сан болушу керек.",
+  "Name_Required": "Аталышы талап кылынат.",
+  "Name_MaxLength": "Аталышы {0} символдон ашпашы керек.",
+  "Code_Required": "Код талап кылынат.",
+  "Code_Format": "Код жалаң гана баш тамгалардан, сандардан жана астын сызуу белгилеринен турушу керек.",
+  "Code_MaxLength": "Код {0} символдон ашпашы керек.",
+  "Description_MaxLength": "Сүрөттөмө {0} символдон ашпашы керек.",
+
+  // Service validation messages
+  "Service_Name_Required": "Сервистин аталышы талап кылынат.",
+  "Service_Name_MaxLength": "Сервистин аталышы {0} символдон ашпашы керек.",
+  "Service_ShortName_MaxLength": "Кыскача аталышы {0} символдон ашпашы керек.",
+  "Service_Code_Required": "Сервистин коду талап кылынат.",
+  "Service_Code_Format": "Сервистин коду жалаң гана баш тамгалардан, сандардан жана астын сызуу белгилеринен турушу керек.",
+  "Service_Code_MaxLength": "Сервистин коду {0} символдон ашпашы керек.",
+  "Service_DayCount_Positive": "Күндөрдүн саны оң сан же нөл болушу керек.",
+  "Service_Price_Positive": "Баасы оң сан же нөл болушу керек.",
+
+  // Application validation messages
+  "Application_CustomerId_Required": "Кардардын идентификатору талап кылынат.",
+  "Application_ServiceId_Required": "Сервистин идентификатору талап кылынат.",
+  "Application_StatusId_Required": "Статустун идентификатору талап кылынат.",
+  "Application_WorkflowId_Required": "Жумуш процессинин идентификатору талап кылынат.",
+  "Application_Number_MaxLength": "Номер {0} символдон ашпашы керек.",
+  "Application_CustomerName_MaxLength": "Кардардын аты {0} символдон ашпашы керек.",
+  "Application_CustomerPin_MaxLength": "Кардардын ПИН коду {0} символдон ашпашы керек.",
+  "Application_Deadline_Future": "Аткаруу мөөнөтү келечекте болушу керек.",
+  "Application_CustomerAddress_MaxLength": "Кардардын дареги {0} символдон ашпашы керек.",
+  "Application_CustomerOkpo_MaxLength": "ОКПО {0} символдон ашпашы керек.",
+  "Application_CustomerDirector_MaxLength": "Директордун аты {0} символдон ашпашы керек.",
+
+  // ArchObject validation messages
+  "ArchObject_Address_Required": "Дарек талап кылынат.",
+  "ArchObject_Address_MaxLength": "Дарек {0} символдон ашпашы керек.",
+  "ArchObject_Name_MaxLength": "Аталышы {0} символдон ашпашы керек.",
+  "ArchObject_Identifier_MaxLength": "Идентификатор {0} символдон ашпашы керек.",
+  "ArchObject_DistrictId_Positive": "Райондун идентификатору оң сан болушу керек.",
+  "ArchObject_Description_MaxLength": "Сүрөттөмө {0} символдон ашпашы керек.",
+  "ArchObject_XCoordinate_Range": "Узактык -180 дан 180 га чейин болушу керек.",
+  "ArchObject_YCoordinate_Range": "Кеңдик -90 дан 90 га чейин болушу керек.",
+
+  // ApplicationObject validation messages
+  "ApplicationObject_ApplicationId_Required": "Арыздын идентификатору талап кылынат.",
+  "ApplicationObject_ArchObjectId_Required": "Архитектуралык объекттин идентификатору талап кылынат.",
+
+  // Auth validation messages
+  "PIN_Required": "ПИН талап кылынат.",
+  "PIN_MinLength": "ПИН кеминде {0} символдон турушу керек.",
+  "PIN_MaxLength": "ПИН {0} символдон ашпашы керек.",
+  "TokenId_Required": "Токендин идентификатору талап кылынат.",
+  "TokenId_MaxLength": "Токендин идентификатору {0} символдон ашпашы керек.",
+  "Signature_Required": "Кол тамга талап кылынат.",
+  "Signature_MaxLength": "Кол тамга {0} символдон ашпашы керек.",
+  "DeviceId_MaxLength": "Түзмөктүн идентификатору {0} символдон ашпашы керек.",
+  "RefreshToken_Required": "Жаңыртуу токени талап кылынат.",
+  "RefreshToken_MinLength": "Жаңыртуу токени кеминде {0} символдон турушу керек.",
+  "RefreshToken_MaxLength": "Жаңыртуу токени {0} символдон ашпашы керек.",
+  "TwoFactorCode_Required": "Ырастоо коду талап кылынат.",
+  "TwoFactorCode_Length": "Ырастоо коду так 6 цифрадан турушу керек.",
+  "TwoFactorCode_Format": "Ырастоо коду жалаң гана цифралардан турушу керек.",
+  "Email_Required": "Email талап кылынат.",
+  "Email_Format": "Туура электрондук почта дарегин киргизиңиз."
+}
