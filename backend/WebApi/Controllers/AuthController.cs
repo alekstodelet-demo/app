@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Application.Services;
+using Asp.Versioning;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,8 @@ using WebApi.Dtos;
 
 namespace WebApi.Controllers
 {
+    [ApiVersion("1.0")]
+    [IgnoreAntiforgeryToken]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     public class AuthController : ControllerBase
@@ -25,6 +28,7 @@ namespace WebApi.Controllers
             _tokenService = tokenService;
         }
 
+        [IgnoreAntiforgeryToken]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
