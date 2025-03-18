@@ -20,11 +20,14 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": "src",
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": true
   },
   "include": [
-    "src"
-, "src/api/EmployeeContact/useUpdateEmployeeContact/.ts"  ],
+    "src",
+    "src/api/EmployeeContact/useUpdateEmployeeContact/.ts"
+  ],
   "exclude": ["node_modules"],
   "paths": {
     "react": ["./node_modules/@types/react"]

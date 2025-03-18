@@ -13,13 +13,6 @@ const ServiceListView: FC = observer(() => {
   const { t } = useTranslation();
   const translate = t;
 
-  useEffect(() => {
-    console.log(store.data)
-    return () => {
-      store.clearStore();
-    }
-  }, [store.data]);
-
   // Define grid columns
   const columns: GridColDef[] = [
     {

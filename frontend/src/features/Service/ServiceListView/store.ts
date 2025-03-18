@@ -1,4 +1,4 @@
-import { runInAction } from "mobx";
+import { runInAction, makeObservable, observable } from "mobx";
 import i18n from "i18next";
 import BaseStore from 'core/stores/BaseStore';
 import { getServices, deleteService } from "api/Service";
@@ -9,12 +9,13 @@ import MainStore from "../../../MainStore";
  * Store for managing Service list data and operations
  */
 class ServiceListStore extends BaseStore {
-  data: Service[] = [];
-  openPanel: boolean = false;
-  currentId: number = 0;
+  @observable data: Service[] = [];
+  @observable openPanel: boolean = false;
+  @observable currentId: number = 0;
 
   constructor() {
     super();
+    makeObservable(this);
   }
 
   /**

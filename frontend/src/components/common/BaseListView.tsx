@@ -27,67 +27,57 @@ interface BaseListViewProps {
 /**
  * A base list view component for displaying data grids with common functionality
  */
-const BaseListView: FC<BaseListViewProps> = observer(({
-                                                        title,
-                                                        columns,
-                                                        data,
-                                                        tableName,
-                                                        onDeleteClicked,
-                                                        onEditClicked,
-                                                        store,
-                                                        viewMode = 'form',
-                                                        hideAddButton = false,
-                                                        hideActions = false,
-                                                        children,
-                                                        maxWidth = 'xl',
-                                                        marginTop = 30
-                                                      }) => {
+const BaseListView: FC<BaseListViewProps> = observer((props: BaseListViewProps) => {
   // Load data on component mount
   useEffect(() => {
-    store.loadData();
+    props.store.loadData();
     return () => {
-      store.clearStore();
+      props.store.clearStore();
     };
   }, []);
 
-  console.log(data)
+  // Debug data changes
+  useEffect(() => {
+  }, [props.data]);
 
   let gridComponent = null;
 
-  switch (viewMode) {
+  switch (props.viewMode) {
     case 'form':
       gridComponent = (
         <PageGrid
-          title={title}
-          onDeleteClicked={onDeleteClicked}
-          columns={columns}
-          data={data}
-          tableName={tableName}
-          hideAddButton={hideAddButton}
-          hideActions={hideActions}
+          key={JSON.stringify(props.data)}
+          title={props.title}
+          onDeleteClicked={props.onDeleteClicked}
+          columns={props.columns}
+          data={props.data}
+          tableName={props.tableName}
+          hideAddButton={props.hideAddButton}
+          hideActions={props.hideActions}
         />
       );
       break;
     case 'popup':
       gridComponent = (
         <PopupGrid
-          title={title}
-          onDeleteClicked={onDeleteClicked}
-          onEditClicked={onEditClicked}
-          columns={columns}
-          data={data}
-          tableName={tableName}
-          hideAddButton={hideAddButton}
-          hideActions={hideActions}
+          key={JSON.stringify(props.data)}
+          title={props.title}
+          onDeleteClicked={props.onDeleteClicked}
+          onEditClicked={props.onEditClicked}
+          columns={props.columns}
+          data={props.data}
+          tableName={props.tableName}
+          hideAddButton={props.hideAddButton}
+          hideActions={props.hideActions}
         />
       );
       break;
   }
 
   return (
-    <Container maxWidth={maxWidth} style={{ marginTop }}>
+    <Container maxWidth={props.maxWidth} style={{ marginTop: props.marginTop }}>
       {gridComponent}
-      {children}
+      {props.children}
     </Container>
   );
 });
