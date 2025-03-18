@@ -1,80 +1,38 @@
-import React, { FC, useEffect } from "react";
-import { default as ServiceAddEditBaseView } from "./base";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router";
-import {
-  Box,
-  Grid
-} from "@mui/material";
+import React, { FC } from "react";
+import { Grid } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { observer } from "mobx-react";
+import { withForm } from "components/hoc/withForm";
+import ServiceAddEditBaseView from "./base";
 import store from "./store";
-import CustomButton from "components/Button";
 import MtmTabs from "./mtmTabs";
 
-type ServiceProps = {};
+/**
+ * Interface for component props
+ */
+interface ServiceProps {
+  id: string | null;
+}
 
+/**
+ * Service form component for adding and editing services
+ * @param props - Component props
+ */
 const ServiceAddEditView: FC<ServiceProps> = observer((props) => {
   const { t } = useTranslation();
-  const translate = t;
-  const navigate = useNavigate();
-  const query = useQuery();
-  const id = query.get("id");
-
-  useEffect(() => {
-    if ((id != null) &&
-      (id !== "") &&
-      !isNaN(Number(id.toString()))) {
-      store.doLoad(Number(id));
-    } else {
-      navigate("/error-404");
-    }
-    return () => {
-      store.clearStore();
-    };
-  }, []);
+  const { id } = props;
 
   return (
-    <ServiceAddEditBaseView {...props}>
-
-      {/* start MTM */}
-      {/*{store.id > 0 && <Grid item xs={12} spacing={0}><MtmTabs /></Grid>}*/}
-      {/* end MTM */}
-
-      <Grid item xs={12} spacing={0}>
-        <Box display="flex" p={2}>
-          <Box m={2}>
-            <CustomButton
-              variant="contained"
-              id="id_ServiceSaveButton"
-              onClick={() => {
-                store.onSaveClick((id: number) => {
-                  navigate("/user/Service");
-                });
-              }}
-            >
-              {translate("common:save")}
-            </CustomButton>
-          </Box>
-          <Box m={2}>
-            <CustomButton
-              color={"secondary"}
-              sx={{ color: "white", backgroundColor: "red !important" }}
-              variant="contained"
-              id="id_ServiceCancelButton"
-              onClick={() => navigate("/user/Service")}
-            >
-              {translate("common:goOut")}
-            </CustomButton>
-          </Box>
-        </Box>
-      </Grid>
+    <ServiceAddEditBaseView>
+      {/* Show many-to-many relationship tabs only when editing existing service */}
+      {Number(id) > 0 && (
+        <Grid item xs={12} spacing={0}>
+          <MtmTabs />
+        </Grid>
+      )}
     </ServiceAddEditBaseView>
   );
 });
 
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
-
-export default ServiceAddEditView;
+// Enhance component with form functionality using the HOC
+export default withForm(ServiceAddEditView, store, "/user/Service");

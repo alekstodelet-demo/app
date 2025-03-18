@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeObservable, observable, runInAction } from "mobx";
 import i18n from "i18next";
 import MainStore from "MainStore";
 
@@ -6,11 +6,11 @@ import MainStore from "MainStore";
  * Base Store class that provides common functionality for MobX stores
  */
 export default class BaseStore {
-  errors: { [key: string]: string } = {};
-  loader: boolean = false;
+  @observable errors: { [key: string]: string } = {};
+  @observable loader: boolean = false;
 
   constructor() {
-    makeAutoObservable(this);
+    makeObservable(this);
   }
 
   /**

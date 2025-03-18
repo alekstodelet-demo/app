@@ -50,6 +50,8 @@ const BaseListView: FC<BaseListViewProps> = observer(({
     };
   }, []);
 
+  console.log(data)
+
   let gridComponent = null;
 
   switch (viewMode) {
