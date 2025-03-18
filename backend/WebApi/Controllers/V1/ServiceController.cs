@@ -17,12 +17,11 @@ namespace WebApi.Controllers.V1
         UpdateServiceRequest>
     {
         private readonly IServiceUseCases _serviceUseCases;
-        private readonly ILoggingService _loggingService;
 
         public ServiceController(IServiceUseCases serviceUseCases,
             ILogger<BaseController<IServiceUseCases, Service, GetServiceResponse, CreateServiceRequest,
-                UpdateServiceRequest>> logger, ILoggingService loggingService)
-            : base(serviceUseCases, logger, loggingService)
+                UpdateServiceRequest>> logger)
+            : base(serviceUseCases, logger)
         {
             _serviceUseCases = serviceUseCases;
         }

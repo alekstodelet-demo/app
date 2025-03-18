@@ -18,12 +18,11 @@ namespace WebApi.Controllers.V1
         CreateArchObjectRequest, UpdateArchObjectRequest>
     {
         private readonly IArchObjectUseCases _ArchObjectUseCases;
-        private readonly ILoggingService _loggingService;
 
         public ArchObjectController(IArchObjectUseCases ArchObjectUseCases,
             ILogger<BaseController<IArchObjectUseCases, ArchObject, GetArchObjectResponse, CreateArchObjectRequest,
-                UpdateArchObjectRequest>> logger, ILoggingService loggingService)
-            : base(ArchObjectUseCases, logger, loggingService)
+                UpdateArchObjectRequest>> logger)
+            : base(ArchObjectUseCases, logger)
         {
             _ArchObjectUseCases = ArchObjectUseCases;
         }

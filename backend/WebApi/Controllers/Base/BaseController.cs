@@ -20,17 +20,15 @@ namespace WebApi.Controllers
         where TUpdateRequestDto : class
     {
         protected readonly TService _service;
-        private readonly ILoggingService _loggingService;
 
         private readonly ILogger<BaseController<TService, TEntity, TResponseDto, TCreateRequestDto, TUpdateRequestDto>>
             _logger;
 
         protected BaseController(TService service,
-            ILogger<BaseController<TService, TEntity, TResponseDto, TCreateRequestDto, TUpdateRequestDto>> logger, ILoggingService? loggingService = null)
+            ILogger<BaseController<TService, TEntity, TResponseDto, TCreateRequestDto, TUpdateRequestDto>> logger)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _loggingService = loggingService;
         }
 
         [HttpGet]
@@ -38,19 +36,9 @@ namespace WebApi.Controllers
         [Route("GetAll")]
         public virtual async Task<IActionResult> GetAll()
         {
-            var stopwatch = Stopwatch.StartNew();
             _logger.LogInformation("Getting all {EntityType}", typeof(TEntity).Name);
             
             var result = await _service.GetAll();
-            if (_loggingService != null)
-            {
-                var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
-                _loggingService.LogPerformanceMetric(
-                    $"Getting all {typeof(TEntity).Name}", 
-                    elapsedMilliseconds, 
-                    new Dictionary<string, object> {}
-                );
-            }
             return HandleListDtoResult(result, EntityToDtoMapper);
         }
 
@@ -58,20 +46,10 @@ namespace WebApi.Controllers
         [Route("GetOneById")]
         public virtual async Task<IActionResult> GetOneById(int id)
         {
-            var stopwatch = Stopwatch.StartNew();
             _logger.LogInformation("Getting {EntityType} with ID {Id}", typeof(TEntity).Name, id);
             
             var result = await _service.GetOneByID(id);
             
-            if (_loggingService != null)
-            {
-                var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
-                _loggingService.LogPerformanceMetric(
-                    $"Getting {typeof(TEntity).Name} with ID", 
-                    elapsedMilliseconds, 
-                    new Dictionary<string, object> {}
-                );
-            }
             return HandleSingleDtoResult(result, EntityToDtoMapper);
         }
 
@@ -79,21 +57,11 @@ namespace WebApi.Controllers
         [Route("GetPaginated")]
         public virtual async Task<IActionResult> GetPaginated(int pageSize, int pageNumber)
         {
-            var stopwatch = Stopwatch.StartNew();
             _logger.LogInformation("Getting paginated {EntityType} (page {Page}, size {Size})", 
                 typeof(TEntity).Name, pageNumber, pageSize);
             
             var result = await _service.GetPaginated(pageSize, pageNumber);
-
-            if (_loggingService != null)
-            {
-                var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
-                _loggingService.LogPerformanceMetric(
-                    $"Getting paginated {typeof(TEntity).Name}",
-                    elapsedMilliseconds,
-                    new Dictionary<string, object> { }
-                );
-            }
+            
             return HandlePaginatedDtoResult(result, EntityToDtoMapper);
         }
 

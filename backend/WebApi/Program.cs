@@ -53,6 +53,13 @@ namespace WebApi
             
             builder.Services.AddLogging();
             
+            // Register the request timing options (optional - if you want to use custom settings)
+            builder.Services.Configure<RequestTimingOptions>(options => {
+                options.MinDurationToLog = 300; // Log requests that take longer than 300ms
+                options.LogAllRequests = true;  // Set to false in production to reduce log volume
+                options.ExcludePaths = new[] { "/health", "/metrics", "/favicon.ico", "/static" };
+            });
+            
             builder.Services.AddAntiforgery(options =>
             {
                 // Настройка генерации токенов для защиты от CSRF
@@ -199,6 +206,10 @@ namespace WebApi
             app.UseCsrfProtection();
             
             app.UseRateLimiting();
+            
+            // Add the request timing middleware early in the pipeline
+            // to capture the total request processing time
+            app.UseRequestTiming();
 
             app.UseCors(x => x
                 .AllowAnyMethod()

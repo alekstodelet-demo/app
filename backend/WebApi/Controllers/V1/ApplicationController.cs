@@ -17,12 +17,11 @@ namespace WebApi.Controllers.V1
         GetApplicationResponse, CreateApplicationRequest, UpdateApplicationRequest>
     {
         private readonly IApplicationUseCases _ApplicationUseCases;
-        private readonly ILoggingService _loggingService;
 
         public ApplicationController(IApplicationUseCases ApplicationUseCases,
             ILogger<BaseController<IApplicationUseCases, Domain.Entities.Application, GetApplicationResponse,
-                CreateApplicationRequest, UpdateApplicationRequest>> logger, ILoggingService loggingService)
-            : base(ApplicationUseCases, logger, loggingService)
+                CreateApplicationRequest, UpdateApplicationRequest>> logger)
+            : base(ApplicationUseCases, logger)
         {
             _ApplicationUseCases = ApplicationUseCases;
         }
