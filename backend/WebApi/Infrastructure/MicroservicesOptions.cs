@@ -1,6 +1,7 @@
 ﻿using Application.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Infrastructure.Repositories;
 
 namespace WebApi.Infrastructure
 {
@@ -60,7 +61,7 @@ namespace WebApi.Infrastructure
             }
             
             // Иначе используем обычный репозиторий с прямым доступом к БД
-            return _serviceProvider.GetRequiredService<Infrastructure.Repositories.ServiceRepository>();
+            return _serviceProvider.GetRequiredService<ServiceRepository>();
         }
     }
 }

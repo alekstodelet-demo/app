@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Messaging.Shared;
+using Messaging.Shared.RabbitMQ;
 
 namespace Infrastructure.Messaging
 {

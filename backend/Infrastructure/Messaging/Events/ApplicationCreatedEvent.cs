@@ -1,4 +1,5 @@
 ﻿using System;
+using Messaging.Shared.Events;
 
 namespace Infrastructure.Messaging.Events
 {

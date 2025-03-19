@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Infrastructure.Messaging.Events;
+using Infrastructure.Messaging.Handlers;
 
 namespace Infrastructure.Messaging
 {

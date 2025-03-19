@@ -55,7 +55,7 @@ namespace Messaging.Shared.RabbitMQ
         /// <summary>
         /// Публикует событие в шину
         /// </summary>
-        public async Task<r> PublishAsync<TEvent>(TEvent @event) where TEvent : IntegrationEvent
+        public async Task<Result> PublishAsync<TEvent>(TEvent @event) where TEvent : IntegrationEvent
         {
             if (!_persistentConnection.IsConnected)
             {
@@ -98,7 +98,7 @@ namespace Messaging.Shared.RabbitMQ
                         basicProperties: properties,
                         body: body);
 
-                    return r.Ok();
+                    return Result.Ok();
                 });
             }
         }
@@ -275,7 +275,7 @@ namespace Messaging.Shared.RabbitMQ
                 }
 
                 var integrationEvent = JsonSerializer.Deserialize(message, eventType);
-
+                
                 using (var scope = _serviceProvider.CreateScope())
                 {
                     foreach (var subscription in subscriptions)
@@ -283,4 +283,32 @@ namespace Messaging.Shared.RabbitMQ
                         var handler = scope.ServiceProvider.GetService(subscription);
                         if (handler == null) continue;
 
-                        var concr
+                        var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
+                        var handleMethod = concreteType.GetMethod("HandleAsync");
+
+                        if (handleMethod != null)
+                        {
+                            await (Task<Result>)handleMethod.Invoke(handler, new object[] { integrationEvent });
+                        }
+                        else
+                        {
+                            _logger.LogWarning("HandleAsync method not found on handler: {HandlerType}", subscription.Name);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                _logger.LogWarning("No subscription for RabbitMQ event: {EventName}", eventName);
+            }
+        }
+
+        /// <summary>
+        /// Освобождает ресурсы
+        /// </summary>
+        public void Dispose()
+        {
+            _consumerChannel?.Dispose();
+        }
+    }
+}
