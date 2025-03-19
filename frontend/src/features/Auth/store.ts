@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import i18n from "i18next";
 import MainStore from "MainStore";
-import { auth } from "api/Auth/useAuth";
+import { auth, logout, checkAuthStatus } from "api/Auth/useAuth";
 
 interface UsbTokenData {
   tokenId: string;
@@ -11,11 +11,14 @@ interface UsbTokenData {
 class NewStore {
   pin = "";
   error = "";
-  navigate: (path: string) => void = () => {
-  };
-
+  isAuthenticated = false;
+  navigate: (path: string) => void = () => {};
+  
   constructor() {
     makeAutoObservable(this);
+    
+    // Check authentication status on store initialization
+    this.checkAuth();
   }
 
   setNavigateFunction(navigate: (path: string) => void) {
@@ -35,30 +38,66 @@ class NewStore {
     });
   }
 
+  checkAuth = async () => {
+    try {
+      const response = await checkAuthStatus();
+      
+      runInAction(() => {
+        this.isAuthenticated = response.status === 200;
+      });
+      
+      return this.isAuthenticated;
+    } catch (error) {
+      runInAction(() => {
+        this.isAuthenticated = false;
+      });
+      return false;
+    }
+  };
+
   onLogin = async () => {
     try {
       MainStore.changeLoader(true);
       const tokenData = await this.simulateUsbToken();
+      
       var data = {
         pin: this.pin,
         tokenId: tokenData.tokenId,
         signature: tokenData.signature,
         DeviceId: 'device_id'
       };
+      
       const response = await auth(data);
 
       if (response.status === 201 || response.status === 200) {
-        if (response.data) {
-          const { token } = response.data;
-          localStorage.setItem("token", token);
-          this.navigate("/user");
-          window.location.reload();
-          this.clearStore();
-        }
+        runInAction(() => {
+          this.isAuthenticated = true;
+        });
+        
+        this.navigate("/user");
+        this.clearStore();
       } else {
         throw new Error();
       }
     } catch (err) {
+      MainStore.setSnackbar(i18n.t("message:somethingWentWrong"), "error");
+    } finally {
+      MainStore.changeLoader(false);
+    }
+  };
+
+  onLogout = async () => {
+    try {
+      MainStore.changeLoader(true);
+      await logout();
+      
+      runInAction(() => {
+        this.isAuthenticated = false;
+      });
+      
+      this.navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
       MainStore.setSnackbar(i18n.t("message:somethingWentWrong"), "error");
     } finally {
       MainStore.changeLoader(false);

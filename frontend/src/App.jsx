@@ -1,16 +1,29 @@
+import { Suspense, lazy } from "react";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import { ThemeProvider } from "@mui/material/styles";
 import { StyledEngineProvider } from "@mui/material";
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+
 import NavigationScroll from "layouts/NavigationScroll";
 import MainWrapper from "layouts/MainWrapper";
-import AuthForm from "features/Auth/AuthForm";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import themes from "themes";
 import MainLayout from "layouts/MainLayout";
-import ServiceListView from "features/Service/ServiceListView"
-import ServiceAddEditView from "features/Service/ServiceAddEditView"
+
+// Lazy-loaded components
+const AuthForm = lazy(() => import("features/Auth/AuthForm"));
+const ServiceListView = lazy(() => import("features/Service/ServiceListView"));
+const ServiceAddEditView = lazy(() => import("features/Service/ServiceAddEditView"));
+
+// Loading fallback component
+const LoadingFallback = () => (
+  <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+    <CircularProgress />
+  </Box>
+);
 
 const router = createBrowserRouter([
   {
@@ -27,18 +40,44 @@ const router = createBrowserRouter([
             element: <MainLayout />,
             path: "/user",
             children: [
-              { path: "Service", element: <ServiceListView /> },
-              { path: "Service/addedit", element: <ServiceAddEditView /> },
+              { 
+                path: "Service", 
+                element: (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <ServiceListView />
+                  </Suspense>
+                ) 
+              },
+              { 
+                path: "Service/addedit", 
+                element: (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <ServiceAddEditView />
+                  </Suspense>
+                ) 
+              },
             ]
           }]
       },
       {
         element: <PublicRoute />,
         children: [
-
-          { path: "/login", element: <AuthForm /> },
-          { path: "/", element: <AuthForm /> },
-
+          { 
+            path: "/login", 
+            element: (
+              <Suspense fallback={<LoadingFallback />}>
+                <AuthForm />
+              </Suspense>
+            ) 
+          },
+          { 
+            path: "/", 
+            element: (
+              <Suspense fallback={<LoadingFallback />}>
+                <AuthForm />
+              </Suspense>
+            ) 
+          },
         ]
       },
       { path: "error-404", element: <div></div> },

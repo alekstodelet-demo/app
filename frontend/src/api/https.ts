@@ -2,30 +2,43 @@ import { API_URL } from "constants/config";
 import CsrfHelper from './csrf-helper';
 import axios from "axios";
 import MainStore from "MainStore";
+import { refreshToken } from "api/Auth/useAuth";
 
 const http = axios.create({
   baseURL: API_URL,
-  withCredentials: true,
+  withCredentials: true, // Always include credentials for cross-origin requests
 });
 
 CsrfHelper.setupAxios(http);
 
+// Flag to prevent multiple refresh token requests
+let isRefreshing = false;
+let failedQueue = [];
+
+// Process the failed request queue based on token refresh success/failure
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve();
+    }
+  });
+  
+  failedQueue = [];
+};
+
 const SetupInterceptors = (http) => {
   http.interceptors.request.use(
     (config) => {
-      const accessToken = localStorage.getItem("token");
-      if (accessToken) {
-        //@ts-ignore
-        config.headers = {
-          ...config.headers,
-          Authorization: `Bearer ${accessToken}`,
-        };
-      }
+      // We don't need to manually set the Authorization header anymore
+      // since the cookies will be sent automatically due to withCredentials: true
+      
       config.headers["ngrok-skip-browser-warning"] = true;
       return config;
     },
     (error) => {
-      Promise.reject(error);
+      return Promise.reject(error);
     }
   );
 
@@ -33,23 +46,51 @@ const SetupInterceptors = (http) => {
     (response) => {
       return response;
     },
-    (error) => {
-      console.log("Ошибка");
+    async (error) => {
+      const originalRequest = error.config;
+      
+      // Handle 401 errors (unauthorized)
+      if (error?.response?.status === 401 && !originalRequest._retry) {
+        if (isRefreshing) {
+          // If token refresh is already in progress, queue this request
+          return new Promise((resolve, reject) => {
+            failedQueue.push({ resolve, reject });
+          })
+            .then(() => {
+              return http(originalRequest);
+            })
+            .catch(err => {
+              return Promise.reject(err);
+            });
+        }
 
-      if (error?.response) {
-        console.log("Ошибка с response");
-        console.log(error);
+        originalRequest._retry = true;
+        isRefreshing = true;
 
-        if (error?.response?.status === 401) {
-          console.log("Ошибка 401");
-
-          localStorage.removeItem("token");
-          localStorage.removeItem("currentUser");
+        try {
+          // Attempt to refresh the token
+          await refreshToken();
+          
+          // If refresh succeeds, process the queue and retry the original request
+          processQueue(null);
+          isRefreshing = false;
+          return http(originalRequest);
+        } catch (refreshError) {
+          // If refresh fails, process the queue with the error and redirect to login
+          processQueue(refreshError);
+          isRefreshing = false;
+          
+          // Redirect to login page
           window.location.href = "/login";
+          return Promise.reject(refreshError);
+        }
+      }
+      
+      // Handle other error statuses
+      if (error?.response) {
+        console.log("Error with response:", error);
 
-          return Promise.reject(error); // Возврат промиса с ошибкой
-        } else if (error?.response?.status === 403) {
-          // const message = JSON.parse(error.response?.data);
+        if (error?.response?.status === 403) {
           const message = error.response?.data?.message;
           MainStore.openErrorDialog(message && message !== "" ? message : "У вас нет доступа!");
           return Promise.reject(error);
@@ -57,8 +98,9 @@ const SetupInterceptors = (http) => {
           let message = error.response?.data?.message;
           try {
             const json = JSON.parse(message);
-            message = json?.ru
+            message = json?.ru;
           } catch (e) {
+            // Parsing error, continue with original message
           }
           MainStore.openErrorDialog(
             message && message !== "" ? message : "Ошибка логики, обратитесь к администратору!"
@@ -80,13 +122,11 @@ const SetupInterceptors = (http) => {
           return Promise.reject(error);
         }
       } else if (error.request) {
-        console.log("Ошибка с request");
-        console.log(error);
-        console.log(error.request);
-        return Promise.reject(error); // Обработка ошибок с request
+        console.log("Error with request:", error.request);
+        return Promise.reject(error);
       } else {
-        console.log("Произошла ошибка настройки запроса:", error.message);
-        return Promise.reject(error); // Возврат промиса с ошибкой
+        console.log("Request setup error:", error.message);
+        return Promise.reject(error);
       }
     }
   );
@@ -103,7 +143,7 @@ const get = (url: string, headers = {}, params = {}) => {
       },
     })
     .catch(function (error) {
-      console.log("Ошибка GET");
+      console.log("GET Error:");
       console.log(error.toJSON());
     });
 };
@@ -117,7 +157,7 @@ const post = (url: string, data: any, headers = {}, params = {}) => {
       },
     })
     .catch(function (error) {
-      console.log("Ошибка POST");
+      console.log("POST Error:");
       console.log(error.toJSON());
       return error;
     });
@@ -131,7 +171,7 @@ const put = (url: string, data: any, headers = {}) => {
       },
     })
     .catch(function (error) {
-      console.log("Ошибка PUT");
+      console.log("PUT Error:");
       console.log(error.toJSON());
       return error;
     });
@@ -146,10 +186,11 @@ const remove = (url: string, data: any, headers = {}) => {
       data,
     })
     .catch(function (error) {
-      console.log("Ошибка REMOVE");
+      console.log("DELETE Error:");
       console.log(error.toJSON());
     });
 };
+
 const patch = (url: string, data: any, headers = {}) => {
   return http
     .patch(url, data, {
@@ -158,7 +199,7 @@ const patch = (url: string, data: any, headers = {}) => {
       },
     })
     .catch(function (error) {
-      console.log("Ошибка PATCH");
+      console.log("PATCH Error:");
       console.log(error.toJSON());
     });
 };

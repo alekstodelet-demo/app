@@ -11,7 +11,6 @@ import Chip from '@mui/material/Chip';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import InputAdornment from '@mui/material/InputAdornment';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -28,15 +27,12 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
-import UpgradePlanCard from './UpgradePlanCard';
 
 // assets
 import { IconLogout, IconSettings } from '@tabler/icons-react';
 import { observer } from 'mobx-react';
-import store from 'layouts/MainLayout/store'
-import MainStore from 'MainStore';
-import dayjs from 'dayjs';
-// Assuming you have a MobX store
+import store from 'layouts/MainLayout/store';
+import AuthStore from 'features/Auth/store';
 
 const ProfileSection = observer(() => {
   const theme = useTheme();
@@ -48,9 +44,8 @@ const ProfileSection = observer(() => {
   const anchorRef = useRef(null);
 
   const handleLogout = async () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("currentUser");
-    navigate("/login");
+    // Use the new logout method from AuthStore
+    await AuthStore.onLogout();
   };
 
   const handleClose = (event) => {
@@ -106,7 +101,6 @@ const ProfileSection = observer(() => {
         }}
         icon={
           <Avatar
-            // src={User1}
             sx={{
               ...theme.typography.mediumAvatar,
               margin: '8px 0 8px 8px !important',
@@ -157,7 +151,6 @@ const ProfileSection = observer(() => {
                           {store.first_name + " " + store.last_name}
                         </Typography>
                       </Stack>
-                      {/* <Typography variant="subtitle2">Project Admin</Typography> */}
                     </Stack>
                     <Divider />
                   </Box>
