@@ -9,9 +9,10 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MemoryIcon from '@mui/icons-material/Memory';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import { AuthFormType } from '../store/AuthStore';
 
 interface AuthSidebarProps {
-  onMethodSelect?: (method: string) => void;
+  onMethodSelect: (method: AuthFormType) => void;
 }
 
 const AuthSidebar: FC<AuthSidebarProps> = ({ onMethodSelect }) => {
@@ -33,7 +34,7 @@ const AuthSidebar: FC<AuthSidebarProps> = ({ onMethodSelect }) => {
           icon={<KeyIcon fontSize="large" style={{ color: 'white' }} />}
           title="Логин и пароль"
           subtitle="Логин(ИНН) и пароль"
-          onClick={() => onMethodSelect?.('login')}
+          onClick={() => onMethodSelect('login')}
         />
         
         <AuthMethodItem
@@ -41,7 +42,7 @@ const AuthSidebar: FC<AuthSidebarProps> = ({ onMethodSelect }) => {
           icon={<MemoryIcon fontSize="large" style={{ color: 'white' }} />}
           title="Рутокен"
           subtitle="Электронная подпись на USB носителе"
-          onClick={() => onMethodSelect?.('rutoken')}
+          onClick={() => onMethodSelect('rutoken')}
         />
         
         <AuthMethodItem
@@ -49,7 +50,7 @@ const AuthSidebar: FC<AuthSidebarProps> = ({ onMethodSelect }) => {
           icon={<MemoryIcon fontSize="large" style={{ color: 'white' }} />}
           title="JaCarta"
           subtitle="Электронная подпись на USB носителе"
-          onClick={() => onMethodSelect?.('jacarta')}
+          onClick={() => onMethodSelect('jacarta')}
         />
         
         <AuthMethodItem
@@ -57,7 +58,7 @@ const AuthSidebar: FC<AuthSidebarProps> = ({ onMethodSelect }) => {
           icon={<MemoryIcon fontSize="large" style={{ color: 'white' }} />}
           title="EnoToken"
           subtitle="Электронная подпись на USB носителе"
-          onClick={() => onMethodSelect?.('enotoken')}
+          onClick={() => onMethodSelect('enotoken')}
         />
         
         <AuthMethodItem
@@ -65,7 +66,7 @@ const AuthSidebar: FC<AuthSidebarProps> = ({ onMethodSelect }) => {
           icon={<QrCodeIcon fontSize="large" style={{ color: 'white' }} />}
           title="Smart-ID KG"
           subtitle="Аутентификация по QR-коду через приложение Smart-ID KG"
-          onClick={() => onMethodSelect?.('smartid')}
+          onClick={() => onMethodSelect('smartid')}
         />
         
         <AuthMethodItem
@@ -73,7 +74,7 @@ const AuthSidebar: FC<AuthSidebarProps> = ({ onMethodSelect }) => {
           icon={<AccountBoxIcon fontSize="large" style={{ color: 'white' }} />}
           title="ЕСИ-Облако"
           subtitle="Единая система идентификации"
-          onClick={() => onMethodSelect?.('esicloud')}
+          onClick={() => onMethodSelect('esicloud')}
         />
         
         <AuthMethodItem
@@ -81,7 +82,7 @@ const AuthSidebar: FC<AuthSidebarProps> = ({ onMethodSelect }) => {
           icon={<ShoppingCartIcon fontSize="large" style={{ color: 'white' }} />}
           title="ЭТТН"
           subtitle="Электронная товарно-транспортная накладная"
-          onClick={() => onMethodSelect?.('ettn')}
+          onClick={() => onMethodSelect('ettn')}
         />
       </Box>
       
@@ -95,7 +96,7 @@ const AuthSidebar: FC<AuthSidebarProps> = ({ onMethodSelect }) => {
           icon={<AppRegistrationIcon fontSize="large" style={{ color: 'white' }} />}
           title="Зарегистрироваться"
           subtitle="Регистрация в кабинете налогоплательщика"
-          onClick={() => onMethodSelect?.('register')}
+          onClick={() => onMethodSelect('registration')}
         />
       </Box>
     </SidebarContainer>

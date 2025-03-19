@@ -3,7 +3,11 @@ import http from "api/https";
 import { Auth } from "constants/Auth";
 import MainStore from "MainStore";
 
+export type AuthFormType = 'login' | 'registration' | 'rutoken' | 'jacarta' | 'enotoken' | 'smartid' | 'esicloud' | 'ettn';
+
 class AuthStore {
+  currentForm: AuthFormType = 'login';
+  
   login: string = "";
   password: string = "";
   rememberMe: boolean = false;
@@ -13,6 +17,13 @@ class AuthStore {
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  setCurrentForm = (formType: AuthFormType) => {
+    runInAction(() => {
+      this.currentForm = formType;
+      this.error = "";
+    });
   }
 
   setLogin(login: string) {

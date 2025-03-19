@@ -1,44 +1,44 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react';
 import { Grid, Box } from '@mui/material';
 import styled from 'styled-components';
 import AuthSidebar from './components/AuthSidebar';
 import LoginForm from './components/LoginForm';
+import RegistrationForm from './components/RegistrationForm';
 import PromoSidebar from './components/PromoSidebar';
 import AuthStore from './store/AuthStore';
-import { useNavigate } from 'react-router-dom';
 
 const LoginPage = observer(() => {
-  const navigate = useNavigate();
-  
-  // useEffect(() => {
-  //   const checkAuth = async () => {
-  //     const isAuthenticated = await AuthStore.checkAuthStatus();
-  //     if (isAuthenticated) {
-  //       navigate('/user');
-  //     }
-  //   };
-    
-  //   checkAuth();
-  // }, [navigate]);
-  
-  const handleLogin = (login: string, password: string, rememberMe: boolean) => {
-    AuthStore.setLogin(login);
-    AuthStore.setPassword(password);
-    AuthStore.setRememberMe(rememberMe);
-    AuthStore.loginWithCredentials();
+  const renderAuthForm = () => {
+    switch (AuthStore.currentForm) {
+      case 'login':
+        return <LoginForm onLogin={() => AuthStore.setCurrentForm('login')} />;
+      case 'registration':
+        return <RegistrationForm />;
+      case 'rutoken':
+      case 'jacarta':
+      case 'enotoken':
+      case 'smartid':
+      case 'esicloud':
+      case 'ettn':
+        return (
+          <ComingSoonContainer>
+            <ComingSoonTitle>В разработке</ComingSoonTitle>
+            <ComingSoonText>
+              Данный метод авторизации находится в разработке и будет доступен в ближайшее время
+            </ComingSoonText>
+          </ComingSoonContainer>
+        );
+      default:
+        return <LoginForm onLogin={() => AuthStore.setCurrentForm('login')} />;
+    }
   };
-  
-  const handleMethodSelect = (method: string) => {
-    console.log(`Selected auth method: ${method}`);
-    // Здесь можно добавить логику для переключения между методами авторизации
-  };
-  
+
   return (
     <PageContainer>
       <Grid container>
         <Grid item xs={12} md={3}>
-          <AuthSidebar onMethodSelect={handleMethodSelect} />
+          <AuthSidebar onMethodSelect={(method) => AuthStore.setCurrentForm(method)} />
         </Grid>
         
         <Grid item xs={12} md={6}>
@@ -49,11 +49,7 @@ const LoginPage = observer(() => {
             </LogoContainer>
             
             <FormContainer>
-              <LoginForm 
-                onLogin={handleLogin}
-                loading={AuthStore.loading}
-                error={AuthStore.error}
-              />
+              {renderAuthForm()}
             </FormContainer>
           </ContentContainer>
         </Grid>
@@ -95,6 +91,24 @@ const FormContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
+`;
+
+const ComingSoonContainer = styled.div`
+  text-align: center;
+  padding: 40px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  margin: 20px;
+`;
+
+const ComingSoonTitle = styled.h2`
+  color: #2196f3;
+  margin-bottom: 16px;
+`;
+
+const ComingSoonText = styled.p`
+  color: #666;
+  font-size: 16px;
 `;
 
 export default LoginPage;
