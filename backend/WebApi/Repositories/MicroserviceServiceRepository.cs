@@ -1,7 +1,9 @@
-﻿using Application.Models;
+﻿using System.Data;
+using Application.Models;
 using Application.Repositories;
 using Domain.Entities;
 using FluentResults;
+using Infrastructure.Messaging.Events;
 using Messaging.Shared;
 using Messaging.Shared.Services.Events;
 using Microsoft.Extensions.Logging;
@@ -137,13 +139,11 @@ namespace WebApi.Repositories
                 await _eventBus.PublishAsync(new ServiceCreatedEvent(
                     entity.Id, 
                     entity.Name, 
-                    entity.ShortName, 
                     entity.Code, 
                     entity.Description, 
                     entity.DayCount, 
-                    entity.WorkflowId, 
                     entity.Price,
-                    entity.IsActive));
+                    entity.WorkflowId));
                 
                 return Result.Ok(entity.Id);
             }
@@ -168,13 +168,11 @@ namespace WebApi.Repositories
                 await _eventBus.PublishAsync(new ServiceUpdatedEvent(
                     entity.Id, 
                     entity.Name, 
-                    entity.ShortName, 
                     entity.Code, 
                     entity.Description, 
                     entity.DayCount, 
-                    entity.WorkflowId, 
                     entity.Price,
-                    entity.IsActive));
+                    entity.WorkflowId));
                 
                 return Result.Ok();
             }
@@ -246,10 +244,15 @@ namespace WebApi.Repositories
             }
         }
 
+        public void SetTransaction(IDbTransaction dbTransaction)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Преобразует DTO в доменный объект
         /// </summary>
-        private Service MapToService(ServiceDto dto)
+        private Service MapToService(Service dto)
         {
             return new Service
             {

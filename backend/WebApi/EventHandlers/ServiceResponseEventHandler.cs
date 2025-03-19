@@ -23,7 +23,7 @@ namespace WebApi.EventHandlers
         /// <summary>
         /// Обрабатывает событие ответа от микросервиса Services
         /// </summary>
-        public async Task<r> HandleAsync(ServiceResponseEvent @event)
+        public async Task<Result> HandleAsync(ServiceResponseEvent @event)
         {
             _logger.LogInformation("Handling ServiceResponseEvent with correlationId: {@CorrelationId}", @event.CorrelationId);
             
