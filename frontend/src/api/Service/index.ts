@@ -18,5 +18,5 @@ export const updateService = (data: Service): Promise<any> => {
 };
 
 export const deleteService = (id: number): Promise<any> => {
-  return http.remove(`/api/v1/Service/Delete?id=${id}`, {});
+  return http.delete(`/api/v1/Service/Delete?id=${id}`);
 };

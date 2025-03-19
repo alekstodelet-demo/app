@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { Grid, Box } from '@mui/material';
 import styled from 'styled-components';
@@ -7,12 +7,31 @@ import LoginForm from './components/LoginForm';
 import RegistrationForm from './components/RegistrationForm';
 import PromoSidebar from './components/PromoSidebar';
 import AuthStore from './store/AuthStore';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = observer(() => {
+  const navigate = useNavigate();
+  
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     try {
+  //       const isAuthenticated = await AuthStore.checkAuthStatus();
+  //       if (isAuthenticated) {
+  //         navigate('/user');
+  //       }
+  //     } catch (error) {
+  //       console.error("Ошибка проверки авторизации:", error);
+  //       // Здесь можно добавить обработку ошибки, например, показать уведомление
+  //     }
+  //   };
+    
+  //   checkAuth();
+  // }, [navigate]);
+  
   const renderAuthForm = () => {
     switch (AuthStore.currentForm) {
       case 'login':
-        return <LoginForm onLogin={() => AuthStore.setCurrentForm('login')} />;
+        return <LoginForm />;
       case 'registration':
         return <RegistrationForm />;
       case 'rutoken':
@@ -30,7 +49,7 @@ const LoginPage = observer(() => {
           </ComingSoonContainer>
         );
       default:
-        return <LoginForm onLogin={() => AuthStore.setCurrentForm('login')} />;
+        return <LoginForm />;
     }
   };
 

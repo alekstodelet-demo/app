@@ -1,29 +1,34 @@
+// src/features/Auth/store/AuthStore.ts
+
 import { makeAutoObservable, runInAction } from "mobx";
-import http from "api/https";
-import { Auth } from "constants/Auth";
+import { login, logout, validateToken, refreshToken, LoginRequest } from "api/Auth/useAuth";
 import MainStore from "MainStore";
 
+// Получение уникального ID устройства
+const getDeviceId = (): string => {
+  let deviceId = localStorage.getItem('deviceId');
+  if (!deviceId) {
+    deviceId = `device_${Math.random().toString(36).substring(2, 15)}`;
+    localStorage.setItem('deviceId', deviceId);
+  }
+  return deviceId;
+};
+
+// В начале файла добавим экспорт типа
 export type AuthFormType = 'login' | 'registration' | 'rutoken' | 'jacarta' | 'enotoken' | 'smartid' | 'esicloud' | 'ettn';
 
 class AuthStore {
-  currentForm: AuthFormType = 'login';
-  
   login: string = "";
   password: string = "";
   rememberMe: boolean = false;
   loading: boolean = false;
   error: string = "";
   isAuthenticated: boolean = false;
+  deviceId: string = getDeviceId();
+  currentForm: AuthFormType = 'login';
 
   constructor() {
     makeAutoObservable(this);
-  }
-
-  setCurrentForm = (formType: AuthFormType) => {
-    runInAction(() => {
-      this.currentForm = formType;
-      this.error = "";
-    });
   }
 
   setLogin(login: string) {
@@ -44,32 +49,48 @@ class AuthStore {
     this.error = "";
   }
 
+  setCurrentForm(form: AuthFormType) {
+    this.currentForm = form;
+  }
+
   async loginWithCredentials() {
     try {
       this.loading = true;
       this.error = "";
       
-      const authData: Auth = {
+      const authData: LoginRequest = {
         pin: this.password,
         tokenId: this.login,
-        signature: "PIN_LOGIN"
+        signature: "SIMULATED_SIGNATURE",
+        deviceId: this.deviceId
       };
       
-      const response = await http.post('/api/v1/Auth/login', authData);
+      const response = await login(authData);
 
       runInAction(() => {
         if (response?.status === 200 || response?.status === 201) {
           this.isAuthenticated = true;
-          // Редирект на главную страницу после успешной авторизации
+          
+          if (this.rememberMe && response.data.accessToken) {
+            localStorage.setItem('accessToken', response.data.accessToken);
+            localStorage.setItem('tokenExpiry', 
+              (Date.now() + response.data.expiresIn * 1000).toString());
+          }
+          
           window.location.href = '/user';
         } else {
           this.error = "Ошибка авторизации. Пожалуйста, проверьте логин и пароль.";
         }
         this.loading = false;
       });
-    } catch (error) {
+    } catch (error: any) {
       runInAction(() => {
-        this.error = "Произошла ошибка при авторизации. Попробуйте позже.";
+        if (error.response) {
+          this.error = error.response.data?.message || 
+            "Произошла ошибка при авторизации. Попробуйте позже.";
+        } else {
+          this.error = "Сетевая ошибка. Пожалуйста, проверьте ваше интернет-соединение.";
+        }
         this.loading = false;
       });
     }
@@ -77,11 +98,16 @@ class AuthStore {
 
   async logOut() {
     try {
-      await http.post('/api/v1/Auth/logout', {});
+      await logout();
       
       runInAction(() => {
         this.isAuthenticated = false;
         this.resetForm();
+        
+        // Удаляем данные из localStorage
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('tokenExpiry');
+        
         // Редирект на страницу входа
         window.location.href = '/login';
       });
@@ -92,16 +118,64 @@ class AuthStore {
 
   async checkAuthStatus() {
     try {
-      const response = await http.get('/api/v1/Auth/status');
+      // Проверяем, есть ли у нас локально сохраненный токен
+      const token = localStorage.getItem('accessToken');
+      const expiry = localStorage.getItem('tokenExpiry');
+      
+      // Если токен есть и он не истек, пробуем использовать его
+      if (token && expiry && parseInt(expiry) > Date.now()) {
+        this.isAuthenticated = true;
+        return true;
+      }
+      
+      // Если токен истек, пробуем обновить его
+      if (token && expiry) {
+        await this.refreshToken();
+      }
+      
+      // Если нет локальных токенов, проверяем через API
+      const response = await validateToken();
       
       runInAction(() => {
-        this.isAuthenticated = Boolean(response && response.status === 200);
+        this.isAuthenticated = response?.status === 200;
       });
       
       return this.isAuthenticated;
     } catch (error) {
+      // Пытаемся обновить токен, если валидация не сработала
+      try {
+        await this.refreshToken();
+        return true;
+      } catch (refreshError) {
+        runInAction(() => {
+          this.isAuthenticated = false;
+        });
+        return false;
+      }
+    }
+  }
+  
+  async refreshToken() {
+    try {
+      const response = await refreshToken();
+      
+      if (response?.status === 200 && response.data.accessToken) {
+        runInAction(() => {
+          this.isAuthenticated = true;
+          if (this.rememberMe) {
+            localStorage.setItem('accessToken', response.data.accessToken);
+            localStorage.setItem('tokenExpiry', 
+              (Date.now() + response.data.expiresIn * 1000).toString());
+          }
+        });
+        return true;
+      }
+      return false;
+    } catch (error) {
       runInAction(() => {
         this.isAuthenticated = false;
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('tokenExpiry');
       });
       return false;
     }

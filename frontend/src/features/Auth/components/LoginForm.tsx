@@ -1,3 +1,4 @@
+// src/features/Auth/components/LoginForm.tsx
 import React, { FC, useState } from 'react';
 import { observer } from 'mobx-react';
 import { Box, Typography, FormControlLabel, Checkbox, Link } from '@mui/material';
@@ -6,23 +7,20 @@ import CustomButton from 'components/Button';
 import styled from 'styled-components';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
+import AuthStore from '../store/AuthStore';
 
 interface LoginFormProps {
-  onLogin: (login: string, password: string, rememberMe: boolean) => void;
   loading?: boolean;
   error?: string;
 }
 
-const LoginForm: FC<LoginFormProps> = observer(({ onLogin, loading, error }) => {
+const LoginForm: FC<LoginFormProps> = observer(({ loading, error }) => {
   const { t } = useTranslation();
-  const [login, setLogin] = useState('');
-  const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin(login, password, rememberMe);
+    await AuthStore.loginWithCredentials();
   };
 
   return (
@@ -38,25 +36,21 @@ const LoginForm: FC<LoginFormProps> = observer(({ onLogin, loading, error }) => 
         <Box mb={2}>
           <CustomTextField
             label="Логин"
-            value={login}
-            onChange={(e) => setLogin(e.target.value)}
+            value={AuthStore.login}
+            onChange={(e) => AuthStore.setLogin(e.target.value)}
             id="login-input"
             name="login"
-            // fullWidth
-            // autoComplete="username"
           />
         </Box>
         
         <Box mb={2}>
           <CustomTextField
             label="Пароль"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={AuthStore.password}
+            onChange={(e) => AuthStore.setPassword(e.target.value)}
             type={showPassword ? "text" : "password"}
             id="password-input"
             name="password"
-            // fullWidth
-            // autoComplete="current-password"
             InputProps={{
               endAdornment: (
                 <PasswordToggle 
@@ -73,8 +67,8 @@ const LoginForm: FC<LoginFormProps> = observer(({ onLogin, loading, error }) => 
           <FormControlLabel
             control={
               <Checkbox 
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
+                checked={AuthStore.rememberMe}
+                onChange={(e) => AuthStore.setRememberMe(e.target.checked)}
                 name="rememberMe"
                 color="primary"
               />
@@ -86,9 +80,9 @@ const LoginForm: FC<LoginFormProps> = observer(({ onLogin, loading, error }) => 
           </ForgotPasswordLink>
         </FormRow>
         
-        {error && (
+        {AuthStore.error && (
           <ErrorMessage>
-            {error}
+            {AuthStore.error}
           </ErrorMessage>
         )}
         
@@ -96,7 +90,7 @@ const LoginForm: FC<LoginFormProps> = observer(({ onLogin, loading, error }) => 
           variant="contained"
           type="submit"
           fullWidth
-          disabled={loading}
+          disabled={AuthStore.loading}
           id="login-button"
           sx={{ mt: 2, py: 1 }}
         >

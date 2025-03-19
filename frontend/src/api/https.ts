@@ -1,216 +1,209 @@
-import { API_URL } from "constants/config";
-import CsrfHelper from './csrf-helper';
+// src/api/https.ts
+
 import axios from "axios";
 import MainStore from "MainStore";
-import { refreshToken } from "api/Auth/useAuth";
+
+const API_URL = process.env.REACT_APP_API_URL || "https://localhost:5001";
 
 const http = axios.create({
   baseURL: API_URL,
-  withCredentials: true, // Always include credentials for cross-origin requests
+  withCredentials: true, // Для работы с cookies
 });
 
-CsrfHelper.setupAxios(http);
-
-// Flag to prevent multiple refresh token requests
-let isRefreshing = false;
-let failedQueue = [];
-
-// Process the failed request queue based on token refresh success/failure
-const processQueue = (error, token = null) => {
-  failedQueue.forEach(prom => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve();
+// Добавляем заголовок X-Device-Id, который ожидает контроллер
+http.interceptors.request.use(
+  (config) => {
+    // Получаем deviceId из localStorage
+    const deviceId = localStorage.getItem('deviceId') || 
+      `device_${Math.random().toString(36).substring(2, 15)}`;
+    
+    if (!localStorage.getItem('deviceId')) {
+      localStorage.setItem('deviceId', deviceId);
     }
-  });
-  
-  failedQueue = [];
-};
-
-const SetupInterceptors = (http) => {
-  http.interceptors.request.use(
-    (config) => {
-      // We don't need to manually set the Authorization header anymore
-      // since the cookies will be sent automatically due to withCredentials: true
-      
-      config.headers["ngrok-skip-browser-warning"] = true;
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
+    
+    // Добавляем заголовок
+    config.headers["X-Device-Id"] = deviceId;
+    
+    // Добавляем токен авторизации, если он есть
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-  );
 
-  http.interceptors.response.use(
-    (response) => {
-      return response;
-    },
-    async (error) => {
-      const originalRequest = error.config;
+    // Добавляем заголовок для предотвращения кеширования в браузере
+    config.headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+    config.headers["Pragma"] = "no-cache";
+    config.headers["Expires"] = "0";
+    
+    // Добавляем заголовок для защиты от CSRF-атак
+    const csrfToken = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('XSRF-TOKEN='))
+      ?.split('=')[1];
+    
+    if (csrfToken) {
+      config.headers["X-XSRF-TOKEN"] = csrfToken;
+    }
+    
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Обработка ответов и ошибок
+http.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    const originalRequest = error.config;
+    
+    // Если ошибка 401 (Unauthorized) и это не повторный запрос
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
       
-      // Handle 401 errors (unauthorized)
-      if (error?.response?.status === 401 && !originalRequest._retry) {
-        if (isRefreshing) {
-          // If token refresh is already in progress, queue this request
-          return new Promise((resolve, reject) => {
-            failedQueue.push({ resolve, reject });
-          })
-            .then(() => {
-              return http(originalRequest);
-            })
-            .catch(err => {
-              return Promise.reject(err);
-            });
-        }
-
-        originalRequest._retry = true;
-        isRefreshing = true;
-
-        try {
-          // Attempt to refresh the token
-          await refreshToken();
-          
-          // If refresh succeeds, process the queue and retry the original request
-          processQueue(null);
-          isRefreshing = false;
-          return http(originalRequest);
-        } catch (refreshError) {
-          // If refresh fails, process the queue with the error and redirect to login
-          processQueue(refreshError);
-          isRefreshing = false;
-          
-          // Redirect to login page
-          window.location.href = "/login";
-          return Promise.reject(refreshError);
-        }
-      }
-      
-      // Handle other error statuses
-      if (error?.response) {
-        console.log("Error with response:", error);
-
-        if (error?.response?.status === 403) {
-          const message = error.response?.data?.message;
-          MainStore.openErrorDialog(message && message !== "" ? message : "У вас нет доступа!");
-          return Promise.reject(error);
-        } else if (error?.response?.status === 422) {
-          let message = error.response?.data?.message;
-          try {
-            const json = JSON.parse(message);
-            message = json?.ru;
-          } catch (e) {
-            // Parsing error, continue with original message
+      try {
+        // Пытаемся обновить токен через refresh-token
+        const res = await axios.post(
+          `${API_URL}/api/v1/Auth/refresh-token`, 
+          {}, 
+          { 
+            withCredentials: true,
+            headers: {
+              "X-Device-Id": localStorage.getItem('deviceId') || "",
+            }
           }
-          MainStore.openErrorDialog(
-            message && message !== "" ? message : "Ошибка логики, обратитесь к администратору!"
-          );
-          return Promise.reject(error);
-        } else if (error?.response?.status === 404) {
-          const message = error.response?.data?.message;
-          MainStore.openErrorDialog(message && message !== "" ? message : "Страница не найдена!");
-          return Promise.reject(error);
-        } else if (error?.response?.status === 400) {
-          const message = error.response?.data?.message;
-          MainStore.openErrorDialog(
-            message && message !== ""
-              ? message
-              : "Не правильно отправяете данные, обратитесь к администратору!"
-          );
-          return Promise.reject(error);
-        } else {
-          return Promise.reject(error);
+        );
+        
+        if (res.status === 200) {
+          // Сохраняем новый access token
+          localStorage.setItem('accessToken', res.data.accessToken);
+          localStorage.setItem('tokenExpiry', 
+            (Date.now() + res.data.expiresIn * 1000).toString());
+          
+          // Повторяем оригинальный запрос с новым токеном
+          originalRequest.headers.Authorization = `Bearer ${res.data.accessToken}`;
+          return http(originalRequest);
         }
-      } else if (error.request) {
-        console.log("Error with request:", error.request);
-        return Promise.reject(error);
-      } else {
-        console.log("Request setup error:", error.message);
-        return Promise.reject(error);
+      } catch (refreshError) {
+        // Если не удалось обновить токен, перенаправляем на страницу входа
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('tokenExpiry');
+        
+        // Проверяем, что текущий URL не является страницей логина
+        // чтобы избежать бесконечного редиректа
+        if (!window.location.pathname.includes('/login')) {
+          window.location.href = '/login';
+        }
+        return Promise.reject(refreshError);
       }
     }
-  );
-};
+    
+    // Обработка других HTTP ошибок
+    if (error.response) {
+      // Ответ сервера вне диапазона 2xx
+      switch (error.response.status) {
+        case 400:
+          console.error('Bad Request:', error.response.data);
+          MainStore.setSnackbar(
+            error.response.data.message || "Некорректный запрос", 
+            "error"
+          );
+          break;
+        case 403:
+          console.error('Forbidden:', error.response.data);
+          MainStore.setSnackbar(
+            "Доступ запрещен. У вас недостаточно прав.", 
+            "error"
+          );
+          break;
+        case 404:
+          console.error('Not Found:', error.response.data);
+          MainStore.setSnackbar(
+            "Запрашиваемый ресурс не найден", 
+            "error"
+          );
+          break;
+        case 422:
+          console.error('Validation Error:', error.response.data);
+          MainStore.setSnackbar(
+            error.response.data.message || "Ошибка валидации данных", 
+            "error"
+          );
+          break;
+        case 500:
+          console.error('Server Error:', error.response.data);
+          MainStore.setSnackbar(
+            "Внутренняя ошибка сервера. Попробуйте позже.", 
+            "error"
+          );
+          break;
+        default:
+          console.error('HTTP Error:', error.response.data);
+          MainStore.setSnackbar(
+            "Произошла ошибка при обработке запроса", 
+            "error"
+          );
+      }
+    } else if (error.request) {
+      // Запрос был сделан, но ответ не получен
+      console.error('Network Error:', error.request);
+      MainStore.setSnackbar(
+        "Ошибка сети. Проверьте подключение к интернету.", 
+        "error"
+      );
+    } else {
+      // Ошибка при настройке запроса
+      console.error('Request Error:', error.message);
+      MainStore.setSnackbar(
+        "Ошибка при формировании запроса", 
+        "error"
+      );
+    }
+    
+    return Promise.reject(error);
+  }
+);
 
-SetupInterceptors(http);
-
+// Экспорт методов для работы с API
 const get = (url: string, headers = {}, params = {}) => {
   return http
     .get(url, {
-      ...params,
-      headers: {
-        ...headers,
-      },
-    })
-    .catch(function (error) {
-      console.log("GET Error:");
-      console.log(error.toJSON());
+      headers,
+      params
     });
 };
 
-const post = (url: string, data: any, headers = {}, params = {}) => {
+const post = (url: string, data = {}, headers = {}, config = {}) => {
   return http
     .post(url, data, {
-      ...params,
-      headers: {
-        ...headers,
-      },
-    })
-    .catch(function (error) {
-      console.log("POST Error:");
-      console.log(error.toJSON());
-      return error;
+      headers,
+      ...config
     });
 };
 
-const put = (url: string, data: any, headers = {}) => {
+const put = (url: string, data = {}, headers = {}) => {
   return http
     .put(url, data, {
-      headers: {
-        ...headers,
-      },
-    })
-    .catch(function (error) {
-      console.log("PUT Error:");
-      console.log(error.toJSON());
-      return error;
+      headers
     });
 };
 
-const remove = (url: string, data: any, headers = {}) => {
-  return http
-    .delete(url, {
-      headers: {
-        ...headers,
-      },
-      data,
-    })
-    .catch(function (error) {
-      console.log("DELETE Error:");
-      console.log(error.toJSON());
-    });
-};
-
-const patch = (url: string, data: any, headers = {}) => {
+const patch = (url: string, data = {}, headers = {}) => {
   return http
     .patch(url, data, {
-      headers: {
-        ...headers,
-      },
-    })
-    .catch(function (error) {
-      console.log("PATCH Error:");
-      console.log(error.toJSON());
+      headers
     });
 };
 
-const module = {
-  http,
-  get,
-  post,
-  put,
-  remove,
-  patch,
+const del = (url: string, headers = {}) => {
+  return http
+    .delete(url, {
+      headers
+    });
 };
 
-export default module;
+export { get, post, put, patch, del };
+export default http;
