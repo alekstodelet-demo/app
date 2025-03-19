@@ -3,11 +3,12 @@ using Application.Models;
 using Application.Repositories;
 using Domain.Entities;
 using FluentResults;
-using Infrastructure.Messaging.Events;
 using Messaging.Shared;
-using Messaging.Shared.Services.Events;
-using Microsoft.Extensions.Logging;
+using Messaging.Shared.Events;
 using WebApi.EventHandlers;
+using ServiceCreatedEvent = Infrastructure.Messaging.Events.ServiceCreatedEvent;
+using ServiceDeletedEvent = Infrastructure.Messaging.Events.ServiceDeletedEvent;
+using ServiceUpdatedEvent = Infrastructure.Messaging.Events.ServiceUpdatedEvent;
 
 namespace WebApi.Repositories
 {

@@ -1,8 +1,8 @@
 ﻿using FluentResults;
 using Messaging.Shared;
-using Messaging.Shared.Services.Events;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
+using Messaging.Shared.Events;
 
 namespace WebApi.EventHandlers
 {

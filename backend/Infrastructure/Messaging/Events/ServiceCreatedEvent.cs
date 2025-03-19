@@ -1,4 +1,5 @@
 ﻿using System;
+using Messaging.Shared.Events;
 
 namespace Infrastructure.Messaging.Events
 {
@@ -22,7 +23,7 @@ namespace Infrastructure.Messaging.Events
             string description,
             int? dayCount,
             decimal? price,
-            int? workflowId)
+            int? workflowId) : base()
         {
             ServiceId = serviceId;
             Name = name;

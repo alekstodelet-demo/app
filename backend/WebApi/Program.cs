@@ -79,7 +79,6 @@ namespace WebApi
             builder.Services.AddSingleton<WebApi.Infrastructure.IRepositoryFactory, WebApi.Infrastructure.RepositoryFactory>();
 
 // Register repositories for different modes
-            builder.Services.AddScoped<Infrastructure.Repositories.ServiceRepository>(); // Direct DB access
             builder.Services.AddScoped<WebApi.Repositories.MicroserviceServiceRepository>(); // Microservice access
 
 // Register event subscription service
