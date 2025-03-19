@@ -242,11 +242,11 @@ namespace WebApi
             var localizationOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(localizationOptions.Value);
             
-            app.UseCsrfProtection();
+            //app.UseCsrfProtection();
             
             app.UseLocalizationConfiguration();
             
-            app.UseRateLimiting();
+            //app.UseRateLimiting();
             
             // Add the request timing middleware early in the pipeline
             // to capture the total request processing time
