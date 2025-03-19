@@ -8,31 +8,32 @@ import AuthStore from "features/Auth/store";
 
 const PublicRoute = observer(() => {
     const location = useLocation();
-    const [isChecking, setIsChecking] = useState(true);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    // Убираем состояния и useEffect
+    // const [isChecking, setIsChecking] = useState(true);
+    // const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    useEffect(() => {
-        const checkAuthentication = async () => {
-            setIsChecking(true);
-            const authenticated = await AuthStore.checkAuth();
-            setIsAuthenticated(authenticated);
-            setIsChecking(false);
-        };
+    // useEffect(() => {
+    //     const checkAuthentication = async () => {
+    //         setIsChecking(true);
+    //         const authenticated = await AuthStore.checkAuth();
+    //         setIsAuthenticated(authenticated);
+    //         setIsChecking(false);
+    //     };
 
-        checkAuthentication();
-    }, []);
+    //     checkAuthentication();
+    // }, []);
 
-    if (isChecking) {
-        return (
-            <Backdrop sx={{ color: "#fff", zIndex: 1000000 }} open={true}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
-        );
-    }
+    // if (isChecking) {
+    //     return (
+    //         <Backdrop sx={{ color: "#fff", zIndex: 1000000 }} open={true}>
+    //             <CircularProgress color="inherit" />
+    //         </Backdrop>
+    //     );
+    // }
 
-    if (isAuthenticated) {
-        return <Navigate to="/user" state={{ from: location }} replace />;
-    }
+    // if (isAuthenticated) {
+    //     return <Navigate to="/user" state={{ from: location }} replace />;
+    // }
 
     return (
         <>

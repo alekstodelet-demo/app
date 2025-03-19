@@ -14,7 +14,7 @@ import themes from "themes";
 import MainLayout from "layouts/MainLayout";
 
 // Lazy-loaded components
-const AuthForm = lazy(() => import("features/Auth/AuthForm"));
+const LoginPage = lazy(() => import("features/Auth/LoginPage"));
 const ServiceListView = lazy(() => import("features/Service/ServiceListView"));
 const ServiceAddEditView = lazy(() => import("features/Service/ServiceAddEditView"));
 
@@ -57,7 +57,8 @@ const router = createBrowserRouter([
                 ) 
               },
             ]
-          }]
+          }
+        ]
       },
       {
         element: <PublicRoute />,
@@ -66,7 +67,7 @@ const router = createBrowserRouter([
             path: "/login", 
             element: (
               <Suspense fallback={<LoadingFallback />}>
-                <AuthForm />
+                <LoginPage />
               </Suspense>
             ) 
           },
@@ -74,7 +75,7 @@ const router = createBrowserRouter([
             path: "/", 
             element: (
               <Suspense fallback={<LoadingFallback />}>
-                <AuthForm />
+                <LoginPage />
               </Suspense>
             ) 
           },
