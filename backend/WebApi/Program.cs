@@ -47,8 +47,43 @@ namespace WebApi
             builder.Services.AddControllers(options =>
             {
                 // Добавление глобального фильтра для проверки CSRF токенов
-                options.Filters.Add<ValidateAntiforgeryTokenFilter>();
+                // options.Filters.Add<ValidateAntiforgeryTokenFilter>();
             });
+            
+            // Configure RabbitMQ
+            builder.Services.Configure<Messaging.Shared.RabbitMQ.RabbitMQOptions>(builder.Configuration.GetSection("RabbitMQ"));
+            builder.Services.AddSingleton<Messaging.Shared.RabbitMQ.IRabbitMQConnection, Messaging.Shared.RabbitMQ.RabbitMQConnection>();
+
+// Configure EventBus
+            builder.Services.AddSingleton<Messaging.Shared.IEventBus>(sp =>
+            {
+                var rabbitMQConnection = sp.GetRequiredService<Messaging.Shared.RabbitMQ.IRabbitMQConnection>();
+                var logger = sp.GetRequiredService<ILogger<Messaging.Shared.RabbitMQ.RabbitMQEventBus>>();
+                var queueName = $"bga_main_queue_{Guid.NewGuid()}"; // Unique queue name for this instance
+    
+                return new Messaging.Shared.RabbitMQ.RabbitMQEventBus(
+                    rabbitMQConnection,
+                    logger,
+                    sp,
+                    queueName);
+            });
+
+// Register event handlers
+            builder.Services.AddTransient<WebApi.EventHandlers.ServiceResponseEventHandler>();
+
+// Configure microservices options
+            builder.Services.Configure<WebApi.Infrastructure.MicroservicesOptions>(
+                builder.Configuration.GetSection("Microservices"));
+
+// Register repository factory
+            builder.Services.AddSingleton<WebApi.Infrastructure.IRepositoryFactory, WebApi.Infrastructure.RepositoryFactory>();
+
+// Register repositories for different modes
+            builder.Services.AddScoped<Infrastructure.Repositories.ServiceRepository>(); // Direct DB access
+            builder.Services.AddScoped<WebApi.Repositories.MicroserviceServiceRepository>(); // Microservice access
+
+// Register event subscription service
+            builder.Services.AddHostedService<Messaging.Shared.Services.EventBusSubscriptionService>();
 
             builder.Services.AddCors();
 
@@ -64,16 +99,16 @@ namespace WebApi
                 options.ExcludePaths = new[] { "/health", "/metrics", "/favicon.ico", "/static" };
             });
             
-            builder.Services.AddAntiforgery(options =>
-            {
-                // Настройка генерации токенов для защиты от CSRF
-                options.HeaderName = "X-XSRF-TOKEN"; // Имя заголовка, в котором клиент должен передавать токен
-                options.Cookie.Name = "XSRF-TOKEN";  // Имя cookie, в котором хранится токен
-                options.Cookie.HttpOnly = false;     // JavaScript должен иметь доступ к токену
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Требуем HTTPS
-                options.Cookie.SameSite = SameSiteMode.Strict; // Ограничиваем доступ только с того же сайта
-                options.SuppressXFrameOptionsHeader = false;   // Добавляем X-Frame-Options header
-            });
+            // builder.Services.AddAntiforgery(options =>
+            // {
+            //     // Настройка генерации токенов для защиты от CSRF
+            //     options.HeaderName = "X-XSRF-TOKEN"; // Имя заголовка, в котором клиент должен передавать токен
+            //     options.Cookie.Name = "XSRF-TOKEN";  // Имя cookie, в котором хранится токен
+            //     options.Cookie.HttpOnly = false;     // JavaScript должен иметь доступ к токену
+            //     options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Требуем HTTPS
+            //     options.Cookie.SameSite = SameSiteMode.Strict; // Ограничиваем доступ только с того же сайта
+            //     options.SuppressXFrameOptionsHeader = false;   // Добавляем X-Frame-Options header
+            // });
             
             builder.Services.AddMemoryCache();
 
@@ -242,7 +277,7 @@ namespace WebApi
             var localizationOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(localizationOptions.Value);
             
-            app.UseCsrfProtection();
+            // app.UseCsrfProtection();
             
             app.UseLocalizationConfiguration();
             

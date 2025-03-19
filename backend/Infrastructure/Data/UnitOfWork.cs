@@ -12,6 +12,8 @@ namespace Infrastructure.Data
     {
         private readonly IDbConnection _dbConnection;
         private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<UnitOfWork> _logger;
+        private readonly IRepositoryFactory _repositoryFactory;
         private IDbTransaction _dbTransaction;
         private IServiceRepository? _serviceRepository;
         private IApplicationObjectRepository? _applicationObjectRepository;
@@ -21,7 +23,8 @@ namespace Infrastructure.Data
         private IHostEnvironment _appEnvironment;
         private IConfiguration _configuration;
         
-        public UnitOfWork(DapperDbContext context, IHostEnvironment appEnvironment, IServiceProvider serviceProvider, IConfiguration configuration)
+        public UnitOfWork(DapperDbContext context, IHostEnvironment appEnvironment, IServiceProvider serviceProvider, 
+            IConfiguration configuration, IRepositoryFactory repositoryFactory, ILogger<UnitOfWork> logger)
         {
             _dbConnection = context.CreateConnection();
             _dbConnection.Open();
@@ -29,6 +32,8 @@ namespace Infrastructure.Data
             _appEnvironment = appEnvironment;
             _serviceProvider = serviceProvider;
             _configuration = configuration;
+            _repositoryFactory = repositoryFactory;
+            _logger = logger;
         }
 
         public IServiceRepository ServiceRepository
@@ -37,8 +42,13 @@ namespace Infrastructure.Data
             {
                 if (_serviceRepository == null)
                 {
-                    _serviceRepository = new ServiceRepository(_dbConnection, _configuration);
-                    _serviceRepository.SetTransaction(_dbTransaction);
+                    _serviceRepository = _repositoryFactory.CreateServiceRepository();
+                    
+                    // Если репозиторий поддерживает транзакции базы данных, устанавливаем транзакцию
+                    if (_serviceRepository is Infrastructure.Repositories.ServiceRepository dbRepository)
+                    {
+                        dbRepository.SetTransaction(_dbTransaction);
+                    }
                 }
                 return _serviceRepository;
             }
@@ -96,14 +106,19 @@ namespace Infrastructure.Data
             }
         }
 
+        /// <summary>
+        /// Подтверждает все изменения, сделанные в контексте транзакции
+        /// </summary>
         public void Commit()
         {
             try
             {
                 _dbTransaction.Commit();
+                _logger.LogInformation("Transaction committed successfully");
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error committing transaction");
                 _dbTransaction.Rollback();
                 throw;
             }
@@ -111,14 +126,43 @@ namespace Infrastructure.Data
             {
                 _dbTransaction.Dispose();
                 _dbTransaction = _dbConnection.BeginTransaction();
+                ResetRepositories();
             }
         }
 
+        /// <summary>
+        /// Откатывает все изменения, сделанные в контексте транзакции
+        /// </summary>
         public void Rollback()
         {
-            _dbTransaction.Rollback();
-            _dbTransaction.Dispose();
-            _dbTransaction = _dbConnection.BeginTransaction();
+            try
+            {
+                _dbTransaction.Rollback();
+                _logger.LogInformation("Transaction rolled back successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error rolling back transaction");
+                throw;
+            }
+            finally
+            {
+                _dbTransaction.Dispose();
+                _dbTransaction = _dbConnection.BeginTransaction();
+                ResetRepositories();
+            }
+        }
+        
+        /// <summary>
+        /// Сбрасывает кэшированные репозитории
+        /// </summary>
+        private void ResetRepositories()
+        {
+            _serviceRepository = null;
+            _applicationObjectRepository = null;
+            _applicationRepository = null;
+            _archObjectRepository = null;
+            _userRepository = null;
         }
 
         public void Dispose()
