@@ -8,7 +8,7 @@ namespace Application.UseCases
     public class ContactTypeUseCases : BaseUseCases<ContactType>, IContactTypeUseCases
     {
         private readonly IUnitOfWork _unitOfWork;
-        protected override IBaseRepository<ContactType> Repository => null; // todo _unitOfWork.ContactTypeRepository;
+        protected override IBaseRepository<ContactType> Repository => _unitOfWork.ContactTypeRepository;
 
         public ContactTypeUseCases(IUnitOfWork unitOfWork) : base(unitOfWork)
         {

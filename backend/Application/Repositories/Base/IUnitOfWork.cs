@@ -7,6 +7,7 @@ namespace Application.Repositories
         IServiceRepository ServiceRepository { get; }
         ICustomerRepository CustomerRepository { get; }
         ICustomerContactRepository CustomerContactRepository { get; }
+        IContactTypeRepository ContactTypeRepository { get; }
         IApplicationObjectRepository ApplicationObjectRepository { get; }
         IApplicationRepository ApplicationRepository { get; }
         IArchObjectRepository ArchObjectRepository { get; }
