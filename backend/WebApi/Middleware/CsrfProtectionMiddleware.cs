@@ -76,6 +76,7 @@ namespace WebApi.Middleware
             // или те, которые аутентифицируются через JWT
             string[] excludedPaths = new[] {
                 "/api/v1/Auth/login",
+                "/api/v1/Auth/register",
                 "/api/v2/auth",
                 "/swagger"
             };

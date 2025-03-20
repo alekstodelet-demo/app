@@ -20,25 +20,25 @@ namespace WebApi.Filters
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            //// Проверяем, что этот метод требует проверки CSRF токена
-            //if (ShouldValidate(context))
-            //{
-            //    try
-            //    {
-            //        await _antiforgery.ValidateRequestAsync(context.HttpContext);
-            //    }
-            //    catch (AntiforgeryValidationException ex)
-            //    {
-            //        _logger.LogWarning(ex, "CSRF validation failed for {Method} {Path}",
-            //            context.HttpContext.Request.Method, context.HttpContext.Request.Path);
+            // Проверяем, что этот метод требует проверки CSRF токена
+            if (ShouldValidate(context))
+            {
+                //try
+                //{
+                //    await _antiforgery.ValidateRequestAsync(context.HttpContext);
+                //}
+                //catch (AntiforgeryValidationException ex)
+                //{
+                //    _logger.LogWarning(ex, "CSRF validation failed for {Method} {Path}",
+                //        context.HttpContext.Request.Method, context.HttpContext.Request.Path);
 
-            //        context.Result = new BadRequestObjectResult(new
-            //        {
-            //            Error = "CSRF validation failed",
-            //            Message = "Invalid anti-forgery token"
-            //        });
-            //    }
-            //}
+                //    context.Result = new BadRequestObjectResult(new
+                //    {
+                //        Error = "CSRF validation failed",
+                //        Message = "Invalid anti-forgery token"
+                //    });
+                //}
+            }
         }
 
         private bool ShouldValidate(AuthorizationFilterContext context)

@@ -25,6 +25,11 @@ using WebApi.Configuration;
 using WebApi.Filters;
 using WebApi.Resources;
 using WebApi.Services;
+using FluentValidation;
+using WebApi.Dtos;
+using WebApi.Validations;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace WebApi
 {
@@ -63,7 +68,7 @@ namespace WebApi
                 options.LogAllRequests = true;  // Set to false in production to reduce log volume
                 options.ExcludePaths = new[] { "/health", "/metrics", "/favicon.ico", "/static" };
             });
-            
+
             builder.Services.AddAntiforgery(options =>
             {
                 // Настройка генерации токенов для защиты от CSRF
@@ -182,10 +187,12 @@ namespace WebApi
             {
                 options.Limits.MaxRequestBodySize = int.MaxValue;
             });
-            
+
             builder.Services.AddDapperEncryption();
             
             builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+            builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+            builder.Services.AddScoped<ICustomerContactRepository, CustomerContactRepository>();
             builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
             builder.Services.AddScoped<IApplicationObjectRepository, ApplicationObjectRepository>();
             builder.Services.AddScoped<IArchObjectRepository, ArchObjectRepository>();
@@ -194,11 +201,18 @@ namespace WebApi
             builder.Services.AddScoped<ITokenService, TokenService>();
             
             builder.Services.AddScoped<IServiceUseCases, ServiceUseCases>();
+            builder.Services.AddScoped<ICustomerUseCases, CustomerUseCases>();
+            builder.Services.AddScoped<ICustomerContactUseCases, CustomerContactUseCases>();
+            builder.Services.AddScoped<IUserUseCases, UserUseCases>();
             builder.Services.AddScoped<IApplicationUseCases, ApplicationUseCases>();
             builder.Services.AddScoped<IApplicationObjectUseCases, ApplicationObjectUseCases>();
             builder.Services.AddScoped<IArchObjectUseCases, ArchObjectUseCases>();
             builder.Services.AddScoped<IAlertService, AlertService>();
             builder.Services.AddScoped<ILoggingService, LoggingService>();
+            // Регистрация сервисов
+            builder.Services.AddScoped<IRegistrationRepository, RegistrationRepository>();
+            builder.Services.AddScoped<IRegistrationService, RegistrationService>();
+            builder.Services.AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>();
 
             var app = builder.Build();
             

@@ -1,22 +1,17 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace WebApi.Dtos
 {
-    [JsonObject(NamingStrategyType = null)]
     public class GetCustomerResponse
     {
         [JsonProperty("id")]
         public int Id { get; set; }
-
         [JsonProperty("pin")]
         public string Pin { get; set; }
-
         [JsonProperty("is_organization")]
         public bool? IsOrganization { get; set; }
-
         [JsonProperty("full_name")]
         public string FullName { get; set; }
 
@@ -84,6 +79,7 @@ namespace WebApi.Dtos
             {
                 Id = domain.Id,
                 Pin = domain.Pin,
+                FullName = domain.FullName,
                 IsOrganization = domain.IsOrganization,
                 Address = domain.Address,
                 Director = domain.Director,

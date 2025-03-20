@@ -2,6 +2,7 @@
 using Application.Models;
 using Application.Repositories;
 using Dapper;
+using DocumentFormat.OpenXml.EMMA;
 using Domain.Entities;
 using FluentResults;
 using Infrastructure.Security;
@@ -42,7 +43,14 @@ public class UserRepository : IUserRepository
             CreatedAt = domain.CreatedAt,
             UpdatedAt = domain.UpdatedAt,
             CreatedBy = domain.CreatedBy,
-            UpdatedBy = domain.UpdatedBy
+            UpdatedBy = domain.UpdatedBy,
+            HashCode = domain.HashCode,
+            HashCodeDate = domain.HashCodeDate,
+            SecondName = domain.SecondName,
+            Pin = domain.Pin,
+            ContractSigned = domain.ContractSigned,
+            ContractDate = domain.ContractDate,
+            PasswordHash = domain.PasswordHash
         };
     }
 
@@ -60,7 +68,13 @@ public class UserRepository : IUserRepository
             CreatedAt = model.CreatedAt,
             UpdatedAt = model.UpdatedAt,
             CreatedBy = model.CreatedBy,
-            UpdatedBy = model.UpdatedBy
+            UpdatedBy = model.UpdatedBy,
+            HashCode = model.HashCode,
+            HashCodeDate = model.HashCodeDate,
+            SecondName = model.SecondName,
+            Pin = model.Pin,
+            ContractSigned = model.ContractSigned,
+            ContractDate = model.ContractDate
         };
     }
 

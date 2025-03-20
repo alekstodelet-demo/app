@@ -1,5 +1,6 @@
 export type Auth = {
-  pin: string;
-  tokenId: string;
-  signature: string;
+  Pin: string;
+  TokenId: string;
+  Signature: string;
+  DeviceId: string;
 };

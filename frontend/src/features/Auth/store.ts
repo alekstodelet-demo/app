@@ -65,9 +65,9 @@ class NewStore {
       const tokenData = await this.simulateUsbToken();
       
       var data = {
-        pin: this.pin,
-        tokenId: tokenData.tokenId,
-        signature: tokenData.signature,
+        Pin: this.pin,
+        TokenId: tokenData.tokenId,
+        Signature: tokenData.signature,
         DeviceId: 'device_id'
       };
       

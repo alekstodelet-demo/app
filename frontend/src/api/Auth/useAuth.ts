@@ -3,7 +3,7 @@ import { Auth } from "constants/Auth";
 
 export const auth = (data: Auth): Promise<any> => {
   // Authentication endpoint that will set HttpOnly cookie
-  return http.post(`/api/v1/Auth/login`, data, {}, { withCredentials: true });
+  return http.post(`/api/v1/Auth/login`, data, {}, );
 };
 
 export const logout = (): Promise<any> => {

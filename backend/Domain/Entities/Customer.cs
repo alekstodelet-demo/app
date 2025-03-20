@@ -8,6 +8,7 @@ namespace Domain.Entities
         public int Id { get; set; }
         public string? Pin { get; set; }
         public bool? IsOrganization { get; set; }
+        public string? FullName { get; set; }
         public string? Address { get; set; }
         public string? Director { get; set; }
         public string? Okpo { get; set; }

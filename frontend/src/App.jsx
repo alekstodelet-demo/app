@@ -17,6 +17,8 @@ import MainLayout from "layouts/MainLayout";
 const AuthForm = lazy(() => import("features/Auth/AuthForm"));
 const ServiceListView = lazy(() => import("features/Service/ServiceListView"));
 const ServiceAddEditView = lazy(() => import("features/Service/ServiceAddEditView"));
+const CustomerListView = lazy(() => import("features/Customer/CustomerListView"));
+const CustomerAddEditView = lazy(() => import("features/Customer/CustomerAddEditView"));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -53,6 +55,22 @@ const router = createBrowserRouter([
                 element: (
                   <Suspense fallback={<LoadingFallback />}>
                     <ServiceAddEditView />
+                  </Suspense>
+                ) 
+              },
+              { 
+                path: "Customer", 
+                element: (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <CustomerListView />
+                  </Suspense>
+                ) 
+              },
+              { 
+                path: "Customer/addedit", 
+                element: (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <CustomerAddEditView />
                   </Suspense>
                 ) 
               },

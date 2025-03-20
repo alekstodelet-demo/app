@@ -6,16 +6,35 @@ namespace WebApi.Dtos
     {
         [Required]
         public string Pin { get; set; }
-        
+
         [Required]
         public string TokenId { get; set; }
-        
+
         [Required]
         public string Signature { get; set; }
-        
+
         public string DeviceId { get; set; }
     }
-    
+
+
+    //public class RegisterRequest
+    //{
+    //    [Required]
+    //    public string Pin { get; set; }
+
+    //    [Required]
+    //    public string TokenId { get; set; }
+
+    //    [Required]
+    //    public string Signature { get; set; }
+    //    [Required]
+    //    public string Email { get; set; }
+
+    //    [Required]
+    //    public string Password { get; set; }
+
+    //    public string DeviceId { get; set; }
+    //}
     public class AuthResponse
     {
         public string AccessToken { get; set; }

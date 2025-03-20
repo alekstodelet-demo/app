@@ -8,6 +8,7 @@ Thumbs.db
 *.lock
 *.pid
 *.seed
+*.vs/
 
 # Файлы конфигурации IDE
 .idea/

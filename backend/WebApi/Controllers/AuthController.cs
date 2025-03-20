@@ -1,7 +1,9 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Application.Services;
+using Application.UseCases;
 using Asp.Versioning;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
@@ -20,12 +22,14 @@ namespace WebApi.Controllers
         private readonly IConfiguration _configuration;
         private readonly ILogger<AuthController> _logger;
         private readonly ITokenService _tokenService;
+        private readonly IUserUseCases _userUseCases;
 
-        public AuthController(IConfiguration configuration, ILogger<AuthController> logger, ITokenService tokenService)
+        public AuthController(IConfiguration configuration, ILogger<AuthController> logger, ITokenService tokenService, IUserUseCases userUseCase)
         {
             _configuration = configuration;
             _logger = logger;
             _tokenService = tokenService;
+            _userUseCases = userUseCase;
         }
 
         [IgnoreAntiforgeryToken]
@@ -185,7 +189,65 @@ namespace WebApi.Controllers
 
             return Ok(new { Message = "Logged out successfully" });
         }
-        
+
+        //[HttpPost("register")]
+        //public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(new { Message = "Некорректные данные" });
+        //    }
+
+        //    var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        //    var userAgent = Request.Headers["User-Agent"].ToString();
+        //    var deviceId = request.DeviceId ?? Guid.NewGuid().ToString();
+
+        //    // check existing user
+        //    //var existingUser = await _userService.GetUserByEmailAsync(request.Email);
+        //    //if (existingUser != null)
+        //    //{
+        //    //    return BadRequest(new { Message = "Пользователь с таким email уже существует" });
+        //    //}
+
+        //    var hashedPassword = HashPassword(request.Password);
+        //    //var newUser = await _userService.CreateUserAsync(request.Email, hashedPassword, request.Pin); // generate user
+        //    await _userUseCases.Create(new Domain.Entities.User
+        //    {
+        //        Email = request.Email,
+                
+        //    });
+
+
+        //    var claims = new List<Claim>
+        //    {
+        //        new Claim(ClaimTypes.NameIdentifier, request.TokenId),
+        //        new Claim("ip_address", ipAddress),
+        //        new Claim("user_agent", userAgent.Substring(0, Math.Min(userAgent.Length, 255))),
+        //        new Claim("device_id", deviceId)
+        //    };
+
+        //    var accessToken = _tokenService.GenerateAccessToken(claims);
+        //    var refreshToken = await _tokenService.GenerateRefreshToken(request.TokenId, ipAddress, userAgent, deviceId);
+
+        //    SetRefreshTokenCookie(refreshToken.Token);
+
+        //    return Ok(new AuthResponse
+        //    {
+        //        AccessToken = accessToken,
+        //        ExpiresIn = 900,
+        //        TokenType = "Bearer",
+        //        RefreshToken = refreshToken.Token
+        //    });
+        //}
+        private string HashPassword(string password)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return Convert.ToBase64String(hashedBytes);
+            }
+        }
+
         [Authorize]
         [HttpGet("validate")]
         public IActionResult ValidateToken()
@@ -194,7 +256,7 @@ namespace WebApi.Controllers
             return Ok(new { Message = "Token is valid", UserId = User.FindFirstValue(ClaimTypes.NameIdentifier) });
         }
 
-        private async Task<Result<bool>> ValidateTokenAsync(LoginRequest request)
+        private async Task<Result<bool>> ValidateTokenAsync(Dtos.LoginRequest request)
         {
             var isValid = request.Pin == "1234" &&
                           request.TokenId == "SIMULATED_TOKEN_123" &&
