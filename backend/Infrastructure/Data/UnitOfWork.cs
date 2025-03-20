@@ -61,7 +61,7 @@ namespace Infrastructure.Data
             }
         }
         
-        public IContactTypeRepository СontactTypeRepository
+        public IContactTypeRepository ContactTypeRepository
         {
             get
             {
