@@ -39,5 +39,16 @@ namespace WebApi.Controllers.V1
             return requestDto.ToDomain();
         }
 
+        [HttpGet("GetByCustomerId")]
+        public async Task<IActionResult> GetByCustomerId(int customer_id)
+        {
+            var result = await _CustomerContactUseCases.GetByCustomerId(customer_id);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value);
+            }
+
+            return HandleResult(result);
+        }
     }
 }

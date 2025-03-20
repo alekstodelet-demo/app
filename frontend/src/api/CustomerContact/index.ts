@@ -6,7 +6,7 @@ export const getCustomerContacts = (): Promise<any> => {
 };
 
 export const getCustomerContactsByCustomerId = (id: number): Promise<any> => {
-  return http.get(`/api/v1/CustomerContact/GetByCustomerId?id=${id}`);
+  return http.get(`/api/v1/CustomerContact/GetByCustomerId?customer_id=${id}`);
 };
 
 export const getCustomerContact = (id: number): Promise<any> => {

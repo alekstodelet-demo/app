@@ -33,18 +33,48 @@ namespace Infrastructure.Repositories
             try
             {
                 var sql = @"SELECT id AS ""Id"",
-                                   value AS ""Value""
-                            FROM CustomerContact;";
+                                   value AS ""Value"",
+                                   type_id AS ""TypeId"",
+                                   allow_notification AS ""AllowNotification"",
+                                   customer_id AS ""CustomerId"",
+                                   created_at AS ""CreatedAt"",
+                                   created_by AS ""CreatedBy"",
+                                   updated_at AS ""UpdatedAt"",
+                                   updated_by AS ""UpdatedBy""
+                            FROM customer_contact;";
                 var models = await _dbConnection.QueryAsync<CustomerContact>(sql, transaction: _dbTransaction);
 
-                var results = models.Select(model => FromCustomerContactModel(model)).ToList();
-
-                return Result.Ok(results);
+                return Result.Ok(models.ToList());
             }
             catch (Exception ex)
             {
                 return Result.Fail(new ExceptionalError("Failed to get CustomerContact", ex)
                     .WithMetadata("ErrorCode", "FETCH_ALL_FAILED"));
+            }
+        }
+
+        public async Task<Result<List<CustomerContact>>> GetByCustomerId(int customerId)
+        {
+            try
+            {
+                var sql = @"SELECT id AS ""Id"",
+                                   value AS ""Value"",
+                                   type_id AS ""TypeId"",
+                                   allow_notification AS ""AllowNotification"",
+                                   customer_id AS ""CustomerId"",
+                                   created_at AS ""CreatedAt"",
+                                   created_by AS ""CreatedBy"",
+                                   updated_at AS ""UpdatedAt"",
+                                   updated_by AS ""UpdatedBy""
+                            FROM customer_contact WHERE customer_id = @CustomerId;";
+                var models = await _dbConnection.QueryAsync<CustomerContact>(sql, new { CustomerId = customerId }, transaction: _dbTransaction);
+
+                return Result.Ok(models.ToList());
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(new ExceptionalError("Failed to get CustomerContact", ex)
+                    .WithMetadata("ErrorCode", "FETCH_BY_CUSTOMER_FAILED"));
             }
         }
 
@@ -54,7 +84,14 @@ namespace Infrastructure.Repositories
             {
                 var sql = @"SELECT id AS ""Id"",
                                    value AS ""Value"",
-                            FROM CustomerContact WHERE id=@Id;";
+                                   type_id AS ""TypeId"",
+                                   allow_notification AS ""AllowNotification"",
+                                   customer_id AS ""CustomerId"",
+                                   created_at AS ""CreatedAt"",
+                                   created_by AS ""CreatedBy"",
+                                   updated_at AS ""UpdatedAt"",
+                                   updated_by AS ""UpdatedBy""
+                            FROM customer_contact WHERE id=@Id;";
                 var model = await _dbConnection.QuerySingleOrDefaultAsync<CustomerContact>(sql, new { Id = id },
                     transaction: _dbTransaction);
 
@@ -64,9 +101,7 @@ namespace Infrastructure.Repositories
                         .WithMetadata("ErrorCode", "NOT_FOUND"));
                 }
 
-                var result = FromCustomerContactModel(model);
-
-                return Result.Ok(result);
+                return Result.Ok(model);
             }
             catch (Exception ex)
             {
@@ -79,23 +114,14 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                var model = ToCustomerContactModel(domain);
-                model.CreatedAt = DateTime.Now;
-                model.CreatedBy = 1;
-                model.UpdatedAt = DateTime.Now;
-                model.UpdatedBy = 1;
+                var sql = @"INSERT INTO customer_contact(value, type_id, allow_notification, customer_id, created_at, created_by, updated_at, updated_by) 
+                    VALUES (@Value, @TypeId, @AllowNotification, @CustomerId, NOW(), 1, NOW(), 1) RETURNING id";
 
-                var sql = @"INSERT INTO customer_contact(value, created_at, updated_at, created_by, updated_by) 
-                    VALUES (@value,
-                            @CreatedAt, @UpdatedAt, @CreatedBy, @UpdatedBy) RETURNING id";
-
-                var result = await _dbConnection.ExecuteScalarAsync<int>(sql, model, transaction: _dbTransaction);
+                var result = await _dbConnection.ExecuteScalarAsync<int>(sql, domain, transaction: _dbTransaction);
                 return Result.Ok(result);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Add method error: {ex.Message}");
-                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
                 return Result.Fail(new ExceptionalError("Failed to add CustomerContact", ex)
                     .WithMetadata("ErrorCode", "ADD_FAILED"));
             }
@@ -105,13 +131,16 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                var model = ToCustomerContactModel(domain);
-                model.UpdatedAt = DateTime.Now;
-                model.UpdatedBy = 1;
+                var sql = @"UPDATE customer_contact 
+                            SET value = @Value,
+                                type_id = @TypeId,
+                                allow_notification = @AllowNotification,
+                                customer_id = @CustomerId,
+                                updated_at = NOW(),
+                                updated_by = 1
+                            WHERE id = @Id";
 
-                var sql = "UPDATE customer_contact SET value = @Value" +
-                          "updated_at = @UpdatedAt, updated_by = @UpdatedBy WHERE id = @Id";
-                var affected = await _dbConnection.ExecuteAsync(sql, model, transaction: _dbTransaction);
+                var affected = await _dbConnection.ExecuteAsync(sql, domain, transaction: _dbTransaction);
                 if (affected == 0)
                 {
                     return Result.Fail(new ExceptionalError("Not found", null)
@@ -127,38 +156,11 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public async Task<Result<PaginatedList<CustomerContact>>> GetPaginated(int pageSize, int pageNumber)
-        {
-            try
-            {
-                var sql = @"SELECT id AS ""Id"",
-                                   value as ""Value""
-                            FROM customer_contact
-                            OFFSET @pageSize * (@pageNumber - 1) Limit @pageSize;";
-                var models = await _dbConnection.QueryAsync<CustomerContact>(sql, new { pageSize, pageNumber },
-                    transaction: _dbTransaction);
-
-                var sqlCount = @"SELECT Count(*) FROM customer_contact";
-                var totalItems = await _dbConnection.ExecuteScalarAsync<int>(sqlCount, transaction: _dbTransaction);
-
-                var results = models.Select(model => FromCustomerContactModel(model)).ToList();
-
-                var domainItems = results;
-
-                return Result.Ok(new PaginatedList<CustomerContact>(domainItems, totalItems, pageNumber, pageSize));
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail(new ExceptionalError("Failed to get CustomerContact", ex)
-                    .WithMetadata("ErrorCode", "FETCH_PAGINATED_FAILED"));
-            }
-        }
-
         public async Task<Result> Delete(int id)
         {
             try
             {
-                var sql = @"DELETE FROM customer_contact WHERE id = @Id";
+                var sql = "DELETE FROM customer_contact WHERE id = @Id";
                 var affected = await _dbConnection.ExecuteAsync(sql, new { Id = id }, transaction: _dbTransaction);
 
                 if (affected == 0)
@@ -175,23 +177,34 @@ namespace Infrastructure.Repositories
                     .WithMetadata("ErrorCode", "DELETE_FAILED"));
             }
         }
-
-        private CustomerContactModel ToCustomerContactModel(CustomerContact model)
+        public async Task<Result<PaginatedList<CustomerContact>>> GetPaginated(int pageSize, int pageNumber)
         {
-            return new CustomerContactModel
+            try
             {
-                Id = model.Id,
-                Value = model.Value
-            };
-        }
+                var sql = @"SELECT id AS ""Id"",
+                                   value AS ""Value"",
+                                   type_id AS ""TypeId"",
+                                   allow_notification AS ""AllowNotification"",
+                                   customer_id AS ""CustomerId"",
+                                   created_at AS ""CreatedAt"",
+                                   created_by AS ""CreatedBy"",
+                                   updated_at AS ""UpdatedAt"",
+                                   updated_by AS ""UpdatedBy""
+                            FROM customer_contact
+                            OFFSET @pageSize * (@pageNumber - 1) LIMIT @pageSize;";
+                var models = await _dbConnection.QueryAsync<CustomerContact>(sql, new { pageSize, pageNumber },
+                    transaction: _dbTransaction);
 
-        private CustomerContact FromCustomerContactModel(CustomerContact model)
-        {
-            return new CustomerContact
+                var sqlCount = @"SELECT COUNT(*) FROM customer_contact";
+                var totalItems = await _dbConnection.ExecuteScalarAsync<int>(sqlCount, transaction: _dbTransaction);
+
+                return Result.Ok(new PaginatedList<CustomerContact>(models.ToList(), totalItems, pageNumber, pageSize));
+            }
+            catch (Exception ex)
             {
-                Id = model.Id,
-                Value = model.Value
-            };
+                return Result.Fail(new ExceptionalError("Failed to get paginated CustomerContact", ex)
+                    .WithMetadata("ErrorCode", "FETCH_PAGINATED_FAILED"));
+            }
         }
     }
 }

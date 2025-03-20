@@ -9,6 +9,7 @@ namespace Domain.Entities
         public string? Value { get; set; }
         public string TypeName { get; set; }
         public int TypeId { get; set; }
+        public int CustomerId { get; set; }
         public bool? AllowNotification { get; set; }
 
     }

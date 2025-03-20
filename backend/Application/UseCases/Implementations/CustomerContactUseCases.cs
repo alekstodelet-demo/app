@@ -14,6 +14,10 @@ namespace Application.UseCases
         {
             _unitOfWork = unitOfWork;
         }
-        
+        public Task<Result<List<CustomerContact>>> GetByCustomerId(int customer_id)
+        {
+            return _unitOfWork.CustomerContactRepository.GetByCustomerId(customer_id);
+        }
+
     }
 }

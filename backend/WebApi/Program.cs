@@ -203,6 +203,7 @@ namespace WebApi
             builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
             builder.Services.AddScoped<ICustomerContactRepository, CustomerContactRepository>();
+            builder.Services.AddScoped<IContactTypeRepository, ContactTypeRepository>();
             builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
             builder.Services.AddScoped<IApplicationObjectRepository, ApplicationObjectRepository>();
             builder.Services.AddScoped<IArchObjectRepository, ArchObjectRepository>();
@@ -213,6 +214,7 @@ namespace WebApi
             builder.Services.AddScoped<IServiceUseCases, ServiceUseCases>();
             builder.Services.AddScoped<ICustomerUseCases, CustomerUseCases>();
             builder.Services.AddScoped<ICustomerContactUseCases, CustomerContactUseCases>();
+            builder.Services.AddScoped<IContactTypeUseCases, ContactTypeUseCases>();
             builder.Services.AddScoped<IUserUseCases, UserUseCases>();
             builder.Services.AddScoped<IApplicationUseCases, ApplicationUseCases>();
             builder.Services.AddScoped<IApplicationObjectUseCases, ApplicationObjectUseCases>();

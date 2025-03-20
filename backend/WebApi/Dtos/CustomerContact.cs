@@ -12,6 +12,8 @@ namespace WebApi.Dtos
         public string? Value { get; set; }
         [JsonProperty("type_id")]
         public int TypeId { get; set; }
+        [JsonProperty("customer_id")]
+        public int CustomerId { get; set; }
         [JsonProperty("type_name")]
         public string TypeName { get; set; }
         [JsonProperty("allow_notification")]
@@ -27,6 +29,7 @@ namespace WebApi.Dtos
                 AllowNotification = domain.AllowNotification,
                 TypeName = domain.TypeName,
                 TypeId = domain.TypeId,
+                CustomerId = domain.CustomerId
             };
         }
     }
@@ -37,6 +40,8 @@ namespace WebApi.Dtos
         public string? Value { get; set; }
         [JsonProperty("type_id")]
         public int TypeId { get; set; }
+        [JsonProperty("customer_id")]
+        public int CustomerId { get; set; }
         [JsonProperty("type_name")]
         public string TypeName { get; set; }
         [JsonProperty("allow_notification")]
@@ -50,6 +55,7 @@ namespace WebApi.Dtos
                 AllowNotification = AllowNotification,
                 TypeName = TypeName,
                 TypeId = TypeId,
+                CustomerId = CustomerId
             };
         }
     }
@@ -62,6 +68,8 @@ namespace WebApi.Dtos
         public string? Value { get; set; }
         [JsonProperty("type_id")]
         public int TypeId { get; set; }
+        [JsonProperty("customer_id")]
+        public int CustomerId { get; set; }
         [JsonProperty("type_name")]
         public string TypeName { get; set; }
         [JsonProperty("allow_notification")]
@@ -76,6 +84,7 @@ namespace WebApi.Dtos
                 AllowNotification = AllowNotification,
                 TypeName = TypeName,
                 TypeId = TypeId,
+                CustomerId = CustomerId
             };
         }
     }
