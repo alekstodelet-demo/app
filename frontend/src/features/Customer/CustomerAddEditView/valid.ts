@@ -1,7 +1,7 @@
 import * as yup from "yup";
 
 export const schema = yup.object().shape({
-  name: yup.string().required("Обязательное поле"),
+  pin: yup.string().required("Обязательное поле"),
 });
 
 export const validateField = async (name: string, value: any) => {
