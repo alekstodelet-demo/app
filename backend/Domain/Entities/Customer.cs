@@ -26,6 +26,9 @@ namespace Domain.Entities
         public DateTime? DocumentDateIssue { get; set; }
         public string? IndividualSecondname { get; set; }
         public string? IndividualSurname { get; set; }
+        public string DocumentWhomIssued { get; set; }
+        public bool IsForeign { get; set; }
+        public string ForeignCountry { get; set; }
 
     }
 }

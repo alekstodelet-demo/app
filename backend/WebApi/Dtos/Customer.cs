@@ -52,7 +52,7 @@ namespace WebApi.Dtos
         public string DocumentSerie { get; set; }
 
         [JsonProperty("identity_document_type_id")]
-        public int IdentityDocumentTypeId { get; set; }
+        public int? IdentityDocumentTypeId { get; set; }
 
         [JsonProperty("document_whom_issued")]
         public string DocumentWhomIssued { get; set; }
@@ -94,6 +94,12 @@ namespace WebApi.Dtos
                 IndividualName = domain.IndividualName,
                 IndividualSecondname = domain.IndividualSecondname,
                 IndividualSurname = domain.IndividualSurname,
+                IsForeign = domain.IsForeign,
+                ForeignCountry = domain.ForeignCountry,
+                DocumentSerie = domain.DocumentSerie,
+                DocumentDateIssue = domain.DocumentDateIssue,
+                IdentityDocumentTypeId = domain.IdentityDocumentTypeId,
+                DocumentWhomIssued = domain.DocumentWhomIssued,
 
             };
         }
@@ -187,6 +193,9 @@ namespace WebApi.Dtos
                 IndividualName = IndividualName,
                 IndividualSecondname = IndividualSecondname,
                 IndividualSurname = IndividualSurname,
+                DocumentWhomIssued = DocumentWhomIssued,
+                IsForeign = IsForeign,
+                ForeignCountry = ForeignCountry,
             };
         }
     }
@@ -281,6 +290,9 @@ namespace WebApi.Dtos
                 IndividualName = IndividualName,
                 IndividualSecondname = IndividualSecondname,
                 IndividualSurname = IndividualSurname,
+                DocumentDateIssue = DocumentDateIssue,
+                DocumentSerie = DocumentSerie,
+                IdentityDocumentTypeId = IdentityDocumentTypeId,
             };
         }
     }

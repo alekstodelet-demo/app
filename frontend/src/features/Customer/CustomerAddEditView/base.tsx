@@ -19,6 +19,7 @@ import { observer } from "mobx-react"
 import LookUp from 'components/LookUp';
 import CustomTextField from "components/TextField";
 import CustomCheckbox from "components/Checkbox";
+import DateField from "components/DateField";
 
 type CustomerAddEditProps = {
   children?: React.ReactNode;
@@ -74,6 +75,18 @@ const BaseView: FC<CustomerAddEditProps> = observer((props) => {
                     value={store.full_name}
                     onChange={(event) => store.handleChange(event)}
                     name="full_name"
+                  />
+                </Grid>
+
+                <Grid item md={12} xs={12}>
+                  <DateField
+                    value={store.document_date_issue}
+                    onChange={(event) => store.handleChange(event)}
+                    name="document_date_issue"
+                    id="id_f_customer_document_date_issue"
+                    label={translate("label:CustomerAddEditView.document_date_issue")}
+                    helperText={store.errors.document_date_issue}
+                    error={!!store.errors.document_date_issue}
                   />
                 </Grid>
                 <Grid item md={12} xs={12}>
