@@ -11,6 +11,7 @@ type PopupFormProps = {
   id: number;
   onBtnCancelClick: () => void;
   onSaveClick: (id: number) => void;
+  mainId: number;
 }
 
 const PopupForm: FC<PopupFormProps> = observer((props) => {
@@ -18,6 +19,7 @@ const PopupForm: FC<PopupFormProps> = observer((props) => {
   const translate = t;
 
   useEffect(() => {
+    store.handleChange({ target: { value: props.mainId, name: "customer_id" } })
     if (props.openPanel) {
       store.doLoad(props.id)
     } else {

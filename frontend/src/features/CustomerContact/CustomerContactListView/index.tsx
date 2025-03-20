@@ -49,6 +49,7 @@ const CustomerContactListView: FC<CustomerContactListProps> = observer((props) =
       <CustomerContactPopupForm
         openPanel={store.openPanel}
         id={store.currentId}
+        mainId={store.mainId}
         onBtnCancelClick={() => store.closePanel()}
         onSaveClick={() => {
           store.closePanel();

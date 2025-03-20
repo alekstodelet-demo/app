@@ -18,6 +18,7 @@ import store from "./store"
 import { observer } from "mobx-react"
 import LookUp from 'components/LookUp';
 import CustomTextField from "components/TextField";
+import CustomCheckbox from "components/Checkbox";
 
 type CustomerContactAddEditProps = {
   children?: React.ReactNode;
@@ -51,6 +52,15 @@ const BaseView: FC<CustomerContactAddEditProps> = observer((props) => {
                     value={store.value}
                     onChange={(event) => store.handleChange(event)}
                     name="value"
+                  />
+                </Grid>
+                <Grid item md={12} xs={12}>
+                  <CustomCheckbox
+                    value={store.allow_notification}
+                    onChange={(event) => store.handleChange(event)}
+                    name="allow_notification"
+                    label={translate('label:CustomerContactAddEditView.allow_notification')}
+                    id='id_f_allow_notification'
                   />
                 </Grid>
 
