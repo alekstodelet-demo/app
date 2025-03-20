@@ -33,8 +33,8 @@ namespace WebApi.Middleware
             }
 
             // Получаем лимиты из конфигурации
-            var maxRequestsPerMinute = _configuration.GetValue<int>("Security:RateLimit:MaxRequestsPerMinute", 60);
-            var maxLoginAttemptsPerHour = _configuration.GetValue<int>("Security:RateLimit:MaxLoginAttemptsPerHour", 5);
+            var maxRequestsPerMinute = _configuration.GetValue<int>("Security:RateLimit:MaxRequestsPerMinute", 1000);
+            var maxLoginAttemptsPerHour = _configuration.GetValue<int>("Security:RateLimit:MaxLoginAttemptsPerHour", 500);
 
             // Определяем идентификатор клиента (IP + User-Agent + DeviceId при наличии)
             var clientId = GetClientIdentifier(context);

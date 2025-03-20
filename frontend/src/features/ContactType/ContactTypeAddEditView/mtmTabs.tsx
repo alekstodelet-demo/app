@@ -20,8 +20,7 @@ const MtmTabs = observer(() => {
     <Box component={Paper} elevation={5}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab data-testid={"ServiceDocument_tab_title"} label={translate("label:ServiceDocumentAddEditView.entityTitle")} {...a11yProps(0)} />
-          <Tab data-testid={"TechCouncilParticipantsSettings_tab_title"} label={translate("label:TechCouncilParticipantsSettingsListView.entityTitle")} {...a11yProps(1)} />
+{/* tabs here */}
         </Tabs>
       </Box>
       

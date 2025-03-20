@@ -14,6 +14,7 @@ namespace Infrastructure.Data
         private readonly IServiceProvider _serviceProvider;
         private IDbTransaction _dbTransaction;
         private IServiceRepository? _serviceRepository;
+        private ICustomerRepository? _customerRepository;
         private IApplicationObjectRepository? _applicationObjectRepository;
         private IApplicationRepository? _applicationRepository;
         private IArchObjectRepository? _archObjectRepository;
@@ -43,7 +44,21 @@ namespace Infrastructure.Data
                 return _serviceRepository;
             }
         }
-        
+
+
+        public ICustomerRepository CustomerRepository
+        {
+            get
+            {
+                if (_customerRepository == null)
+                {
+                    _customerRepository = new CustomerRepository(_dbConnection, _configuration);
+                    _customerRepository.SetTransaction(_dbTransaction);
+                }
+                return _customerRepository;
+            }
+        }
+
         public IApplicationObjectRepository ApplicationObjectRepository
         {
             get

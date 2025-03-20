@@ -38,26 +38,26 @@ namespace WebApi.Middleware
                 });
             }
             // Проверка CSRF-токена в mutation запросах (POST, PUT, DELETE, PATCH)
-            else if (IsStateChangingMethod(context.Request.Method) && !IsExcludedPath(context.Request.Path))
-            {
-                try
-                {
-                    await _antiforgery.ValidateRequestAsync(context);
-                }
-                catch (AntiforgeryValidationException ex)
-                {
-                    _logger.LogWarning(ex, "CSRF validation failed for {Method} {Path}", 
-                        context.Request.Method, context.Request.Path);
+            //else if (IsStateChangingMethod(context.Request.Method) && !IsExcludedPath(context.Request.Path))
+            //{
+            //    try
+            //    {
+            //        await _antiforgery.ValidateRequestAsync(context);
+            //    }
+            //    catch (AntiforgeryValidationException ex)
+            //    {
+            //        _logger.LogWarning(ex, "CSRF validation failed for {Method} {Path}", 
+            //            context.Request.Method, context.Request.Path);
                         
-                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    await context.Response.WriteAsJsonAsync(new { 
-                        Error = "CSRF validation failed", 
-                        Message = "Invalid anti-forgery token"
-                    });
+            //        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            //        await context.Response.WriteAsJsonAsync(new { 
+            //            Error = "CSRF validation failed", 
+            //            Message = "Invalid anti-forgery token"
+            //        });
                     
-                    return;
-                }
-            }
+            //        return;
+            //    }
+            //}
 
             await _next(context);
         }

@@ -1,33 +1,30 @@
 import { makeObservable, runInAction, observable } from "mobx";
 import i18n from "i18next";
+import { Dayjs } from "dayjs";
 import BaseStore from 'core/stores/BaseStore';
 import { validate, validateField } from "./valid";
-import { getService, createService, updateService } from "api/Service";
-import { Service, ServiceCreateModel } from "constants/Service";
+import { getContactType, createContactType, updateContactType } from "api/ContactType";
+import { ContactType, ContactTypeCreateModel } from "constants/ContactType";
+
 import MainStore from "../../../MainStore";
 
 
-interface ServiceResponse {
+interface ContactTypeResponse {
   id: number;
 }
 
 /**
- * Store for managing Service edit form data and operations
+ * Store for managing ContactType edit form data and operations
  */
-class ServiceStore extends BaseStore {
+class ContactTypeStore extends BaseStore {
   // Form fields
   @observable id: number = 0;
-  @observable name: string = "";
-  @observable short_name: string = "";
-  @observable code: string = "";
-  @observable description: string = "";
-  @observable day_count: number = 0;
-  @observable price: number = 0;
-  @observable workflow_id: number = 0;
-  @observable workflow_name: string = "";
+  @observable name: string;
+  @observable code: string;
+  @observable description: string;
 
-  // Reference data
-  Workflows: any[] = [];
+  // Справочники
+  // Конец справочников
 
   constructor() {
     super();
@@ -42,14 +39,8 @@ class ServiceStore extends BaseStore {
     runInAction(() => {
       this.id = 0;
       this.name = "";
-      this.short_name = "";
       this.code = "";
       this.description = "";
-      this.day_count = 0;
-      this.price = 0;
-      this.workflow_id = 0;
-      this.workflow_name = "";
-      this.Workflows = [];
     });
   }
 
@@ -75,15 +66,11 @@ class ServiceStore extends BaseStore {
    */
   onSaveClick = async (onSaved: (id: number) => void) => {
     // Create data object from form fields
-    const data: ServiceCreateModel = {
+    const data: ContactTypeCreateModel = {
       id: this.id,
       name: this.name,
-      short_name: this.short_name,
       code: this.code,
-      description: this.description,
-      day_count: this.day_count,
-      price: this.price,
-      workflow_id: this.workflow_id
+      description: this.description
     };
 
     // Validate all fields
@@ -98,13 +85,13 @@ class ServiceStore extends BaseStore {
 
     // Determine whether to create or update
     const apiMethod = data.id === 0 ?
-      () => createService(data) :
-      () => updateService(data);
+      () => createContactType(data) :
+      () => updateContactType(data);
 
     // Make API call with inherited method
     this.apiCall(
       apiMethod,
-      (response: ServiceResponse) => {
+      (response: ContactTypeResponse) => {
         if (data.id === 0) {
           runInAction(() => {
             this.id = response.id;
@@ -119,23 +106,18 @@ class ServiceStore extends BaseStore {
   };
 
   /**
-   * Load service data by ID
-   * @param id - Service ID to load
+   * Load ContactType data by ID
+   * @param id - ContactType ID to load
    */
-  loadService = async (id: number) => {
+  loadContactType = async (id: number) => {
     this.apiCall(
-      () => getService(id),
-      (data: Service) => {
+      () => getContactType(id),
+      (data: ContactType) => {
         runInAction(() => {
           this.id = data.id;
           this.name = data.name;
-          this.short_name = data.short_name;
           this.code = data.code;
           this.description = data.description;
-          this.day_count = data.day_count;
-          this.price = data.price;
-          this.workflow_id = data.workflow_id;
-          this.workflow_name = data.workflow_name;
         });
       }
     );
@@ -143,14 +125,14 @@ class ServiceStore extends BaseStore {
 
   /**
    * Initialize the form for a given ID
-   * @param id - Service ID to load
+   * @param id - ContactType ID to load
    */
   async doLoad(id: number) {
     if (id) {
       this.id = id;
-      await this.loadService(id);
+      await this.loadContactType(id);
     }
   }
 }
 
-export default new ServiceStore();
+export default new ContactTypeStore();

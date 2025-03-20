@@ -1,7 +1,7 @@
 import React, { ComponentType, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { observer } from "mobx-react";
-import { Grid, Box } from '@mui/material';
+import { Grid, Box, Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import CustomButton from 'components/Button';
 
@@ -64,7 +64,8 @@ export const withForm = <P extends object>(
         <WrappedComponent {...wrappedProps} />
 
         {/* Standard form buttons */}
-        <Grid item xs={12} spacing={0}>
+        <Container maxWidth='xl'>
+
           <Box display="flex" p={2}>
             <Box m={2}>
               <CustomButton
@@ -91,11 +92,13 @@ export const withForm = <P extends object>(
               </CustomButton>
             </Box>
           </Box>
-        </Grid>
+
+        </Container>
+
       </>
     );
   });
-  
+
   return WithForm;
 };
 

@@ -1,33 +1,32 @@
 import { makeObservable, runInAction, observable } from "mobx";
 import i18n from "i18next";
+import { Dayjs } from "dayjs";
 import BaseStore from 'core/stores/BaseStore';
 import { validate, validateField } from "./valid";
-import { getService, createService, updateService } from "api/Service";
-import { Service, ServiceCreateModel } from "constants/Service";
+import { getCustomerContact, createCustomerContact, updateCustomerContact } from "api/CustomerContact";
+import { getContactTypes } from "api/ContactType";
+import { CustomerContact, CustomerContactCreateModel } from "constants/CustomerContact";
+
 import MainStore from "../../../MainStore";
 
 
-interface ServiceResponse {
+interface CustomerContactResponse {
   id: number;
 }
 
 /**
- * Store for managing Service edit form data and operations
+ * Store for managing CustomerContact edit form data and operations
  */
-class ServiceStore extends BaseStore {
+class CustomerContactStore extends BaseStore {
   // Form fields
   @observable id: number = 0;
-  @observable name: string = "";
-  @observable short_name: string = "";
-  @observable code: string = "";
-  @observable description: string = "";
-  @observable day_count: number = 0;
-  @observable price: number = 0;
-  @observable workflow_id: number = 0;
-  @observable workflow_name: string = "";
+  @observable customer_id: number; //main table
+  @observable value: string;
+  @observable type_id: number;
+  @observable allow_notification: boolean;
 
   // Reference data
-  Workflows: any[] = [];
+  ContactTypes: any[] = [];
 
   constructor() {
     super();
@@ -41,15 +40,12 @@ class ServiceStore extends BaseStore {
     super.clearStore(); // Call parent's clearStore first
     runInAction(() => {
       this.id = 0;
-      this.name = "";
-      this.short_name = "";
-      this.code = "";
-      this.description = "";
-      this.day_count = 0;
-      this.price = 0;
-      this.workflow_id = 0;
-      this.workflow_name = "";
-      this.Workflows = [];
+      this.customer_id = 0;
+      this.value = "";
+      this.type_id = 0;
+      this.allow_notification = false;
+
+      this.ContactTypes = [];
     });
   }
 
@@ -75,15 +71,12 @@ class ServiceStore extends BaseStore {
    */
   onSaveClick = async (onSaved: (id: number) => void) => {
     // Create data object from form fields
-    const data: ServiceCreateModel = {
+    const data: CustomerContactCreateModel = {
       id: this.id,
-      name: this.name,
-      short_name: this.short_name,
-      code: this.code,
-      description: this.description,
-      day_count: this.day_count,
-      price: this.price,
-      workflow_id: this.workflow_id
+      customer_id: this.customer_id,
+      value: this.value,
+      type_id: this.type_id,
+      allow_notification: this.allow_notification,
     };
 
     // Validate all fields
@@ -98,13 +91,13 @@ class ServiceStore extends BaseStore {
 
     // Determine whether to create or update
     const apiMethod = data.id === 0 ?
-      () => createService(data) :
-      () => updateService(data);
+      () => createCustomerContact(data) :
+      () => updateCustomerContact(data);
 
     // Make API call with inherited method
     this.apiCall(
       apiMethod,
-      (response: ServiceResponse) => {
+      (response: CustomerContactResponse) => {
         if (data.id === 0) {
           runInAction(() => {
             this.id = response.id;
@@ -119,23 +112,30 @@ class ServiceStore extends BaseStore {
   };
 
   /**
-   * Load service data by ID
-   * @param id - Service ID to load
+   * Load CustomerContact data by ID
+   * @param id - CustomerContact ID to load
    */
-  loadService = async (id: number) => {
+  loadCustomerContact = async (id: number) => {
     this.apiCall(
-      () => getService(id),
-      (data: Service) => {
+      () => getCustomerContact(id),
+      (data: CustomerContact) => {
         runInAction(() => {
           this.id = data.id;
-          this.name = data.name;
-          this.short_name = data.short_name;
-          this.code = data.code;
-          this.description = data.description;
-          this.day_count = data.day_count;
-          this.price = data.price;
-          this.workflow_id = data.workflow_id;
-          this.workflow_name = data.workflow_name;
+          this.customer_id = data.customer_id;
+          this.value = data.value;
+          this.type_id = data.type_id;
+          this.allow_notification = data.allow_notification;
+        });
+      }
+    );
+  };
+
+  loadContactTypes = async () => {
+    this.apiCall(
+      () => getContactTypes(),
+      (data: CustomerContact[]) => {
+        runInAction(() => {
+          this.ContactTypes = data
         });
       }
     );
@@ -143,14 +143,15 @@ class ServiceStore extends BaseStore {
 
   /**
    * Initialize the form for a given ID
-   * @param id - Service ID to load
+   * @param id - CustomerContact ID to load
    */
   async doLoad(id: number) {
     if (id) {
       this.id = id;
-      await this.loadService(id);
+      await this.loadCustomerContact(id);
     }
+    await this.loadContactTypes();
   }
 }
 
-export default new ServiceStore();
+export default new CustomerContactStore();

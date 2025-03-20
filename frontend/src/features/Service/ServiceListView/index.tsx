@@ -54,6 +54,7 @@ const ServiceListView: FC = observer(() => {
 
   return (
     <BaseListView
+      maxWidth={"xl"}
       title={translate("label:ServiceListView.entityTitle")}
       columns={columns}
       data={store.data}
@@ -64,7 +65,7 @@ const ServiceListView: FC = observer(() => {
         loadData: store.loadServices,
         clearStore: store.clearStore
       }}
-      viewMode="form"
+      viewMode="popup"
     >
       {/* Popup form for editing/creating services */}
       <ServicePopupForm

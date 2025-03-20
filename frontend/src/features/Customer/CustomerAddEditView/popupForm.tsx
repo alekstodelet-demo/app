@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import ServiceAddEditBaseView from './base';
+import CustomerAddEditBaseView from './base';
 import store from "./store"
 import { observer } from "mobx-react"
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
@@ -28,16 +28,16 @@ const PopupForm: FC<PopupFormProps> = observer((props) => {
   return (
     <Dialog open={props.openPanel} onClose={props.onBtnCancelClick}>
       <DialogContent>
-        <ServiceAddEditBaseView
+        <CustomerAddEditBaseView
           isPopup={true}
         >
-        </ServiceAddEditBaseView>
+        </CustomerAddEditBaseView>
       </DialogContent>
       <DialogActions>
         <DialogActions>
           <CustomButton
             variant="contained"
-            id="id_ServiceSaveButton"
+            id="id_CustomerSaveButton"
             onClick={() => {
               store.onSaveClick((id: number) => props.onSaveClick(id))
             }}
@@ -46,7 +46,7 @@ const PopupForm: FC<PopupFormProps> = observer((props) => {
           </CustomButton>
           <CustomButton
             variant="contained"
-            id="id_ServiceCancelButton"
+            id="id_CustomerCancelButton"
             onClick={() => props.onBtnCancelClick()}
           >
             {translate("common:cancel")}

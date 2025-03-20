@@ -5,6 +5,7 @@ namespace Application.Repositories
     public interface IUnitOfWork : IDisposable
     {
         IServiceRepository ServiceRepository { get; }
+        ICustomerRepository CustomerRepository { get; }
         IApplicationObjectRepository ApplicationObjectRepository { get; }
         IApplicationRepository ApplicationRepository { get; }
         IArchObjectRepository ArchObjectRepository { get; }

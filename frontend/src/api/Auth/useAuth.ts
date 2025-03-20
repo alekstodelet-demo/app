@@ -18,5 +18,5 @@ export const refreshToken = (): Promise<any> => {
 
 export const checkAuthStatus = (): Promise<any> => {
   // Endpoint to check if the user is authenticated
-  return http.get(`/api/v1/Auth/status`, {}, { withCredentials: true });
+  return http.get(`/api/v1/Auth/validate`, {}, { withCredentials: true });
 };

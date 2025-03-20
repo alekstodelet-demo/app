@@ -7,6 +7,8 @@ import { Paper } from '@mui/material';
 import store from './store';
 import { useTranslation } from 'react-i18next';
 
+import CustomerContactListView from 'features/CustomerContact/CustomerContactListView';
+
 const MtmTabs = observer(() => {
   const [value, setValue] = React.useState(0);
   const { t } = useTranslation();
@@ -20,14 +22,14 @@ const MtmTabs = observer(() => {
     <Box component={Paper} elevation={5}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab data-testid={"ServiceDocument_tab_title"} label={translate("label:ServiceDocumentAddEditView.entityTitle")} {...a11yProps(0)} />
-          <Tab data-testid={"TechCouncilParticipantsSettings_tab_title"} label={translate("label:TechCouncilParticipantsSettingsListView.entityTitle")} {...a11yProps(1)} />
+          <Tab data-testid={"CustomerContact_tab_title"} label={translate("label:CustomerContactAddEditView.entityTitle")} {...a11yProps(0)} />
         </Tabs>
       </Box>
-      
+
       <CustomTabPanel value={value} index={0}>
+        <CustomerContactListView mainId={store.id} />
       </CustomTabPanel>
-            
+
     </Box>
   );
 
