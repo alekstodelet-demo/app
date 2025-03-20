@@ -26,5 +26,115 @@
     "day_count": "Количество дней",
     "price": "Цена услуги",
     "workflow_id": "Рабочий процесс"
+  },
+  "OrganizationListView": {
+    "entityTitle": "Организации",
+    "name": "Название",
+    "address": "Адрес",
+    "director": "Директор",
+    "pin": "ПИН",
+    "okpo": "ОКПО",
+    "organization_type_name": "Тип организации",
+    "nomer": "Номер",
+    "postal_code": "Почтовый индекс",
+    "ugns": "УГНС",
+    "reg_number": "Рег. номер"
+  },
+  "OrganizationAddEditView": {
+    "entityTitle": "Организация",
+    "name": "Название",
+    "address": "Адрес",
+    "director": "Директор",
+    "pin": "ПИН",
+    "okpo": "ОКПО",
+    "organization_type_id": "Тип организации",
+    "nomer": "Номер",
+    "postal_code": "Почтовый индекс",
+    "ugns": "УГНС",
+    "reg_number": "Рег. номер"
+  },
+  "OrganizationTypeListView": {
+    "entityTitle": "Типы организаций",
+    "name": "Название",
+    "code": "Код",
+    "description": "Описание",
+    "color_preview": "Предпросмотр цвета"
+  },
+  "OrganizationTypeAddEditView": {
+    "entityTitle": "Тип организации",
+    "name": "Название",
+    "code": "Код",
+    "description": "Описание",
+    "name_kg": "Название (кырг)",
+    "description_kg": "Описание (кырг)",
+    "text_color": "Цвет текста",
+    "background_color": "Цвет фона"
+  },
+  "OrganizationContactListView": {
+    "entityTitle": "Контакты организации",
+    "type_name": "Тип контакта",
+    "value": "Значение",
+    "allow_notification": "Разрешить уведомления"
+  },
+  "OrganizationContactAddEditView": {
+    "entityTitle": "Контакт организации",
+    "t_type_id": "Тип контакта",
+    "value": "Значение",
+    "allow_notification": "Разрешить уведомления"
+  },
+  "OrganizationRequisiteListView": {
+    "entityTitle": "Реквизиты организации",
+    "payment_account": "Расчетный счет",
+    "bank": "Банк",
+    "bik": "БИК"
+  },
+  "OrganizationRequisiteAddEditView": {
+    "entityTitle": "Реквизит организации",
+    "payment_account": "Расчетный счет",
+    "bank": "Банк",
+    "bik": "БИК"
+  },
+  "RepresentativeListView": {
+    "entityTitle": "Представители",
+    "last_name": "Фамилия",
+    "first_name": "Имя",
+    "second_name": "Отчество",
+    "pin": "ПИН",
+    "type_name": "Тип представителя",
+    "inn": "ИНН"
+  },
+  "RepresentativeAddEditView": {
+    "entityTitle": "Представитель",
+    "last_name": "Фамилия",
+    "first_name": "Имя",
+    "second_name": "Отчество",
+    "pin": "ПИН",
+    "type_id": "Тип представителя",
+    "inn": "ИНН",
+    "company_id": "Организация"
+  },
+  "RepresentativeTypeListView": {
+    "entityTitle": "Типы представителей",
+    "name": "Название",
+    "code": "Код",
+    "description": "Описание"
+  },
+  "RepresentativeTypeAddEditView": {
+    "entityTitle": "Тип представителя",
+    "name": "Название",
+    "code": "Код",
+    "description": "Описание"
+  },
+  "RepresentativeContactListView": {
+    "entityTitle": "Контакты представителя",
+    "type_name": "Тип контакта",
+    "value": "Значение",
+    "allow_notification": "Разрешить уведомления"
+  },
+  "RepresentativeContactAddEditView": {
+    "entityTitle": "Контакт представителя",
+    "t_type_id": "Тип контакта",
+    "value": "Значение",
+    "allow_notification": "Разрешить уведомления"
   }
 }
