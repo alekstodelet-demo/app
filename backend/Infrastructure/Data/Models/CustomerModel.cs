@@ -20,6 +20,9 @@ namespace Infrastructure.Data.Models
         public string? OrganizationTypeName { get; set; }
         public string? PaymentAccount { get; set; }
         public string? PostalCode { get; set; }
+        public int? IdentityDocumentTypeId { get; set; }
+        public string? DocumentSerie { get; set; }
+        public DateTime? DocumentDateIssue { get; set; }
         public string? Ugns { get; set; }
         public string? Bank { get; set; }
         public string? Bik { get; set; }
@@ -27,6 +30,9 @@ namespace Infrastructure.Data.Models
         public string? IndividualName { get; set; }
         public string? IndividualSecondname { get; set; }
         public string? IndividualSurname { get; set; }
+        public string? DocumentWhomIssued { get; set; }
+        public int? ForeignCountry { get; set; }
+        public bool? IsForeign { get; set; }
 
     }
 }

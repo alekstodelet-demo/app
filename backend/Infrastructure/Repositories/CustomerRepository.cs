@@ -308,6 +308,9 @@ namespace Infrastructure.Repositories
                 UpdatedAt = model.UpdatedAt,
                 CreatedBy = model.CreatedBy,
                 UpdatedBy = model.UpdatedBy,
+                IdentityDocumentTypeId = model.IdentityDocumentTypeId,
+                DocumentDateIssue = model.DocumentDateIssue,
+                DocumentSerie = model.DocumentSerie,
             };
         }
         private Customer DecryptCustomerModel(CustomerModel model)
@@ -329,6 +332,9 @@ namespace Infrastructure.Repositories
                 Bank = model.Bank,
                 Bik = model.Bik,
                 RegistrationNumber = model.RegistrationNumber,
+                IdentityDocumentTypeId = model.IdentityDocumentTypeId,
+                DocumentDateIssue = model.DocumentDateIssue,
+                DocumentSerie = model.DocumentSerie,
                 IndividualName = model.IndividualName,
                 IndividualSecondname = model.IndividualSecondname,
                 IndividualSurname = model.IndividualSurname,

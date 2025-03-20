@@ -20,7 +20,10 @@ namespace Domain.Entities
         public string? Bank { get; set; }
         public string? Bik { get; set; }
         public string? RegistrationNumber { get; set; }
+        public int? IdentityDocumentTypeId { get; set; }
         public string? IndividualName { get; set; }
+        public string? DocumentSerie { get; set; }
+        public DateTime? DocumentDateIssue { get; set; }
         public string? IndividualSecondname { get; set; }
         public string? IndividualSurname { get; set; }
 
