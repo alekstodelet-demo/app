@@ -1,9 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Xml.Linq;
+using Domain;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Infrastructure.Data.Models
 {
-    public class CustomerContact : BaseLogDomain
+    public class CustomerContactModel : BaseLogDomain
     {
         public int Id { get; set; }
         public string? Value { get; set; }
