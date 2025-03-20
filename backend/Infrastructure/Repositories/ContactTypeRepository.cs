@@ -11,124 +11,82 @@ using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Repositories
 {
-    public class ContactTypeRepository : IContactTypeRepository
+    public class ContactTypeRepository : BaseRepository, IContactTypeRepository
     {
-        private IDbTransaction? _dbTransaction;
-        private IDbConnection _dbConnection;
-        private EncryptionService _crypt;
-
-        public ContactTypeRepository(IDbConnection dbConnection, IConfiguration configuration)
+        public ContactTypeRepository(IDbConnection dbConnection, IDbTransaction dbTransaction) 
+            : base(dbConnection, dbTransaction)
         {
-            _dbConnection = dbConnection;
-            _crypt = new EncryptionService(configuration);
         }
 
-        public void SetTransaction(IDbTransaction dbTransaction)
+        public async Task<Result<IEnumerable<ContactType>>> GetAll()
         {
-            _dbTransaction = dbTransaction;
+            const string sql = @"
+                SELECT id AS ""Id"", 
+                       name AS ""Name"", 
+                       code AS ""Code"",
+                       is_active AS ""IsActive""
+                FROM contact_types 
+                WHERE is_active = true
+                ORDER BY name";
+
+            return await QueryAsync<ContactType>(sql);
         }
 
-        public async Task<Result<List<ContactType>>> GetAll()
+        public async Task<Result<ContactType>> GetById(int id)
         {
-            try
-            {
-                var sql = @"SELECT id AS ""Id"",
-                                   name AS ""Name"",
-                                   code AS ""Code"",
-                                   description AS ""Description""
-                            FROM contact_type;";
-                var models = await _dbConnection.QueryAsync<ContactType>(sql, transaction: _dbTransaction);
+            const string sql = @"
+                SELECT id AS ""Id"", 
+                       name AS ""Name"", 
+                       code AS ""Code"",
+                       is_active AS ""IsActive""
+                FROM contact_types 
+                WHERE id = @Id";
 
-                var results = models.Select(model => FromContactTypeModel(model)).ToList();
-
-                return Result.Ok(results);
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail(new ExceptionalError("Failed to get ContactType", ex)
-                    .WithMetadata("ErrorCode", "FETCH_ALL_FAILED"));
-            }
+            return await QuerySingleOrDefaultAsync<ContactType>(sql, new { Id = id });
         }
 
-        public async Task<Result<ContactType>> GetOneByID(int id)
+        public async Task<Result<int>> Add(ContactType entity)
         {
-            try
+            const string sql = @"
+                INSERT INTO contact_types (name, code, is_active, created_at, created_by)
+                VALUES (@Name, @Code, @IsActive, @CreatedAt, @CreatedBy)
+                RETURNING id";
+
+            var param = new
             {
-                var sql = @"SELECT id AS ""Id"",
-                                   name AS ""Name"",
-                                   code AS ""Code"",
-                                   description AS ""Description""
-                            FROM contact_type WHERE id=@Id;";
-                var model = await _dbConnection.QuerySingleOrDefaultAsync<ContactType>(sql, new { Id = id },
-                    transaction: _dbTransaction);
+                entity.Name,
+                entity.Code,
+                entity.IsActive,
+                CreatedAt = DateTime.UtcNow,
+                CreatedBy = 1 // TODO: Получать из контекста текущего пользователя
+            };
 
-                if (model == null)
-                {
-                    return Result.Fail(new ExceptionalError($"ContactType with ID {id} not found.", null)
-                        .WithMetadata("ErrorCode", "NOT_FOUND"));
-                }
-
-                var result = FromContactTypeModel(model);
-
-                return Result.Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail(new ExceptionalError("Failed to get ContactType", ex)
-                    .WithMetadata("ErrorCode", "FETCH_ONE_FAILED"));
-            }
+            return await QuerySingleOrDefaultAsync<int>(sql, param);
         }
 
-        public async Task<Result<int>> Add(ContactType domain)
+        public async Task<Result> Update(ContactType entity)
         {
-            try
+            const string sql = @"
+                UPDATE contact_types 
+                SET name = @Name,
+                    code = @Code,
+                    is_active = @IsActive,
+                    updated_at = @UpdatedAt,
+                    updated_by = @UpdatedBy
+                WHERE id = @Id";
+
+            var param = new
             {
-                var model = ToContactTypeModel(domain);
-                model.CreatedAt = DateTime.Now;
-                model.CreatedBy = 1;
-                model.UpdatedAt = DateTime.Now;
-                model.UpdatedBy = 1;
+                entity.Id,
+                entity.Name,
+                entity.Code,
+                entity.IsActive,
+                UpdatedAt = DateTime.UtcNow,
+                UpdatedBy = 1 // TODO: Получать из контекста текущего пользователя
+            };
 
-                var sql = @"INSERT INTO customer_contact(name, code, description, created_at, updated_at, created_by, updated_by) 
-                    VALUES (@Name, @Code, @Decsription,
-                            @CreatedAt, @UpdatedAt, @CreatedBy, @UpdatedBy) RETURNING id";
-
-                var result = await _dbConnection.ExecuteScalarAsync<int>(sql, model, transaction: _dbTransaction);
-                return Result.Ok(result);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Add method error: {ex.Message}");
-                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-                return Result.Fail(new ExceptionalError("Failed to add ContactType", ex)
-                    .WithMetadata("ErrorCode", "ADD_FAILED"));
-            }
-        }
-
-        public async Task<Result> Update(ContactType domain)
-        {
-            try
-            {
-                var model = ToContactTypeModel(domain);
-                model.UpdatedAt = DateTime.Now;
-                model.UpdatedBy = 1;
-
-                var sql = @"UPDATE customer_contact SET name = @Name, code = @Code, description = @description
-                          updated_at = @UpdatedAt, updated_by = @UpdatedBy WHERE id = @Id";
-                var affected = await _dbConnection.ExecuteAsync(sql, model, transaction: _dbTransaction);
-                if (affected == 0)
-                {
-                    return Result.Fail(new ExceptionalError("Not found", null)
-                        .WithMetadata("ErrorCode", "NOT_FOUND"));
-                }
-
-                return Result.Ok();
-            }
-            catch (Exception ex)
-            {
-                return Result.Fail(new ExceptionalError("Failed to update ContactType", ex)
-                    .WithMetadata("ErrorCode", "UPDATE_FAILED"));
-            }
+            var result = await ExecuteAsync(sql, param);
+            return result.IsSuccess ? Result.Ok() : Result.Fail(result.Errors);
         }
 
         public async Task<Result<PaginatedList<ContactType>>> GetPaginated(int pageSize, int pageNumber)
