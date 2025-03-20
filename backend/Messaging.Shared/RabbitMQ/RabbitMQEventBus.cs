@@ -123,9 +123,10 @@ namespace Messaging.Shared.RabbitMQ
                 _eventHandlerTypes.Add(eventName, new List<Type>());
             }
 
-            if (!_eventHandlerTypes[eventName].Any(s => s == handlerType))
+            if (_eventHandlerTypes[eventName].Any(s => s == handlerType))
             {
-                _eventHandlerTypes[eventName].Add(handlerType);
+                throw new ArgumentException(
+                    $"Handler Type {handlerType.Name} already registered for '{eventName}'", nameof(handlerType));
             }
 
             _eventHandlerTypes[eventName].Add(handlerType);

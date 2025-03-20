@@ -1,4 +1,6 @@
-﻿using Messaging.Shared.Events;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Messaging.Shared.Events;
 
 namespace Messaging.Shared.Events
 {
@@ -51,6 +53,8 @@ namespace Messaging.Shared.Events
         /// Флаг активности сервиса
         /// </summary>
         public bool? IsActive { get; }
+        
+        public Guid CorrelationId { get; }
 
         /// <summary>
         /// Конструктор события создания сервиса
@@ -64,7 +68,8 @@ namespace Messaging.Shared.Events
             int? dayCount, 
             int? workflowId, 
             decimal? price,
-            bool? isActive) : base()
+            bool? isActive,
+            Guid correlationId) : base()
         {
             ServiceId = serviceId;
             Name = name;
@@ -75,6 +80,7 @@ namespace Messaging.Shared.Events
             WorkflowId = workflowId;
             Price = price;
             IsActive = isActive;
+            CorrelationId = correlationId;
         }
     }
 
@@ -128,19 +134,22 @@ namespace Messaging.Shared.Events
         /// </summary>
         public bool? IsActive { get; }
 
+        public Guid CorrelationId { get; }
+
         /// <summary>
         /// Конструктор события обновления сервиса
         /// </summary>
         public ServiceUpdatedEvent(
             int serviceId, 
-            string name, 
-            string shortName, 
-            string code, 
-            string description, 
-            int? dayCount, 
-            int? workflowId, 
+            string name,
+            string shortName,
+            string code,
+            string description,
+            int? dayCount,
+            int? workflowId,
             decimal? price,
-            bool? isActive)
+            bool? isActive,
+            Guid correlationId)
         {
             ServiceId = serviceId;
             Name = name;
@@ -151,6 +160,7 @@ namespace Messaging.Shared.Events
             WorkflowId = workflowId;
             Price = price;
             IsActive = isActive;
+            CorrelationId = correlationId;
         }
     }
 
@@ -203,6 +213,10 @@ namespace Messaging.Shared.Events
     /// </summary>
     public class ServiceResponseEvent : IntegrationEvent
     {
+        public ServiceResponseEvent()
+        {
+        }
+        
         /// <summary>
         /// Идентификатор коррелятора для сопоставления ответа с запросом
         /// </summary>
@@ -227,6 +241,16 @@ namespace Messaging.Shared.Events
         /// Сообщение об ошибке (если есть)
         /// </summary>
         public string ErrorMessage { get; }
+        
+        [JsonConstructor]
+        public ServiceResponseEvent(Guid correlationId, List<ServiceDto>? services = null, ServiceDto? service = null, bool success = true, string? errorMessage = null)
+        {
+            CorrelationId = correlationId;
+            Services = services;
+            Service = service;
+            Success = success;
+            ErrorMessage = errorMessage;
+        }
 
         /// <summary>
         /// Конструктор для успешного ответа со списком сервисов

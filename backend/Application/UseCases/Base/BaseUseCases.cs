@@ -25,6 +25,7 @@ namespace Application.UseCases
             if (result.IsSuccess)
             {
                 _unitOfWork.Commit();
+                ((dynamic)domain).Id = result.Value;
                 return Result.Ok(domain);
             }
             return Result.Fail(result.Errors);

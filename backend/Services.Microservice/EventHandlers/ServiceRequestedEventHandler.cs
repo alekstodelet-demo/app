@@ -111,13 +111,16 @@ namespace Services.Microservice.EventHandlers
     {
         private readonly IServiceRepository _serviceRepository;
         private readonly ILogger<ServiceCreatedEventHandler> _logger;
+        private readonly IEventBus _eventBus;
 
         public ServiceCreatedEventHandler(
             IServiceRepository serviceRepository,
+            IEventBus eventBus,
             ILogger<ServiceCreatedEventHandler> logger)
         {
             _serviceRepository = serviceRepository ?? throw new ArgumentNullException(nameof(serviceRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
         }
 
         /// <summary>
@@ -159,7 +162,13 @@ namespace Services.Microservice.EventHandlers
                     return Result.Fail(new Error("Failed to create service from event"));
                 }
                 
+
                 _logger.LogInformation("Successfully created service with ID {ServiceId} from event", @event.ServiceId);
+                
+                service.Id = result.Value;
+                var serviceDto = MapToServiceDto(service);
+                await _eventBus.PublishAsync(new ServiceResponseEvent(@event.CorrelationId, serviceDto));
+                
                 return Result.Ok();
             }
             catch (Exception ex)
@@ -168,6 +177,22 @@ namespace Services.Microservice.EventHandlers
                 return Result.Fail(new Error("Error processing ServiceCreatedEvent")
                     .WithMetadata("ErrorMessage", ex.Message));
             }
+        }
+        
+        private ServiceDto MapToServiceDto(Service service)
+        {
+            return new ServiceDto
+            {
+                Id = service.Id,
+                Name = service.Name,
+                ShortName = service.ShortName,
+                Code = service.Code,
+                Description = service.Description,
+                DayCount = service.DayCount,
+                WorkflowId = service.WorkflowId,
+                Price = service.Price,
+                IsActive = service.IsActive,
+            };
         }
     }
 

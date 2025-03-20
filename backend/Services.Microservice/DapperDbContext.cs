@@ -6,11 +6,14 @@ using Npgsql;
 
 public class DapperDbContext
 {
+    private readonly IConfiguration _configuration;
     private readonly string _connectionString;
 
     public DapperDbContext(IConfiguration configuration)
     {
-        _connectionString = configuration.GetConnectionString("DefaultConnection");
+        _configuration = configuration;
+        _connectionString = _configuration.GetConnectionString("DefaultConnection")!;
+        Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
     }
 
     public IDbConnection CreateConnection()

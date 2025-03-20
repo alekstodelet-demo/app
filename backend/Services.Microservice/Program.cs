@@ -65,14 +65,14 @@ namespace Services.Microservice
                 provider.GetService<DapperDbContext>()!.CreateConnection());
             builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 
-            // Register event handlers
+            //// Register event handlers
             builder.Services.AddTransient<ServiceRequestedEventHandler>();
             builder.Services.AddTransient<ServiceCreatedEventHandler>();
             builder.Services.AddTransient<ServiceUpdatedEventHandler>();
             builder.Services.AddTransient<ServiceDeletedEventHandler>();
 
             // Register event subscription service
-            builder.Services.AddHostedService<EventBusSubscriptionService>();
+            //builder.Services.AddHostedService<EventBusSubscriptionService>();
 
             builder.Services.AddControllers();
 

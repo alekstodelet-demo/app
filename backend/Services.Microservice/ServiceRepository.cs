@@ -68,6 +68,8 @@ namespace Infrastructure.Repositories
         {
             try
             {
+                _dbConnection.Open();
+                _dbTransaction = _dbConnection.BeginTransaction();
                 var sql = @"SELECT id AS ""Id"",
                                    name AS ""Name"",
                                    short_name AS ""ShortName"",
@@ -128,6 +130,7 @@ namespace Infrastructure.Repositories
                             @CreatedAt, @UpdatedAt, @CreatedBy, @UpdatedBy) RETURNING id";
 
                 var result = await _dbConnection.ExecuteScalarAsync<int>(sql, model, transaction: _dbTransaction);
+                _dbTransaction.Commit();
                 return Result.Ok(result);
             }
             catch (Exception ex)
@@ -156,7 +159,7 @@ namespace Infrastructure.Repositories
                     return Result.Fail(new ExceptionalError("Not found", null)
                         .WithMetadata("ErrorCode", "NOT_FOUND"));
                 }
-
+                _dbTransaction.Commit();
                 return Result.Ok();
             }
             catch (Exception ex)
@@ -178,7 +181,7 @@ namespace Infrastructure.Repositories
                     return Result.Fail(new ExceptionalError("Service not found", null)
                         .WithMetadata("ErrorCode", "NOT_FOUND"));
                 }
-
+                _dbTransaction.Commit();
                 return Result.Ok();
             }
             catch (Exception ex)
