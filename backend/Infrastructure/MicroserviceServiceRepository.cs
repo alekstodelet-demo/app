@@ -5,10 +5,8 @@ using Domain.Entities;
 using FluentResults;
 using Messaging.Shared;
 using Messaging.Shared.Events;
+using Microsoft.Extensions.Logging;
 using WebApi.EventHandlers;
-using ServiceCreatedEvent = Infrastructure.Messaging.Events.ServiceCreatedEvent;
-using ServiceDeletedEvent = Infrastructure.Messaging.Events.ServiceDeletedEvent;
-using ServiceUpdatedEvent = Infrastructure.Messaging.Events.ServiceUpdatedEvent;
 
 namespace WebApi.Repositories
 {
@@ -139,12 +137,14 @@ namespace WebApi.Repositories
                 // Публикуем событие создания сервиса
                 await _eventBus.PublishAsync(new ServiceCreatedEvent(
                     entity.Id, 
-                    entity.Name, 
+                    entity.Name,
+                    entity.ShortName,
                     entity.Code, 
-                    entity.Description, 
-                    entity.DayCount, 
+                    entity.Description,
+                    entity.DayCount,
+                    entity.WorkflowId,
                     entity.Price,
-                    entity.WorkflowId));
+                    entity.IsActive));
                 
                 return Result.Ok(entity.Id);
             }
@@ -168,12 +168,14 @@ namespace WebApi.Repositories
                 // Публикуем событие обновления сервиса
                 await _eventBus.PublishAsync(new ServiceUpdatedEvent(
                     entity.Id, 
-                    entity.Name, 
+                    entity.Name,
+                    entity.ShortName,
                     entity.Code, 
-                    entity.Description, 
-                    entity.DayCount, 
+                    entity.Description,
+                    entity.DayCount,
+                    entity.WorkflowId,
                     entity.Price,
-                    entity.WorkflowId));
+                    entity.IsActive));
                 
                 return Result.Ok();
             }
@@ -253,7 +255,7 @@ namespace WebApi.Repositories
         /// <summary>
         /// Преобразует DTO в доменный объект
         /// </summary>
-        private Service MapToService(Service dto)
+        private Service MapToService(ServiceDto dto)
         {
             return new Service
             {

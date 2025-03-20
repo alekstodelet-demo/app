@@ -1,7 +1,7 @@
 ﻿using Application.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Infrastructure.Repositories;
+using WebApi.Repositories;
 
 namespace WebApi.Infrastructure
 {
@@ -54,14 +54,20 @@ namespace WebApi.Infrastructure
         /// </summary>
         public IServiceRepository CreateServiceRepository()
         {
-            // Если микросервисы включены, используем микросервисный репозиторий
-            if (_options.Enabled)
+            using (var scope = _serviceProvider.CreateScope())  // Создаём область для разрешения scoped-сервисов
             {
-                return _serviceProvider.GetRequiredService<Repositories.MicroserviceServiceRepository>();
+                var repository = scope.ServiceProvider.GetRequiredService<MicroserviceServiceRepository>();
+                return repository;
             }
             
+            // Если микросервисы включены, используем микросервисный репозиторий
+            // if (_options.Enabled)
+            // {
+                // return _serviceProvider.GetRequiredService<Repositories.MicroserviceServiceRepository>();
+            // }
+            
             // Иначе используем обычный репозиторий с прямым доступом к БД
-            return _serviceProvider.GetRequiredService<ServiceRepository>();
+            // return _serviceProvider.GetRequiredService<Infrastructure.Repositories.ServiceRepository>();
         }
     }
 }

@@ -30,9 +30,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="EventHandlers\" />
     <Folder Include="Files\" />
+    <Folder Include="Infrastructure\" />
     <Folder Include="jsons\" />
     <Folder Include="logs\" />
+    <Folder Include="Repositories\" />
     <Folder Include="wwwroot\Files\" />
   </ItemGroup>
 

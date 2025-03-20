@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using WebApi.Infrastructure;
 
 namespace Infrastructure.Data
 {
@@ -24,7 +25,7 @@ namespace Infrastructure.Data
         private IConfiguration _configuration;
         
         public UnitOfWork(DapperDbContext context, IHostEnvironment appEnvironment, IServiceProvider serviceProvider, 
-            IConfiguration configuration, IRepositoryFactory repositoryFactory, ILogger<UnitOfWork> logger)
+            IConfiguration configuration, ILogger<UnitOfWork> logger, IRepositoryFactory repositoryFactory)
         {
             _dbConnection = context.CreateConnection();
             _dbConnection.Open();

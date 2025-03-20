@@ -54,7 +54,7 @@ namespace WebApi
             builder.Services.Configure<Messaging.Shared.RabbitMQ.RabbitMQOptions>(builder.Configuration.GetSection("RabbitMQ"));
             builder.Services.AddSingleton<Messaging.Shared.RabbitMQ.IRabbitMQConnection, Messaging.Shared.RabbitMQ.RabbitMQConnection>();
 
-// Configure EventBus
+            // Configure EventBus
             builder.Services.AddSingleton<Messaging.Shared.IEventBus>(sp =>
             {
                 var rabbitMQConnection = sp.GetRequiredService<Messaging.Shared.RabbitMQ.IRabbitMQConnection>();
@@ -68,20 +68,20 @@ namespace WebApi
                     queueName);
             });
 
-// Register event handlers
+            // Register event handlers
             builder.Services.AddTransient<WebApi.EventHandlers.ServiceResponseEventHandler>();
 
-// Configure microservices options
+            // Configure microservices options
             builder.Services.Configure<WebApi.Infrastructure.MicroservicesOptions>(
                 builder.Configuration.GetSection("Microservices"));
 
-// Register repository factory
+            // Register repository factory
             builder.Services.AddSingleton<WebApi.Infrastructure.IRepositoryFactory, WebApi.Infrastructure.RepositoryFactory>();
 
-// Register repositories for different modes
+            // Register repositories for different modes
             builder.Services.AddScoped<WebApi.Repositories.MicroserviceServiceRepository>(); // Microservice access
 
-// Register event subscription service
+            // Register event subscription service
             builder.Services.AddHostedService<Messaging.Shared.Services.EventBusSubscriptionService>();
 
             builder.Services.AddCors();
