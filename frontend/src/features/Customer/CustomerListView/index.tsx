@@ -54,7 +54,7 @@ const CustomerListView: FC = observer(() => {
         loadData: store.loadCustomers,
         clearStore: store.clearStore
       }}
-      viewMode="popup"
+      viewMode="form"
     >
       {/* Popup form for editing/creating Customers */}
       <CustomerPopupForm

@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics;
+using System.Text.Json;
 using Application.Models;
 using Application.UseCases;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using WebApi.Services;
 
 namespace WebApi.Controllers
@@ -123,6 +125,7 @@ namespace WebApi.Controllers
             if (result.IsSuccess && result.Value != null)
             {
                 var dtoResult = mapper(result.Value);
+                var res = JsonConvert.SerializeObject(dtoResult);
                 return HandleResult(Result.Ok(dtoResult));
             }
 
