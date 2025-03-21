@@ -20,6 +20,20 @@ const ServiceAddEditView = lazy(() => import("features/Service/ServiceAddEditVie
 const CustomerListView = lazy(() => import("features/Customer/CustomerListView"));
 const CustomerAddEditView = lazy(() => import("features/Customer/CustomerAddEditView"));
 
+const RepresentativeListView = lazy(() => import('features/Representative/RepresentativeListView'));
+const RepresentativeAddEditView = lazy(() => import('features/Representative/RepresentativeAddEditView'));
+const RepresentativeTypeListView = lazy(() => import('features/RepresentativeType/RepresentativeTypeListView'));
+const RepresentativeTypeAddEditView = lazy(() => import('features/RepresentativeType/RepresentativeTypeAddEditView'));
+const RepresentativeContactListView = lazy(() => import('features/RepresentativeContact/RepresentativeContactListView'));
+const RepresentativeContactAddEditView = lazy(() => import('features/RepresentativeContact/RepresentativeContactAddEditView'));
+const CustomerRequisiteListView = lazy(() => import('features/CustomerRequisite/CustomerRequisiteListView'));
+const CustomerRequisiteAddEditView = lazy(() => import('features/CustomerRequisite/CustomerRequisiteAddEditView'));
+const OrganizationTypeListView = lazy(() => import('features/OrganizationType/OrganizationTypeListView'));
+const OrganizationTypeAddEditView = lazy(() => import('features/OrganizationType/OrganizationTypeAddEditView'));
+const CustomerContactListView = lazy(() => import('features/CustomerContact/CustomerContactListView'));
+const CustomerContactAddEditView = lazy(() => import('features/CustomerContact/CustomerContactAddEditView'));
+
+
 // Loading fallback component
 const LoadingFallback = () => (
   <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
@@ -42,59 +56,72 @@ const router = createBrowserRouter([
             element: <MainLayout />,
             path: "/user",
             children: [
-              { 
-                path: "Service", 
+              {
+                path: "Service",
                 element: (
                   <Suspense fallback={<LoadingFallback />}>
                     <ServiceListView />
                   </Suspense>
-                ) 
+                )
               },
-              { 
-                path: "Service/addedit", 
+              {
+                path: "Service/addedit",
                 element: (
                   <Suspense fallback={<LoadingFallback />}>
                     <ServiceAddEditView />
                   </Suspense>
-                ) 
+                )
               },
-              { 
-                path: "Customer", 
+              {
+                path: "Customer",
                 element: (
                   <Suspense fallback={<LoadingFallback />}>
                     <CustomerListView />
                   </Suspense>
-                ) 
+                )
               },
-              { 
-                path: "Customer/addedit", 
+              {
+                path: "Customer/addedit",
                 element: (
                   <Suspense fallback={<LoadingFallback />}>
                     <CustomerAddEditView />
                   </Suspense>
-                ) 
+                )
               },
+
+              { path: 'Representative', element: (<Suspense fallback={<LoadingFallback />}><RepresentativeListView /></Suspense>) },
+              { path: 'Representative/addedit', element: (<Suspense fallback={<LoadingFallback />}><RepresentativeAddEditView /></Suspense>) },
+              { path: 'RepresentativeType', element: (<Suspense fallback={<LoadingFallback />}><RepresentativeTypeListView /></Suspense>) },
+              { path: 'RepresentativeType/addedit', element: (<Suspense fallback={<LoadingFallback />}><RepresentativeTypeAddEditView /></Suspense>) },
+              { path: 'RepresentativeContact', element: (<Suspense fallback={<LoadingFallback />}><RepresentativeContactListView /></Suspense>) },
+              { path: 'RepresentativeContact/addedit', element: (<Suspense fallback={<LoadingFallback />}><RepresentativeContactAddEditView /></Suspense>) },
+              { path: 'CustomerRequisite', element: (<Suspense fallback={<LoadingFallback />}><CustomerRequisiteListView /></Suspense>) },
+              { path: 'CustomerRequisite/addedit', element: (<Suspense fallback={<LoadingFallback />}><CustomerRequisiteAddEditView /></Suspense>) },
+              { path: 'OrganizationType', element: (<Suspense fallback={<LoadingFallback />}><OrganizationTypeListView /></Suspense>) },
+              { path: 'OrganizationType/addedit', element: (<Suspense fallback={<LoadingFallback />}><OrganizationTypeAddEditView /></Suspense>) },
+              { path: 'CustomerContact', element: (<Suspense fallback={<LoadingFallback />}><CustomerContactListView /></Suspense>) },
+              { path: 'CustomerContact/addedit', element: (<Suspense fallback={<LoadingFallback />}><CustomerContactAddEditView /></Suspense>) },
             ]
           }]
       },
       {
         element: <PublicRoute />,
         children: [
-          { 
-            path: "/login", 
+          {
+            path: "/login",
             element: (
               <Suspense fallback={<LoadingFallback />}>
                 <AuthForm />
               </Suspense>
-            ) 
+            )
           },
-          { 
-            path: "/", 
+          {
+            path: "/",
             element: (
               <Suspense fallback={<LoadingFallback />}>
                 <AuthForm />
               </Suspense>
-            ) 
+            )
           },
         ]
       },

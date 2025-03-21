@@ -7,7 +7,10 @@ import { Paper } from '@mui/material';
 import store from './store';
 import { useTranslation } from 'react-i18next';
 
-const MtmTabs = observer(() => {
+
+
+
+const CustomerContactMtmTabs = observer(() => {
   const [value, setValue] = React.useState(0);
   const { t } = useTranslation();
   const translate = t;
@@ -20,13 +23,10 @@ const MtmTabs = observer(() => {
     <Box component={Paper} elevation={5}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-{/* tabs here */}
+          
         </Tabs>
       </Box>
       
-      <CustomTabPanel value={value} index={0}>
-      </CustomTabPanel>
-            
     </Box>
   );
 
@@ -63,4 +63,4 @@ function a11yProps(index: number) {
 }
 
 
-export default MtmTabs
+export default CustomerContactMtmTabs

@@ -7,17 +7,10 @@ import CustomerContactAddEditBaseView from "./base";
 import store from "./store";
 import MtmTabs from "./mtmTabs";
 
-/**
- * Interface for component props
- */
 interface CustomerContactProps {
   id: string | null;
 }
 
-/**
- * CustomerContact form component for adding and editing CustomerContacts
- * @param props - Component props
- */
 const CustomerContactAddEditView: FC<CustomerContactProps> = observer((props) => {
   const { t } = useTranslation();
   const { id } = props;
@@ -32,7 +25,6 @@ const CustomerContactAddEditView: FC<CustomerContactProps> = observer((props) =>
       )}
     </CustomerContactAddEditBaseView>
   );
-});
+})
 
-// Enhance component with form functionality using the HOC
 export default withForm(CustomerContactAddEditView, store, "/user/CustomerContact");

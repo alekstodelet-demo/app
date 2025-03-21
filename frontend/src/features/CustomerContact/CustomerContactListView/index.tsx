@@ -6,28 +6,45 @@ import BaseListView from 'components/common/BaseListView';
 import CustomerContactPopupForm from '../CustomerContactAddEditView/popupForm';
 import store from "./store";
 
-type CustomerContactListProps = {
+
+type CustomerContactListViewProps = {
   mainId: number;
+
 };
 
 
-/**
- * CustomerContact list view component that displays all CustomerContacts
- */
-const CustomerContactListView: FC<CustomerContactListProps> = observer((props) => {
+const CustomerContactListView: FC<CustomerContactListViewProps> = observer((props) => {
   const { t } = useTranslation();
   const translate = t;
 
   useEffect(() => {
     store.setMainId(props.mainId)
   }, [props.mainId]);
+  
 
-  // Define grid columns
   const columns: GridColDef[] = [
-    { field: 'pin', headerName: translate("label:CustomerContactListView.pin"), flex: 1 },
-    { field: 'value', headerName: translate("label:CustomerContactListView.value"), flex: 1 },
-    { field: 'allow_notification', headerName: translate("label:CustomerContactListView.allow_notification"), flex: 1 },
-    { field: 'type_name', headerName: translate("label:CustomerContactListView.type_name"), flex: 1 },
+    
+    {
+      field: 'value',
+      headerName: translate("label:CustomerContactListView.value"),
+      flex: 1,
+      renderCell: (param) => (<div data-testid="table_CustomerContact_column_value"> {param.row.value} </div>),
+      renderHeader: (param) => (<div data-testid="table_CustomerContact_header_value">{param.colDef.headerName}</div>)
+    },
+    {
+      field: 'allowNotification',
+      headerName: translate("label:CustomerContactListView.allowNotification"),
+      flex: 1,
+      renderCell: (param) => (<div data-testid="table_CustomerContact_column_allowNotification"> {param.row.allowNotification} </div>),
+      renderHeader: (param) => (<div data-testid="table_CustomerContact_header_allowNotification">{param.colDef.headerName}</div>)
+    },
+    {
+      field: 'rTypeId',
+      headerName: translate("label:CustomerContactListView.rTypeId"),
+      flex: 1,
+      renderCell: (param) => (<div data-testid="table_CustomerContact_column_rTypeId"> {param.row.rTypeId} </div>),
+      renderHeader: (param) => (<div data-testid="table_CustomerContact_header_rTypeId">{param.colDef.headerName}</div>)
+    },
   ];
 
   return (
@@ -45,11 +62,9 @@ const CustomerContactListView: FC<CustomerContactListProps> = observer((props) =
       }}
       viewMode="popup"
     >
-      {/* Popup form for editing/creating CustomerContacts */}
       <CustomerContactPopupForm
         openPanel={store.openPanel}
         id={store.currentId}
-        mainId={store.mainId}
         onBtnCancelClick={() => store.closePanel()}
         onSaveClick={() => {
           store.closePanel();
@@ -58,6 +73,8 @@ const CustomerContactListView: FC<CustomerContactListProps> = observer((props) =
       />
     </BaseListView>
   );
-});
+})
 
-export default CustomerContactListView;
+
+
+export default CustomerContactListView

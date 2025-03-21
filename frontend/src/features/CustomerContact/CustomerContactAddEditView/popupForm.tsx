@@ -11,15 +11,13 @@ type PopupFormProps = {
   id: number;
   onBtnCancelClick: () => void;
   onSaveClick: (id: number) => void;
-  mainId: number;
 }
 
-const PopupForm: FC<PopupFormProps> = observer((props) => {
+const CustomerContactPopupForm: FC<PopupFormProps> = observer((props) => {
   const { t } = useTranslation();
   const translate = t;
 
   useEffect(() => {
-    store.handleChange({ target: { value: props.mainId, name: "customer_id" } })
     if (props.openPanel) {
       store.doLoad(props.id)
     } else {
@@ -28,7 +26,8 @@ const PopupForm: FC<PopupFormProps> = observer((props) => {
   }, [props.openPanel])
 
   return (
-    <Dialog open={props.openPanel} onClose={props.onBtnCancelClick}>
+    <Dialog open={props.openPanel} onClose={props.onBtnCancelClick} maxWidth="sm" fullWidth>
+      <DialogTitle>{translate('label:CustomerContactAddEditView.entityTitle')}</DialogTitle>
       <DialogContent>
         <CustomerContactAddEditBaseView
           isPopup={true}
@@ -40,6 +39,7 @@ const PopupForm: FC<PopupFormProps> = observer((props) => {
           <CustomButton
             variant="contained"
             id="id_CustomerContactSaveButton"
+            name={'CustomerContactAddEditView.save'}
             onClick={() => {
               store.onSaveClick((id: number) => props.onSaveClick(id))
             }}
@@ -49,6 +49,7 @@ const PopupForm: FC<PopupFormProps> = observer((props) => {
           <CustomButton
             variant="contained"
             id="id_CustomerContactCancelButton"
+            name={'CustomerContactAddEditView.cancel'}
             onClick={() => props.onBtnCancelClick()}
           >
             {translate("common:cancel")}
@@ -59,4 +60,4 @@ const PopupForm: FC<PopupFormProps> = observer((props) => {
   );
 })
 
-export default PopupForm
+export default CustomerContactPopupForm

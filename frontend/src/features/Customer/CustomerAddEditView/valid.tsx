@@ -1,7 +1,17 @@
 import * as yup from "yup";
 
 export const schema = yup.object().shape({
-  value: yup.string().required("Обязательное поле"),
+  
+  pin: yup.string(),
+  okpo: yup.string(),
+  postalCode: yup.string(),
+  ugns: yup.string(),
+  regNumber: yup.string(),
+  organizationTypeId: yup.number().notOneOf([0], "Required field").required("Required field"),
+  name: yup.string(),
+  address: yup.string(),
+  director: yup.string(),
+  nomer: yup.string(),
 });
 
 export const validateField = async (name: string, value: any) => {

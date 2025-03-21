@@ -6,10 +6,14 @@ import { observer } from 'mobx-react';
 import { Paper } from '@mui/material';
 import store from './store';
 import { useTranslation } from 'react-i18next';
-
 import CustomerContactListView from 'features/CustomerContact/CustomerContactListView';
+              import CustomerRequisiteListView from 'features/CustomerRequisite/CustomerRequisiteListView';
+              import RepresentativeListView from 'features/Representative/RepresentativeListView';
+              
 
-const MtmTabs = observer(() => {
+
+
+const CustomerMtmTabs = observer(() => {
   const [value, setValue] = React.useState(0);
   const { t } = useTranslation();
   const translate = t;
@@ -22,14 +26,25 @@ const MtmTabs = observer(() => {
     <Box component={Paper} elevation={5}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab data-testid={"CustomerContact_tab_title"} label={translate("label:CustomerContactAddEditView.entityTitle")} {...a11yProps(0)} />
+          <Tab data-testid={"CustomerContactTabTitle"} label={translate("label:CustomerContactListView.entityTitle")} {...a11yProps(0)} />
+              <Tab data-testid={"CustomerRequisiteTabTitle"} label={translate("label:CustomerRequisiteListView.entityTitle")} {...a11yProps(1)} />
+              <Tab data-testid={"RepresentativeTabTitle"} label={translate("label:RepresentativeListView.entityTitle")} {...a11yProps(2)} />
+              
         </Tabs>
       </Box>
-
+      
       <CustomTabPanel value={value} index={0}>
         <CustomerContactListView mainId={store.id} />
       </CustomTabPanel>
-
+            
+      <CustomTabPanel value={value} index={1}>
+        <CustomerRequisiteListView mainId={store.id} />
+      </CustomTabPanel>
+            
+      <CustomTabPanel value={value} index={2}>
+        <RepresentativeListView mainId={store.id} />
+      </CustomTabPanel>
+            
     </Box>
   );
 
@@ -66,4 +81,4 @@ function a11yProps(index: number) {
 }
 
 
-export default MtmTabs
+export default CustomerMtmTabs

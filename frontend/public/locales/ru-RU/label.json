@@ -26,5 +26,132 @@
     "day_count": "Количество дней",
     "price": "Цена услуги",
     "workflow_id": "Рабочий процесс"
+  },
+  "RepresentativeAddEditView": {
+    "entityTitle": "Representative",
+    "firstName": "firstName",
+    "secondName": "secondName",
+    "pin": "pin",
+    "companyId": "companyId",
+    "hasAccess": "hasAccess",
+    "typeId": "typeId",
+    "lastName": "lastName"
+  },
+  "RepresentativeListView": {
+    "Representative": "Representative",
+    "entityTitle": "Representative",
+    "firstName": "firstName",
+    "secondName": "secondName",
+    "pin": "pin",
+    "companyId": "companyId",
+    "hasAccess": "hasAccess",
+    "typeId": "typeId",
+    "lastName": "lastName"
+  },
+  "RepresentativeTypeAddEditView": {
+    "entityTitle": "RepresentativeType",
+    "description": "description",
+    "name": "name",
+    "code": "code"
+  },
+  "RepresentativeTypeListView": {
+    "RepresentativeType": "RepresentativeType",
+    "entityTitle": "RepresentativeType",
+    "description": "description",
+    "name": "name",
+    "code": "code"
+  },
+  "RepresentativeContactAddEditView": {
+    "entityTitle": "RepresentativeContact",
+    "value": "value",
+    "allowNotification": "allowNotification",
+    "rTypeId": "rTypeId",
+    "representativeId": "representativeId"
+  },
+  "RepresentativeContactListView": {
+    "RepresentativeContact": "RepresentativeContact",
+    "entityTitle": "RepresentativeContact",
+    "value": "value",
+    "allowNotification": "allowNotification",
+    "rTypeId": "rTypeId",
+    "representativeId": "representativeId"
+  },
+  "CustomerRequisiteAddEditView": {
+    "entityTitle": "CustomerRequisite",
+    "paymentAccount": "paymentAccount",
+    "bank": "bank",
+    "bik": "bik",
+    "organizationId": "organizationId"
+  },
+  "CustomerRequisiteListView": {
+    "CustomerRequisite": "CustomerRequisite",
+    "entityTitle": "CustomerRequisite",
+    "paymentAccount": "paymentAccount",
+    "bank": "bank",
+    "bik": "bik",
+    "organizationId": "organizationId"
+  },
+  "CustomerAddEditView": {
+    "entityTitle": "Customer",
+    "pin": "pin",
+    "okpo": "okpo",
+    "postalCode": "postalCode",
+    "ugns": "ugns",
+    "regNumber": "regNumber",
+    "organizationTypeId": "organizationTypeId",
+    "name": "name",
+    "address": "address",
+    "director": "director",
+    "nomer": "nomer"
+  },
+  "CustomerListView": {
+    "Customer": "Customer",
+    "entityTitle": "Customer",
+    "pin": "pin",
+    "okpo": "okpo",
+    "postalCode": "postalCode",
+    "ugns": "ugns",
+    "regNumber": "regNumber",
+    "organizationTypeId": "organizationTypeId",
+    "name": "name",
+    "address": "address",
+    "director": "director",
+    "nomer": "nomer"
+  },
+  "OrganizationTypeAddEditView": {
+    "entityTitle": "OrganizationType",
+    "descriptionKg": "descriptionKg",
+    "textColor": "textColor",
+    "backgroundColor": "backgroundColor",
+    "name": "name",
+    "description": "description",
+    "code": "code",
+    "nameKg": "nameKg"
+  },
+  "OrganizationTypeListView": {
+    "OrganizationType": "OrganizationType",
+    "entityTitle": "OrganizationType",
+    "descriptionKg": "descriptionKg",
+    "textColor": "textColor",
+    "backgroundColor": "backgroundColor",
+    "name": "name",
+    "description": "description",
+    "code": "code",
+    "nameKg": "nameKg"
+  },
+  "CustomerContactAddEditView": {
+    "entityTitle": "CustomerContact",
+    "value": "value",
+    "allowNotification": "allowNotification",
+    "rTypeId": "rTypeId",
+    "organizationId": "organizationId"
+  },
+  "CustomerContactListView": {
+    "CustomerContact": "CustomerContact",
+    "entityTitle": "CustomerContact",
+    "value": "value",
+    "allowNotification": "allowNotification",
+    "rTypeId": "rTypeId",
+    "organizationId": "organizationId"
   }
 }

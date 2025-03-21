@@ -1,6 +1,4 @@
-import React, { FC, useState } from "react";
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router';
+import React, { FC } from "react";
 import {
   Card,
   CardContent,
@@ -8,9 +6,6 @@ import {
   Divider,
   Paper,
   Grid,
-  Button,
-  makeStyles,
-  FormControlLabel,
   Container,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -19,73 +14,73 @@ import { observer } from "mobx-react"
 import LookUp from 'components/LookUp';
 import CustomTextField from "components/TextField";
 import CustomCheckbox from "components/Checkbox";
+import DateTimeField from "components/DateTimeField";
 
-type CustomerContactAddEditProps = {
-  children?: React.ReactNode;
-  isPopup?: boolean;
+type CustomerContactTableProps = {
+  children ?: React.ReactNode;
+  isPopup ?: boolean;
 };
 
-
-const BaseView: FC<CustomerContactAddEditProps> = observer((props) => {
+const BaseCustomerContactView: FC<CustomerContactTableProps> = observer((props) => {
   const { t } = useTranslation();
   const translate = t;
   return (
-    <Container maxWidth='xl' style={{ marginTop: 20 }}>
-
-      <form id="CustomerContactForm" autoComplete='off'>
-        <Paper elevation={7}  >
-          <Card>
-            <CardHeader title={
-              <span id="CustomerContact_TitleName">
-                {translate('label:CustomerContactAddEditView.entityTitle')}
-              </span>
-            } />
-            <Divider />
-            <CardContent>
-              <Grid container spacing={3}>
-                <Grid item md={12} xs={12}>
-                  <CustomTextField
-                    helperText={store.errors.value}
-                    error={!!store.errors.value}
-                    id='id_f_CustomerContact_value'
-                    label={translate('label:CustomerContactAddEditView.value')}
-                    value={store.value}
-                    onChange={(event) => store.handleChange(event)}
-                    name="value"
-                  />
+    <Container maxWidth='xl' sx={{ mt: 3 }}>
+      <Grid container spacing={3}>
+        <Grid item md={props.isPopup ? 12 : 6}>
+          <form data-testid="CustomerContactForm" id="CustomerContactForm" autoComplete='off'>
+            <Card component={Paper} elevation={5}>
+              <CardHeader title={
+                <span id="CustomerContact_TitleName">
+                  {translate('label:CustomerContactAddEditView.entityTitle')}
+                </span>
+              } />
+              <Divider />
+              <CardContent>
+                <Grid container spacing={3}>
+                  
+                  <Grid item md={12} xs={12}>
+                    <CustomTextField
+                      value={store.value}
+                      onChange={(event) => store.handleChange(event)}
+                      name="value"
+                      data-testid="id_f_CustomerContact_value"
+                      id='id_f_CustomerContact_value'
+                      label={translate('label:CustomerContactAddEditView.value')}
+                      helperText={store.errors.value}
+                      error={!!store.errors.value}
+                    />
+                  </Grid>
+                  <Grid item md={12} xs={12}>
+                    <CustomCheckbox
+                      value={store.allowNotification}
+                      onChange={(event) => store.handleChange(event)}
+                      name="allowNotification"
+                      label={translate('label:CustomerContactAddEditView.allowNotification')}
+                      id='id_f_CustomerContact_allowNotification'
+                    />
+                  </Grid>
+                  <Grid item md={12} xs={12}>
+                    <CustomTextField
+                      value={store.rTypeId}
+                      onChange={(event) => store.handleChange(event)}
+                      name="rTypeId"
+                      data-testid="id_f_CustomerContact_rTypeId"
+                      id='id_f_CustomerContact_rTypeId'
+                      label={translate('label:CustomerContactAddEditView.rTypeId')}
+                      helperText={store.errors.rTypeId}
+                      error={!!store.errors.rTypeId}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item md={12} xs={12}>
-                  <CustomCheckbox
-                    value={store.allow_notification}
-                    onChange={(event) => store.handleChange(event)}
-                    name="allow_notification"
-                    label={translate('label:CustomerContactAddEditView.allow_notification')}
-                    id='id_f_allow_notification'
-                  />
-                </Grid>
-
-                <Grid item md={12} xs={12}>
-                  <LookUp
-                    value={store.type_id}
-                    onChange={(event) => store.handleChange(event)}
-                    name="type_id"
-                    data={store.ContactTypes}
-                    id='id_f_CustomerContact_type_id'
-                    label={translate('label:ServiceAddEditView.type_id')}
-                    helperText={store.errors.type_id}
-                    error={!!store.errors.type_id}
-                  />
-                </Grid>
-
-              </Grid>
-            </CardContent>
-          </Card>
-        </Paper>
-      </form>
-      {props.children}
+              </CardContent>
+            </Card>
+          </form>
+        </Grid>
+        {props.children}
+      </Grid>
     </Container>
   );
 })
 
-
-export default BaseView;
+export default BaseCustomerContactView;

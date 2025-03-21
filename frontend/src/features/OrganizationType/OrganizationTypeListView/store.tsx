@@ -1,39 +1,38 @@
 import { runInAction, makeObservable, observable } from "mobx";
 import i18n from "i18next";
-import BaseStore from 'core/stores/BaseStore';
-import { getCustomers, deleteCustomer } from "api/Customer";
-import { Customer } from "constants/Customer";
-import MainStore from "../../../MainStore";
 
-/**
- * Store for managing Customer list data and operations
- */
-class CustomerListStore extends BaseStore {
-  @observable data: Customer[] = [];
+import BaseStore from 'core/stores/BaseStore';
+import MainStore from "MainStore";
+import { deleteOrganizationType } from "api/OrganizationType";
+import { OrganizationType } from "constants/OrganizationType";
+import { getOrganizationTypes } from "api/OrganizationType";
+
+class OrganizationTypeListStore extends BaseStore {
+  @observable data: OrganizationType[] = [];
   @observable openPanel: boolean = false;
   @observable currentId: number = 0;
+  @observable mainId: number = 0;
+  @observable isEdit: boolean = false;
+  
 
   constructor() {
     super();
     makeObservable(this);
   }
 
-  /**
-   * Clear store state to initial values
-   */
   clearStore() {
     super.clearStore(); // Call parent's clearStore first
     runInAction(() => {
       this.data = [];
       this.currentId = 0;
       this.openPanel = false;
+      this.mainId = 0;
+      this.isEdit = false;
     });
   }
 
-  /**
-   * Handle edit button click
-   * @param id - Customer ID to edit
-   */
+  
+
   onEditClicked(id: number) {
     runInAction(() => {
       this.openPanel = true;
@@ -41,22 +40,21 @@ class CustomerListStore extends BaseStore {
     });
   }
 
-  /**
-   * Close the edit panel
-   */
   closePanel() {
     runInAction(() => {
       this.openPanel = false;
       this.currentId = 0;
     });
   }
+  
+  setFastInputIsEdit = (value: boolean) => {
+    this.isEdit = value;
+  }
 
-  /**
-   * Load all Customers from the API
-   */
-  loadCustomers = async () => {
+  loadOrganizationTypes = async () => {
+    
     this.apiCall(
-      getCustomers,
+      getOrganizationTypes,
       (data) => {
         if (Array.isArray(data)) {
           runInAction(() => {
@@ -67,20 +65,16 @@ class CustomerListStore extends BaseStore {
     );
   };
 
-  /**
-   * Delete a Customer by ID
-   * @param id - Customer ID to delete
-   */
-  deleteCustomer = (id: number) => {
+  deleteOrganizationType = (id: number) => {
     this.showConfirmDialog(
       i18n.t("areYouSure"),
       i18n.t("delete"),
       i18n.t("no"),
       async () => {
         this.apiCall(
-          () => deleteCustomer(id),
+          () => deleteOrganizationType(id),
           () => {
-            this.loadCustomers();
+            this.loadOrganizationTypes();
             this.showSuccessSnackbar(i18n.t("message:snackbar.successDelete"));
           },
           (err) => {
@@ -93,4 +87,4 @@ class CustomerListStore extends BaseStore {
   };
 }
 
-export default new CustomerListStore();
+export default new OrganizationTypeListStore();
