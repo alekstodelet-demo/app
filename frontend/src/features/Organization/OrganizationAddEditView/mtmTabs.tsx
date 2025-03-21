@@ -9,8 +9,8 @@ import { useTranslation } from 'react-i18next';
 
 // Import related list components
 import OrganizationContactListView from 'features/OrganizationContact/OrganizationContactListView/index';
-import RepresentativeListView from 'features/Representative/RepresentativeListView/index';
-import OrganizationRequisiteListView from 'features/OrganizationRequisite/OrganizationRequisiteListView';
+// import RepresentativeListView from 'features/Representative/RepresentativeListView/index';
+// import OrganizationRequisiteListView from 'features/OrganizationRequisite/OrganizationRequisiteListView';
 
 const MtmTabs = observer(() => {
   const [value, setValue] = React.useState(0);
@@ -36,11 +36,11 @@ const MtmTabs = observer(() => {
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={1}>
-        <OrganizationRequisiteListView mainId={store.id} />
+        {/* <OrganizationRequisiteListView mainId={store.id} /> */}
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={2}>
-        <RepresentativeListView mainId={store.id} />
+        {/* <RepresentativeListView mainId={store.id} /> */}
       </CustomTabPanel>
     </Box>
   );

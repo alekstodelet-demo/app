@@ -19,6 +19,20 @@ const ServiceListView = lazy(() => import("features/Service/ServiceListView"));
 const ServiceAddEditView = lazy(() => import("features/Service/ServiceAddEditView"));
 const CustomerListView = lazy(() => import("features/Customer/CustomerListView"));
 const CustomerAddEditView = lazy(() => import("features/Customer/CustomerAddEditView"));
+const OrganizationListView = lazy(() => import("features/Organization/OrganizationListView"));
+const OrganizationAddEditView = lazy(() => import("features/Organization/OrganizationAddEditView"));
+const OrganizationContactListView = lazy(() => import("features/OrganizationContact/OrganizationContactListView"));
+const OrganizationContactAddEditView = lazy(() => import("features/OrganizationContact/OrganizationContactAddEditView"));
+const OrganizationRequisiteListView = lazy(() => import("features/OrganizationRequisite/OrganizationRequisiteListView"));
+const OrganizationRequisiteAddEditView = lazy(() => import("features/OrganizationRequisite/OrganizationRequisiteAddEditView"));
+const OrganizationTypeListView = lazy(() => import("features/OrganizationType/OrganizationTypeListView"));
+const OrganizationTypeAddEditView = lazy(() => import("features/OrganizationType/OrganizationTypeAddEditView"));
+// const RepresentativeListView = lazy(() => import("features/Representative/RepresentativeListView"));
+// const RepresentativeAddEditView = lazy(() => import("features/Representative/RepresentativeAddEditView"));
+// const RepresentativeContactListView = lazy(() => import("features/RepresentativeContact/RepresentativeContactListView"));
+// const RepresentativeContactAddEditView = lazy(() => import("features/RepresentativeContact/RepresentativeContactAddEditView"));
+// const RepresentativeTypeListView = lazy(() => import("features/RepresentativeType/RepresentativeTypeListView"));
+// const RepresentativeTypeAddEditView = lazy(() => import("features/RepresentativeType/RepresentativeTypeAddEditView"));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -74,6 +88,90 @@ const router = createBrowserRouter([
                   </Suspense>
                 ) 
               },
+              {path: "Organization", 
+                element: (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <OrganizationListView />
+                  </Suspense>
+              )},
+              {path: "Organization/addedit", 
+                element: (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <OrganizationAddEditView />
+                  </Suspense>
+              )},
+              {path: "OrganizationContact", 
+                element: (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <OrganizationContactListView />
+                  </Suspense>
+              )},
+              {path: "OrganizationContact/addedit", 
+                element: (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <OrganizationContactAddEditView />
+                  </Suspense>
+              )},
+              {path: "OrganizationRequisite", 
+                element: (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <OrganizationRequisiteListView />
+                  </Suspense>
+              )},
+              {path: "OrganizationRequisite/addedit", 
+                element: (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <OrganizationRequisiteAddEditView />
+                  </Suspense>
+              )},
+              {path: "OrganizationType", 
+                element: (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <OrganizationTypeListView />
+                  </Suspense>
+              )},
+              {path: "OrganizationType/addedit", 
+                element: (
+                  <Suspense fallback={<LoadingFallback />}>
+                    <OrganizationTypeAddEditView />
+                  </Suspense>
+              )},
+              // {path: "Representative", 
+              //   element: (
+              //     <Suspense fallback={<LoadingFallback />}>
+              //       <RepresentativeListView />
+              //     </Suspense>
+              // )},
+              // {path: "Representative/addedit", 
+              //   element: (
+              //     <Suspense fallback={<LoadingFallback />}>
+              //       <RepresentativeAddEditView />
+              //     </Suspense>
+              // )},
+              // {path: "RepresentativeContact", 
+              //   element: (
+              //     <Suspense fallback={<LoadingFallback />}>
+              //       <RepresentativeContactListView />
+              //     </Suspense>
+              // )},
+              // {path: "RepresentativeContact/addedit", 
+              //   element: (
+              //     <Suspense fallback={<LoadingFallback />}>
+              //       <RepresentativeContactAddEditView />
+              //     </Suspense>
+              // )},
+              // {path: "RepresentativeType", 
+              //   element: (
+              //     <Suspense fallback={<LoadingFallback />}>
+              //       <RepresentativeTypeListView />
+              //     </Suspense>
+              // )},
+              // {path: "RepresentativeType/addedit", 
+              //   element: (
+              //     <Suspense fallback={<LoadingFallback />}>
+              //       <RepresentativeTypeAddEditView />
+              //     </Suspense>
+              // )},
             ]
           }]
       },

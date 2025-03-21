@@ -86,13 +86,15 @@
     "entityTitle": "Реквизиты организации",
     "payment_account": "Расчетный счет",
     "bank": "Банк",
-    "bik": "БИК"
+    "bik": "БИК",
+    "organization_id": "Инн организации"
   },
   "OrganizationRequisiteAddEditView": {
     "entityTitle": "Реквизит организации",
     "payment_account": "Расчетный счет",
     "bank": "Банк",
-    "bik": "БИК"
+    "bik": "БИК",
+    "organization_id": "Инн организации"
   },
   "RepresentativeListView": {
     "entityTitle": "Представители",
