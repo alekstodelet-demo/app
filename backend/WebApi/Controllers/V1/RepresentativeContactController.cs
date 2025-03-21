@@ -1,4 +1,5 @@
 using Application.UseCases;
+using Application.UseCases.Interfaces;
 using Asp.Versioning;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -11,46 +12,43 @@ namespace WebApi.Controllers.V1
     [ApiController]
     [AllowAnonymous]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class RepresentativeContactController : BaseController<IRepresentativeContactUseCases, RepresentativeContact, GetRepresentativeContactResponse, CreateRepresentativeContactRequest, UpdateRepresentativeContactRequest>
+    public class RepresentativeContactController : BaseController<IRepresentativeContactUseCase, RepresentativeContact, GetRepresentativeContactResponse, CreateRepresentativeContactRequest,
+        UpdateRepresentativeContactRequest>
     {
-        private readonly IRepresentativeContactUseCases _representativeContactUseCases;
-        private readonly ILogger<RepresentativeContactController> _logger;
-        
-        public RepresentativeContactController(IRepresentativeContactUseCases representativeContactUseCases, ILogger<RepresentativeContactController> logger)
-            : base(representativeContactUseCases, logger)
+        private readonly IRepresentativeContactUseCase _RepresentativeContactUseCase;
+
+        public RepresentativeContactController(IRepresentativeContactUseCase RepresentativeContactUseCase,
+            ILogger<BaseController<IRepresentativeContactUseCase, RepresentativeContact, GetRepresentativeContactResponse, CreateRepresentativeContactRequest,
+                UpdateRepresentativeContactRequest>> logger)
+            : base(RepresentativeContactUseCase, logger)
         {
-            _representativeContactUseCases = representativeContactUseCases ?? throw new ArgumentNullException(nameof(representativeContactUseCases));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _RepresentativeContactUseCase = RepresentativeContactUseCase;
         }
-        
+
         protected override GetRepresentativeContactResponse EntityToDtoMapper(RepresentativeContact entity)
         {
-            return entity != null ? GetRepresentativeContactResponse.FromDomain(entity) : throw new ArgumentNullException(nameof(entity));
+            return GetRepresentativeContactResponse.FromDomain(entity);
         }
-        
+
         protected override RepresentativeContact CreateRequestToEntity(CreateRepresentativeContactRequest requestDto)
         {
-            return requestDto?.ToDomain() ?? throw new ArgumentNullException(nameof(requestDto));
+            return requestDto.ToDomain();
         }
-        
+
         protected override RepresentativeContact UpdateRequestToEntity(UpdateRepresentativeContactRequest requestDto)
         {
-            return requestDto?.ToDomain() ?? throw new ArgumentNullException(nameof(requestDto));
+            return requestDto.ToDomain();
         }
-        
-        [HttpGet("GetByRepresentativeId")]
-        public async Task<IActionResult> GetByRepresentativeId(int representativeId)
+
+
+        [HttpGet]
+        [Route("GetByRepresentativeId")]
+        public async Task<IActionResult> GetByRepresentativeId(int RepresentativeId)
         {
-            _logger.LogInformation("Getting Representative Contacts for Representative ID: {RepresentativeId}", representativeId);
-            
-            var result = await _representativeContactUseCases.GetByRepresentativeId(representativeId);
-            if (result.IsSuccess)
-            {
-                var dtoList = result.Value.Select(GetRepresentativeContactResponse.FromDomain).ToList();
-                return Ok(dtoList);
-            }
-            
-            return HandleResult(result);
+            var response = await _RepresentativeContactUseCase.GetByRepresentativeId(RepresentativeId);
+            return Ok(response);
         }
+
+
     }
 }

@@ -1,4 +1,5 @@
 using Application.UseCases;
+using Application.UseCases.Interfaces;
 using Asp.Versioning;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -11,31 +12,35 @@ namespace WebApi.Controllers.V1
     [ApiController]
     [AllowAnonymous]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class RepresentativeTypeController : BaseController<IRepresentativeTypeUseCases, RepresentativeType, GetRepresentativeTypeResponse, CreateRepresentativeTypeRequest, UpdateRepresentativeTypeRequest>
+    public class RepresentativeTypeController : BaseController<IRepresentativeTypeUseCase, RepresentativeType, GetRepresentativeTypeResponse, CreateRepresentativeTypeRequest,
+        UpdateRepresentativeTypeRequest>
     {
-        private readonly IRepresentativeTypeUseCases _representativeTypeUseCases;
-        private readonly ILogger<RepresentativeTypeController> _logger;
-        
-        public RepresentativeTypeController(IRepresentativeTypeUseCases representativeTypeUseCases, ILogger<RepresentativeTypeController> logger)
-            : base(representativeTypeUseCases, logger)
+        private readonly IRepresentativeTypeUseCase _RepresentativeTypeUseCase;
+
+        public RepresentativeTypeController(IRepresentativeTypeUseCase RepresentativeTypeUseCase,
+            ILogger<BaseController<IRepresentativeTypeUseCase, RepresentativeType, GetRepresentativeTypeResponse, CreateRepresentativeTypeRequest,
+                UpdateRepresentativeTypeRequest>> logger)
+            : base(RepresentativeTypeUseCase, logger)
         {
-            _representativeTypeUseCases = representativeTypeUseCases ?? throw new ArgumentNullException(nameof(representativeTypeUseCases));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _RepresentativeTypeUseCase = RepresentativeTypeUseCase;
         }
-        
+
         protected override GetRepresentativeTypeResponse EntityToDtoMapper(RepresentativeType entity)
         {
-            return entity != null ? GetRepresentativeTypeResponse.FromDomain(entity) : throw new ArgumentNullException(nameof(entity));
+            return GetRepresentativeTypeResponse.FromDomain(entity);
         }
-        
+
         protected override RepresentativeType CreateRequestToEntity(CreateRepresentativeTypeRequest requestDto)
         {
-            return requestDto?.ToDomain() ?? throw new ArgumentNullException(nameof(requestDto));
+            return requestDto.ToDomain();
         }
-        
+
         protected override RepresentativeType UpdateRequestToEntity(UpdateRepresentativeTypeRequest requestDto)
         {
-            return requestDto?.ToDomain() ?? throw new ArgumentNullException(nameof(requestDto));
+            return requestDto.ToDomain();
         }
+
+
+
     }
 }

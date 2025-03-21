@@ -1,11 +1,11 @@
 using Application.Models;
 using Application.Repositories;
+using Application.UseCases.Interfaces;
 using Domain.Entities;
-using FluentResults;
 
 namespace Application.UseCases
 {
-    public class RepresentativeTypeUseCases : BaseUseCases<RepresentativeType>, IRepresentativeTypeUseCases
+    public class RepresentativeTypeUseCases : BaseUseCases<RepresentativeType>, IRepresentativeTypeUseCase
     {
         private readonly IUnitOfWork _unitOfWork;
         protected override IBaseRepository<RepresentativeType> Repository => _unitOfWork.RepresentativeTypeRepository;
@@ -14,5 +14,7 @@ namespace Application.UseCases
         {
             _unitOfWork = unitOfWork;
         }
+
+
     }
 }

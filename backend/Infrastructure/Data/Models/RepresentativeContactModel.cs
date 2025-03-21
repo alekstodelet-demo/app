@@ -1,6 +1,8 @@
-namespace Domain.Entities
+﻿using Domain;
+
+namespace Infrastructure.Data.Models
 {
-    public class RepresentativeContact : BaseLogDomain
+    public class RepresentativeContactModel : BaseLogDomain
     {
         public int Id { get; set; }
         public string Value { get; set; }

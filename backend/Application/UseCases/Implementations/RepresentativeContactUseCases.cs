@@ -1,11 +1,11 @@
 using Application.Models;
 using Application.Repositories;
+using Application.UseCases.Interfaces;
 using Domain.Entities;
-using FluentResults;
 
 namespace Application.UseCases
 {
-    public class RepresentativeContactUseCases : BaseUseCases<RepresentativeContact>, IRepresentativeContactUseCases
+    public class RepresentativeContactUseCases : BaseUseCases<RepresentativeContact>, IRepresentativeContactUseCase
     {
         private readonly IUnitOfWork _unitOfWork;
         protected override IBaseRepository<RepresentativeContact> Repository => _unitOfWork.RepresentativeContactRepository;
@@ -14,10 +14,12 @@ namespace Application.UseCases
         {
             _unitOfWork = unitOfWork;
         }
-        
-        public Task<Result<List<RepresentativeContact>>> GetByRepresentativeId(int representativeId)
+
+
+        public Task<List<RepresentativeContact>> GetByRepresentativeId(int RepresentativeId)
         {
-            return _unitOfWork.RepresentativeContactRepository.GetByRepresentativeId(representativeId);
+            return _unitOfWork.RepresentativeContactRepository.GetByRepresentativeId(RepresentativeId);
         }
+
     }
 }

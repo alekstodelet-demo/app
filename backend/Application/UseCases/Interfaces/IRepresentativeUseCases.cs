@@ -1,11 +1,12 @@
 using Application.Models;
 using Domain.Entities;
-using FluentResults;
 
-namespace Application.UseCases.Interfaces
+namespace Application.UseCases
 {
-    public interface IRepresentativeUseCases : IBaseUseCases<Representative>
+    public interface IRepresentativeUseCase : IBaseUseCases<Domain.Entities.Representative>
     {
-        Task<Result<List<Representative>>> GetByOrganizationId(int organizationId);
+
+        Task<List<Representative>> GetByCompanyId(int CompanyId);
+        Task<List<Representative>> GetByTypeId(int TypeId);
     }
 }

@@ -11,46 +11,51 @@ namespace WebApi.Controllers.V1
     [ApiController]
     [AllowAnonymous]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class RepresentativeController : BaseController<IRepresentativeUseCases, Representative, GetRepresentativeResponse, CreateRepresentativeRequest, UpdateRepresentativeRequest>
+    public class RepresentativeController : BaseController<IRepresentativeUseCase, Representative, GetRepresentativeResponse, CreateRepresentativeRequest,
+        UpdateRepresentativeRequest>
     {
-        private readonly IRepresentativeUseCases _representativeUseCases;
-        private readonly ILogger<RepresentativeController> _logger;
-        
-        public RepresentativeController(IRepresentativeUseCases representativeUseCases, ILogger<RepresentativeController> logger)
-            : base(representativeUseCases, logger)
+        private readonly IRepresentativeUseCase _RepresentativeUseCase;
+
+        public RepresentativeController(IRepresentativeUseCase RepresentativeUseCase,
+            ILogger<BaseController<IRepresentativeUseCase, Representative, GetRepresentativeResponse, CreateRepresentativeRequest,
+                UpdateRepresentativeRequest>> logger)
+            : base(RepresentativeUseCase, logger)
         {
-            _representativeUseCases = representativeUseCases ?? throw new ArgumentNullException(nameof(representativeUseCases));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _RepresentativeUseCase = RepresentativeUseCase;
         }
-        
+
         protected override GetRepresentativeResponse EntityToDtoMapper(Representative entity)
         {
-            return entity != null ? GetRepresentativeResponse.FromDomain(entity) : throw new ArgumentNullException(nameof(entity));
+            return GetRepresentativeResponse.FromDomain(entity);
         }
-        
+
         protected override Representative CreateRequestToEntity(CreateRepresentativeRequest requestDto)
         {
-            return requestDto?.ToDomain() ?? throw new ArgumentNullException(nameof(requestDto));
+            return requestDto.ToDomain();
         }
-        
+
         protected override Representative UpdateRequestToEntity(UpdateRepresentativeRequest requestDto)
         {
-            return requestDto?.ToDomain() ?? throw new ArgumentNullException(nameof(requestDto));
+            return requestDto.ToDomain();
         }
-        
-        [HttpGet("GetByOrganizationId")]
-        public async Task<IActionResult> GetByOrganizationId(int organizationId)
+
+
+        [HttpGet]
+        [Route("GetByCompanyId")]
+        public async Task<IActionResult> GetByCompanyId(int CompanyId)
         {
-            _logger.LogInformation("Getting Representatives for Organization ID: {OrganizationId}", organizationId);
-            
-            var result = await _representativeUseCases.GetByOrganizationId(organizationId);
-            if (result.IsSuccess)
-            {
-                var dtoList = result.Value.Select(GetRepresentativeResponse.FromDomain).ToList();
-                return Ok(dtoList);
-            }
-            
-            return HandleResult(result);
+            var response = await _RepresentativeUseCase.GetByCompanyId(CompanyId);
+            return Ok(response);
         }
+
+        [HttpGet]
+        [Route("GetByTypeId")]
+        public async Task<IActionResult> GetByTypeId(int TypeId)
+        {
+            var response = await _RepresentativeUseCase.GetByTypeId(TypeId);
+            return Ok(response);
+        }
+
+
     }
 }

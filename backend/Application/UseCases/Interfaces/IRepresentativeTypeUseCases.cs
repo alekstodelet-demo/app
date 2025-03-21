@@ -1,10 +1,10 @@
 using Application.Models;
 using Domain.Entities;
-using FluentResults;
 
-namespace Application.UseCases.Interfaces
+namespace Application.UseCases
 {
-    public interface IRepresentativeTypeUseCases : IBaseUseCases<RepresentativeType>
+    public interface IRepresentativeTypeUseCase : IBaseUseCases<Domain.Entities.RepresentativeType>
     {
+
     }
 }
