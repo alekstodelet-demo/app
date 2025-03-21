@@ -14,14 +14,14 @@ namespace WebApi.Controllers.V1
     public class CustomerController : BaseController<ICustomerUseCases, Customer, GetCustomerResponse, CreateCustomerRequest,
         UpdateCustomerRequest>
     {
-        private readonly ICustomerUseCases _CustomerUseCases;
+        private readonly ICustomerUseCases _CustomerUseCase;
 
-        public CustomerController(ICustomerUseCases CustomerUseCases,
+        public CustomerController(ICustomerUseCases CustomerUseCase,
             ILogger<BaseController<ICustomerUseCases, Customer, GetCustomerResponse, CreateCustomerRequest,
                 UpdateCustomerRequest>> logger)
-            : base(CustomerUseCases, logger)
+            : base(CustomerUseCase, logger)
         {
-            _CustomerUseCases = CustomerUseCases;
+            _CustomerUseCase = CustomerUseCase;
         }
 
         protected override GetCustomerResponse EntityToDtoMapper(Customer entity)
@@ -38,6 +38,16 @@ namespace WebApi.Controllers.V1
         {
             return requestDto.ToDomain();
         }
+        
+        
+        [HttpGet]
+        [Route("GetByOrganizationTypeId")]
+        public async Task<IActionResult> GetByOrganizationTypeId(int OrganizationTypeId)
+        {
+            var response = await _CustomerUseCase.GetByOrganizationTypeId(OrganizationTypeId);
+            return Ok(response);
+        }
+        
 
     }
 }

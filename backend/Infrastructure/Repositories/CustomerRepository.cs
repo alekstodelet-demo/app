@@ -1,26 +1,23 @@
-﻿using System.Data;
-using System.Security.Cryptography;
+using System.Data;
 using Dapper;
 using Domain.Entities;
 using Application.Repositories;
-using Application.Models;
-using FluentResults;
 using Infrastructure.Data.Models;
-using Infrastructure.Security;
-using Microsoft.Extensions.Configuration;
+using Application.Exceptions;
+using Application.Models;
+using System;
+using FluentResults;
 
 namespace Infrastructure.Repositories
 {
     public class CustomerRepository : ICustomerRepository
     {
+        private readonly IDbConnection _dbConnection;
         private IDbTransaction? _dbTransaction;
-        private IDbConnection _dbConnection;
-        private EncryptionService _crypt;
 
-        public CustomerRepository(IDbConnection dbConnection, IConfiguration configuration)
+        public CustomerRepository(IDbConnection dbConnection)
         {
             _dbConnection = dbConnection;
-            _crypt = new EncryptionService(configuration);
         }
 
         public void SetTransaction(IDbTransaction dbTransaction)
@@ -32,43 +29,36 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                var sql = @"SELECT id AS ""Id"",
-                                   pin AS ""Pin"",
-                                   is_organization AS ""IsOrganization"",
-                                   full_name AS ""FullName"",
-                                   created_at AS ""CreatedAt"",
-                                   updated_at AS ""UpdatedAt"",
-                                   created_by AS ""CreatedBy"",
-                                   updated_by AS ""UpdatedBy"",
-                                   address AS ""Address"",
-                                   okpo AS ""Okpo"",
-                                   director AS ""Director"",
-                                   organization_type_id AS ""OrganizationTypeId"",
-                                   payment_account AS ""PaymentAccount"",
-                                   postal_code AS ""PostalCode"",
-                                   ugns AS ""Ugns"",
-                                   bank AS ""Bank"",
-                                   bik AS ""Bik"",
-                                   registration_number AS ""RegistrationNumber"",
-                                   individual_name AS ""IndividualName"",
-                                   individual_secondname AS ""IndividualSecondname"",
-                                   individual_surname AS ""IndividualSurname"",
-                                   identity_document_type_id AS ""IdentityDocumentTypeId"",
-                                   document_serie AS ""DocumentSerie"",
-                                   document_date_issue AS ""DocumentDateIssue"",
-                                   document_whom_issued AS ""DocumentWhomIssued"",
-                                   foreign_country AS ""ForeignCountry"",
-                                   is_foreign AS ""IsForeign""
-                            FROM Customer;";
-                var models = await _dbConnection.QueryAsync<CustomerModel>(sql, transaction: _dbTransaction);
+                var sql = @"
+                    SELECT 
+                        ""id"" AS ""Id"",
+                        ""pin"" AS ""Pin"",
+                        ""okpo"" AS ""Okpo"",
+                        ""postal_code"" AS ""PostalCode"",
+                        ""ugns"" AS ""Ugns"",
+                        ""reg_number"" AS ""RegNumber"",
+                        ""organization_type_id"" AS ""OrganizationTypeId"",
+                        ""created_at"" AS ""CreatedAt"",
+                        ""updated_at"" AS ""UpdatedAt"",
+                        ""created_by"" AS ""CreatedBy"",
+                        ""updated_by"" AS ""UpdatedBy"",
+                        ""name"" AS ""Name"",
+                        ""address"" AS ""Address"",
+                        ""director"" AS ""Director"",
+                        ""nomer"" AS ""Nomer""
+                        
+                    FROM ""customer"";
+                ";
 
-                var results = models.Select(model => DecryptCustomerModel(model)).ToList();
+                var models = await _dbConnection.QueryAsync<Customer>(sql, transaction: _dbTransaction);
+                
+                var results = models.Select(model => FromCustomerModel(model)).ToList();
 
                 return Result.Ok(results);
             }
             catch (Exception ex)
             {
-                return Result.Fail(new ExceptionalError("Failed to get Customer", ex)
+                return Result.Fail(new ExceptionalError("Failed to get all customer", ex)
                     .WithMetadata("ErrorCode", "FETCH_ALL_FAILED"));
             }
         }
@@ -77,35 +67,26 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                var sql = @"SELECT id AS ""Id"",
-                                   pin AS ""Pin"",
-                                   is_organization AS ""IsOrganization"",
-                                   full_name AS ""FullName"",
-                                   created_at AS ""CreatedAt"",
-                                   updated_at AS ""UpdatedAt"",
-                                   created_by AS ""CreatedBy"",
-                                   updated_by AS ""UpdatedBy"",
-                                   address AS ""Address"",
-                                   okpo AS ""Okpo"",
-                                   director AS ""Director"",
-                                   organization_type_id AS ""OrganizationTypeId"",
-                                   payment_account AS ""PaymentAccount"",
-                                   postal_code AS ""PostalCode"",
-                                   ugns AS ""Ugns"",
-                                   bank AS ""Bank"",
-                                   bik AS ""Bik"",
-                                   registration_number AS ""RegistrationNumber"",
-                                   individual_name AS ""IndividualName"",
-                                   individual_secondname AS ""IndividualSecondname"",
-                                   individual_surname AS ""IndividualSurname"",
-                                   identity_document_type_id AS ""IdentityDocumentTypeId"",
-                                   document_serie AS ""DocumentSerie"",
-                                   document_date_issue AS ""DocumentDateIssue"",
-                                   document_whom_issued AS ""DocumentWhomIssued"",
-                                   foreign_country AS ""ForeignCountry"",
-                                   is_foreign AS ""IsForeign""
-                            FROM Customer WHERE id=@Id;";
-                var model = await _dbConnection.QuerySingleOrDefaultAsync<CustomerModel>(sql, new { Id = id },
+                var sql = @"
+                    SELECT 
+                        ""id"" AS ""Id"",
+                        ""pin"" AS ""Pin"",
+                        ""okpo"" AS ""Okpo"",
+                        ""postal_code"" AS ""PostalCode"",
+                        ""ugns"" AS ""Ugns"",
+                        ""reg_number"" AS ""RegNumber"",
+                        ""organization_type_id"" AS ""OrganizationTypeId"",
+                        ""created_at"" AS ""CreatedAt"",
+                        ""updated_at"" AS ""UpdatedAt"",
+                        ""created_by"" AS ""CreatedBy"",
+                        ""updated_by"" AS ""UpdatedBy"",
+                        ""name"" AS ""Name"",
+                        ""address"" AS ""Address"",
+                        ""director"" AS ""Director"",
+                        ""nomer"" AS ""Nomer""
+                        
+                    FROM ""customer"" WHERE id=@Id;";
+                var model = await _dbConnection.QuerySingleOrDefaultAsync<Customer>(sql, new { Id = id },
                     transaction: _dbTransaction);
 
                 if (model == null)
@@ -114,7 +95,7 @@ namespace Infrastructure.Repositories
                         .WithMetadata("ErrorCode", "NOT_FOUND"));
                 }
 
-                var result = DecryptCustomerModel(model);
+                var result = FromCustomerModel(model);
 
                 return Result.Ok(result);
             }
@@ -129,29 +110,18 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                var model = EncryptCustomerModel(domain);
-                model.CreatedAt = DateTime.Now;
-                model.CreatedBy = 1;
-                model.UpdatedAt = DateTime.Now;
-                model.UpdatedBy = 1;
-                var sql = @"INSERT INTO Customer(pin, is_organization, full_name, created_at, updated_at, created_by, updated_by, address, okpo, 
-                                 director, organization_type_id, payment_account, postal_code, ugns, bank, bik, registration_number, 
-                                 individual_name, individual_secondname, individual_surname, identity_document_type_id, 
-                                 document_serie, document_date_issue, document_whom_issued, foreign_country, is_foreign) 
-            VALUES (@Pin, @IsOrganization, @FullName, @CreatedAt, @UpdatedAt, @CreatedBy, @UpdatedBy, @Address, @Okpo, 
-                    @Director, @OrganizationTypeId, @PaymentAccount, @PostalCode, @Ugns, @Bank, @Bik, @RegistrationNumber, 
-                    @IndividualName, @IndividualSecondname, @IndividualSurname, @IdentityDocumentTypeId, 
-                    @DocumentSerie, @DocumentDateIssue, @DocumentWhomIssued, @ForeignCountry, @IsForeign) 
-            RETURNING id";
+                var model = ToCustomerModel(domain);
 
+                var sql = @"
+                    INSERT INTO ""customer""(""pin"", ""okpo"", ""postal_code"", ""ugns"", ""reg_number"", ""organization_type_id"", ""created_at"", ""updated_at"", ""created_by"", ""updated_by"", ""name"", ""address"", ""director"", ""nomer"" ) 
+                    VALUES (@Pin, @Okpo, @PostalCode, @Ugns, @RegNumber, @OrganizationTypeId, @CreatedAt, @UpdatedAt, @CreatedBy, @UpdatedBy, @Name, @Address, @Director, @Nomer) RETURNING id
+                ";
 
                 var result = await _dbConnection.ExecuteScalarAsync<int>(sql, model, transaction: _dbTransaction);
                 return Result.Ok(result);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Add method error: {ex.Message}");
-                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
                 return Result.Fail(new ExceptionalError("Failed to add Customer", ex)
                     .WithMetadata("ErrorCode", "ADD_FAILED"));
             }
@@ -161,36 +131,12 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                var model = EncryptCustomerModel(domain);
-                model.UpdatedAt = DateTime.Now;
-                model.UpdatedBy = 1;
-                var sql = @"UPDATE Customer 
-            SET pin = @Pin, 
-                is_organization = @IsOrganization, 
-                full_name = @FullName, 
-                updated_at = @UpdatedAt, 
-                updated_by = @UpdatedBy, 
-                address = @Address, 
-                okpo = @Okpo, 
-                director = @Director, 
-                organization_type_id = @OrganizationTypeId, 
-                payment_account = @PaymentAccount, 
-                postal_code = @PostalCode, 
-                ugns = @Ugns, 
-                bank = @Bank, 
-                bik = @Bik, 
-                registration_number = @RegistrationNumber, 
-                individual_name = @IndividualName, 
-                individual_secondname = @IndividualSecondname, 
-                individual_surname = @IndividualSurname, 
-                identity_document_type_id = @IdentityDocumentTypeId, 
-                document_serie = @DocumentSerie, 
-                document_date_issue = @DocumentDateIssue, 
-                document_whom_issued = @DocumentWhomIssued, 
-                foreign_country = @ForeignCountry, 
-                is_foreign = @IsForeign
-            WHERE id = @Id";
+                var model = ToCustomerModel(domain);
 
+                var sql = @"
+                    UPDATE ""customer"" SET 
+                    ""id"" = @Id, ""pin"" = @Pin, ""okpo"" = @Okpo, ""postal_code"" = @PostalCode, ""ugns"" = @Ugns, ""reg_number"" = @RegNumber, ""organization_type_id"" = @OrganizationTypeId, ""updated_at"" = @UpdatedAt, ""updated_by"" = @UpdatedBy, ""name"" = @Name, ""address"" = @Address, ""director"" = @Director, ""nomer"" = @Nomer 
+                    WHERE id = @Id";
                 var affected = await _dbConnection.ExecuteAsync(sql, model, transaction: _dbTransaction);
                 if (affected == 0)
                 {
@@ -211,43 +157,33 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                var sql = @"SELECT id AS ""Id"",
-                   pin AS ""Pin"",
-                   is_organization AS ""IsOrganization"",
-                   full_name AS ""FullName"",
-                   created_at AS ""CreatedAt"",
-                   updated_at AS ""UpdatedAt"",
-                   created_by AS ""CreatedBy"",
-                   updated_by AS ""UpdatedBy"",
-                   address AS ""Address"",
-                   okpo AS ""Okpo"",
-                   director AS ""Director"",
-                   organization_type_id AS ""OrganizationTypeId"",
-                   payment_account AS ""PaymentAccount"",
-                   postal_code AS ""PostalCode"",
-                   ugns AS ""Ugns"",
-                   bank AS ""Bank"",
-                   bik AS ""Bik"",
-                   registration_number AS ""RegistrationNumber"",
-                   individual_name AS ""IndividualName"",
-                   individual_secondname AS ""IndividualSecondname"",
-                   individual_surname AS ""IndividualSurname"",
-                   identity_document_type_id AS ""IdentityDocumentTypeId"",
-                   document_serie AS ""DocumentSerie"",
-                   document_date_issue AS ""DocumentDateIssue"",
-                   document_whom_issued AS ""DocumentWhomIssued"",
-                   foreign_country AS ""ForeignCountry"",
-                   is_foreign AS ""IsForeign""
-            FROM Customer
-            OFFSET @pageSize * (@pageNumber - 1) LIMIT @pageSize;";
-
-                var models = await _dbConnection.QueryAsync<CustomerModel>(sql, new { pageSize, pageNumber },
+                var sql = @"
+                    SELECT 
+                        ""id"" AS ""Id"",
+                        ""pin"" AS ""Pin"",
+                        ""okpo"" AS ""Okpo"",
+                        ""postal_code"" AS ""PostalCode"",
+                        ""ugns"" AS ""Ugns"",
+                        ""reg_number"" AS ""RegNumber"",
+                        ""organization_type_id"" AS ""OrganizationTypeId"",
+                        ""created_at"" AS ""CreatedAt"",
+                        ""updated_at"" AS ""UpdatedAt"",
+                        ""created_by"" AS ""CreatedBy"",
+                        ""updated_by"" AS ""UpdatedBy"",
+                        ""name"" AS ""Name"",
+                        ""address"" AS ""Address"",
+                        ""director"" AS ""Director"",
+                        ""nomer"" AS ""Nomer""
+                        
+                    FROM ""customer""
+                    OFFSET @pageSize * (@pageNumber - 1) Limit @pageSize;";
+                var models = await _dbConnection.QueryAsync<Customer>(sql, new { pageSize, pageNumber },
                     transaction: _dbTransaction);
 
-                var sqlCount = @"SELECT Count(*) FROM Customer";
+                var sqlCount = @"SELECT Count(*) FROM ""customer""";
                 var totalItems = await _dbConnection.ExecuteScalarAsync<int>(sqlCount, transaction: _dbTransaction);
 
-                var results = models.Select(model => DecryptCustomerModel(model)).ToList();
+                var results = models.Select(model => FromCustomerModel(model)).ToList();
 
                 var domainItems = results;
 
@@ -264,7 +200,7 @@ namespace Infrastructure.Repositories
         {
             try
             {
-                var sql = @"DELETE FROM Customer WHERE id = @Id";
+                var sql = @"DELETE FROM ""customer"" WHERE id = @Id";
                 var affected = await _dbConnection.ExecuteAsync(sql, new { Id = id }, transaction: _dbTransaction);
 
                 if (affected == 0)
@@ -282,68 +218,84 @@ namespace Infrastructure.Repositories
             }
         }
 
-        private CustomerModel EncryptCustomerModel(Customer model)
+        
+        public async Task<List<Customer>> GetByOrganizationTypeId(int OrganizationTypeId)
+        {
+            try
+            {
+                var sql = @"
+                    SELECT 
+                        ""id"" AS ""Id"",
+                        ""pin"" AS ""Pin"",
+                        ""okpo"" AS ""Okpo"",
+                        ""postal_code"" AS ""PostalCode"",
+                        ""ugns"" AS ""Ugns"",
+                        ""reg_number"" AS ""RegNumber"",
+                        ""organization_type_id"" AS ""OrganizationTypeId"",
+                        ""created_at"" AS ""CreatedAt"",
+                        ""updated_at"" AS ""UpdatedAt"",
+                        ""created_by"" AS ""CreatedBy"",
+                        ""updated_by"" AS ""UpdatedBy"",
+                        ""name"" AS ""Name"",
+                        ""address"" AS ""Address"",
+                        ""director"" AS ""Director"",
+                        ""nomer"" AS ""Nomer""
+                        
+                    FROM ""customer"" WHERE ""organization_type_id"" = @OrganizationTypeId";
+                var models = await _dbConnection.QueryAsync<Customer>(sql, new { OrganizationTypeId }, transaction: _dbTransaction);
+                return models.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException("Failed to get customer by id", ex);
+            }
+        }
+        
+
+        private CustomerModel ToCustomerModel(Customer model)
         {
             return new CustomerModel
             {
                 Id = model.Id,
-                Pin = model.Pin, // Если нужно расшифровать: Decrypt(model.Pin)
-                IsOrganization = model.IsOrganization,
-                FullName = model.FullName,
-                Address = model.Address,
-                Director = model.Director,
+                Pin = model.Pin,
                 Okpo = model.Okpo,
-                OrganizationTypeId = model.OrganizationTypeId,
-                OrganizationTypeName = model.OrganizationTypeName,
-                PaymentAccount = model.PaymentAccount,
                 PostalCode = model.PostalCode,
                 Ugns = model.Ugns,
-                Bank = model.Bank,
-                Bik = model.Bik,
-                RegistrationNumber = model.RegistrationNumber,
-                IndividualName = model.IndividualName,
-                IndividualSecondname = model.IndividualSecondname,
-                IndividualSurname = model.IndividualSurname,
+                RegNumber = model.RegNumber,
+                OrganizationTypeId = model.OrganizationTypeId,
                 CreatedAt = model.CreatedAt,
                 UpdatedAt = model.UpdatedAt,
                 CreatedBy = model.CreatedBy,
                 UpdatedBy = model.UpdatedBy,
-                IdentityDocumentTypeId = model.IdentityDocumentTypeId,
-                DocumentDateIssue = model.DocumentDateIssue,
-                DocumentSerie = model.DocumentSerie,
+                Name = model.Name,
+                Address = model.Address,
+                Director = model.Director,
+                Nomer = model.Nomer
+                
             };
         }
-        private Customer DecryptCustomerModel(CustomerModel model)
+
+        private Customer FromCustomerModel(Customer model)
         {
             return new Customer
             {
                 Id = model.Id,
-                Pin = model.Pin, // Если нужно расшифровать: Decrypt(model.Pin)
-                IsOrganization = model.IsOrganization,
-                FullName = model.FullName,
-                Address = model.Address,
-                Director = model.Director,
+                Pin = model.Pin,
                 Okpo = model.Okpo,
-                OrganizationTypeId = model.OrganizationTypeId,
-                OrganizationTypeName = model.OrganizationTypeName,
-                PaymentAccount = model.PaymentAccount,
                 PostalCode = model.PostalCode,
                 Ugns = model.Ugns,
-                Bank = model.Bank,
-                Bik = model.Bik,
-                RegistrationNumber = model.RegistrationNumber,
-                IdentityDocumentTypeId = model.IdentityDocumentTypeId,
-                DocumentDateIssue = model.DocumentDateIssue,
-                DocumentSerie = model.DocumentSerie,
-                IndividualName = model.IndividualName,
-                IndividualSecondname = model.IndividualSecondname,
-                IndividualSurname = model.IndividualSurname,
+                RegNumber = model.RegNumber,
+                OrganizationTypeId = model.OrganizationTypeId,
                 CreatedAt = model.CreatedAt,
                 UpdatedAt = model.UpdatedAt,
                 CreatedBy = model.CreatedBy,
                 UpdatedBy = model.UpdatedBy,
+                Name = model.Name,
+                Address = model.Address,
+                Director = model.Director,
+                Nomer = model.Nomer
+                
             };
         }
-
     }
 }

@@ -14,14 +14,14 @@ namespace WebApi.Controllers.V1
     public class CustomerContactController : BaseController<ICustomerContactUseCases, CustomerContact, GetCustomerContactResponse, CreateCustomerContactRequest,
         UpdateCustomerContactRequest>
     {
-        private readonly ICustomerContactUseCases _CustomerContactUseCases;
+        private readonly ICustomerContactUseCases _CustomerContactUseCase;
 
-        public CustomerContactController(ICustomerContactUseCases CustomerContactUseCases,
+        public CustomerContactController(ICustomerContactUseCases CustomerContactUseCase,
             ILogger<BaseController<ICustomerContactUseCases, CustomerContact, GetCustomerContactResponse, CreateCustomerContactRequest,
                 UpdateCustomerContactRequest>> logger)
-            : base(CustomerContactUseCases, logger)
+            : base(CustomerContactUseCase, logger)
         {
-            _CustomerContactUseCases = CustomerContactUseCases;
+            _CustomerContactUseCase = CustomerContactUseCase;
         }
 
         protected override GetCustomerContactResponse EntityToDtoMapper(CustomerContact entity)
@@ -38,17 +38,16 @@ namespace WebApi.Controllers.V1
         {
             return requestDto.ToDomain();
         }
-
-        [HttpGet("GetByCustomerId")]
-        public async Task<IActionResult> GetByCustomerId(int customer_id)
+        
+        
+        [HttpGet]
+        [Route("GetByOrganizationId")]
+        public async Task<IActionResult> GetByOrganizationId(int OrganizationId)
         {
-            var result = await _CustomerContactUseCases.GetByCustomerId(customer_id);
-            if (result.IsSuccess)
-            {
-                return Ok(result.Value);
-            }
-
-            return HandleResult(result);
+            var response = await _CustomerContactUseCase.GetByOrganizationId(OrganizationId);
+            return Ok(response);
         }
+        
+
     }
 }

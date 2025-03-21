@@ -1,4 +1,4 @@
-﻿using Application.Models;
+using Application.Models;
 using Application.Repositories;
 using Domain.Entities;
 using FluentResults;
@@ -13,6 +13,12 @@ namespace Application.UseCases
         public CustomerUseCases(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
             _unitOfWork = unitOfWork;
+        }
+
+        
+        public Task<List<Customer>> GetByOrganizationTypeId(int OrganizationTypeId)
+        {
+            return _unitOfWork.CustomerRepository.GetByOrganizationTypeId(OrganizationTypeId);
         }
         
     }

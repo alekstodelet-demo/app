@@ -1,14 +1,13 @@
-using Domain;
 
-namespace Infrastructure.Data.Models
+namespace Domain.Entities
 {
-    public class CustomerContactModel : BaseLogDomain
+    public class RepresentativeContact : BaseLogDomain
     {
         public int Id { get; set; }
 		public string Value { get; set; }
 		public bool? AllowNotification { get; set; }
 		public int? RTypeId { get; set; }
-		public int OrganizationId { get; set; }
+		public int RepresentativeId { get; set; }
 		
     }
 }

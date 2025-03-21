@@ -226,6 +226,28 @@ namespace WebApi
             builder.Services.AddScoped<IRegistrationService, RegistrationService>();
             builder.Services.AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>();
 
+
+            builder.Services.AddScoped<ICustomerContactRepository, CustomerContactRepository>();
+            builder.Services.AddScoped<ICustomerRequisiteRepository, CustomerRequisiteRepository>();
+            builder.Services.AddScoped<IOrganizationTypeRepository, OrganizationTypeRepository>();
+            builder.Services.AddScoped<IRepresentativeRepository, RepresentativeRepository>();
+            builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+            builder.Services.AddScoped<IRepresentativeContactRepository, RepresentativeContactRepository>();
+            builder.Services.AddScoped<IRepresentativeTypeRepository, RepresentativeTypeRepository>();
+
+
+
+            builder.Services.AddScoped<ICustomerContactUseCases, CustomerContactUseCases>();
+            builder.Services.AddScoped<ICustomerRequisiteUseCase, CustomerRequisiteUseCases>();
+            builder.Services.AddScoped<IOrganizationTypeUseCase, OrganizationTypeUseCases>();
+            builder.Services.AddScoped<IRepresentativeUseCase, RepresentativeUseCases>();
+            builder.Services.AddScoped<ICustomerUseCases, CustomerUseCases>();
+            builder.Services.AddScoped<IRepresentativeContactUseCase, RepresentativeContactUseCases>();
+            builder.Services.AddScoped<IRepresentativeTypeUseCase, RepresentativeTypeUseCases>();
+
+
+
+
             var app = builder.Build();
             
             EncryptedStringTypeHandler.Initialize(app.Services.GetRequiredService<IEncryptionService>());

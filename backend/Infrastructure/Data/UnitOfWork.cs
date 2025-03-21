@@ -23,7 +23,13 @@ namespace Infrastructure.Data
         private IUserRepository? _userRepository;
         private IHostEnvironment _appEnvironment;
         private IConfiguration _configuration;
-        
+        private ICustomerRequisiteRepository? _CustomerRequisiteRepository;
+        private IOrganizationTypeRepository? _OrganizationTypeRepository;
+        private IRepresentativeRepository? _RepresentativeRepository;
+        private IRepresentativeContactRepository? _RepresentativeContactRepository;
+        private IRepresentativeTypeRepository? _RepresentativeTypeRepository;
+
+
         public UnitOfWork(DapperDbContext context, IHostEnvironment appEnvironment, IServiceProvider serviceProvider, IConfiguration configuration)
         {
             _dbConnection = context.CreateConnection();
@@ -54,7 +60,7 @@ namespace Infrastructure.Data
             {
                 if (_customerRepository == null)
                 {
-                    _customerRepository = new CustomerRepository(_dbConnection, _configuration);
+                    _customerRepository = new CustomerRepository(_dbConnection);
                     _customerRepository.SetTransaction(_dbTransaction);
                 }
                 return _customerRepository;
@@ -80,7 +86,7 @@ namespace Infrastructure.Data
             {
                 if (_customerContactRepository == null)
                 {
-                    _customerContactRepository = new CustomerContactRepository(_dbConnection, _configuration);
+                    _customerContactRepository = new CustomerContactRepository(_dbConnection);
                     _customerContactRepository.SetTransaction(_dbTransaction);
                 }
                 return _customerContactRepository;
@@ -138,6 +144,69 @@ namespace Infrastructure.Data
                 return _userRepository;
             }
         }
+
+
+        public ICustomerRequisiteRepository CustomerRequisiteRepository
+        {
+            get
+            {
+                if (_CustomerRequisiteRepository == null)
+                {
+                    _CustomerRequisiteRepository = new CustomerRequisiteRepository(_dbConnection);
+                    _CustomerRequisiteRepository.SetTransaction(_dbTransaction);
+                }
+                return _CustomerRequisiteRepository;
+            }
+        }
+        public IOrganizationTypeRepository OrganizationTypeRepository
+        {
+            get
+            {
+                if (_OrganizationTypeRepository == null)
+                {
+                    _OrganizationTypeRepository = new OrganizationTypeRepository(_dbConnection);
+                    _OrganizationTypeRepository.SetTransaction(_dbTransaction);
+                }
+                return _OrganizationTypeRepository;
+            }
+        }
+        public IRepresentativeRepository RepresentativeRepository
+        {
+            get
+            {
+                if (_RepresentativeRepository == null)
+                {
+                    _RepresentativeRepository = new RepresentativeRepository(_dbConnection);
+                    _RepresentativeRepository.SetTransaction(_dbTransaction);
+                }
+                return _RepresentativeRepository;
+            }
+        }
+        public IRepresentativeContactRepository RepresentativeContactRepository
+        {
+            get
+            {
+                if (_RepresentativeContactRepository == null)
+                {
+                    _RepresentativeContactRepository = new RepresentativeContactRepository(_dbConnection);
+                    _RepresentativeContactRepository.SetTransaction(_dbTransaction);
+                }
+                return _RepresentativeContactRepository;
+            }
+        }
+        public IRepresentativeTypeRepository RepresentativeTypeRepository
+        {
+            get
+            {
+                if (_RepresentativeTypeRepository == null)
+                {
+                    _RepresentativeTypeRepository = new RepresentativeTypeRepository(_dbConnection);
+                    _RepresentativeTypeRepository.SetTransaction(_dbTransaction);
+                }
+                return _RepresentativeTypeRepository;
+            }
+        }
+
 
         public void Commit()
         {

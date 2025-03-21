@@ -19,5 +19,9 @@ namespace Application.UseCases
             return _unitOfWork.CustomerContactRepository.GetByCustomerId(customer_id);
         }
 
+        public Task<List<CustomerContact>> GetByOrganizationId(int OrganizationId)
+        {
+            return _unitOfWork.CustomerContactRepository.GetByOrganizationId(OrganizationId);
+        }
     }
 }

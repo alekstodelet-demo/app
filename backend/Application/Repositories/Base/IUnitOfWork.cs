@@ -12,6 +12,13 @@ namespace Application.Repositories
         IApplicationRepository ApplicationRepository { get; }
         IArchObjectRepository ArchObjectRepository { get; }
         IUserRepository UserRepository { get; }
+        ICustomerRequisiteRepository CustomerRequisiteRepository { get; }
+        IOrganizationTypeRepository OrganizationTypeRepository { get; }
+        IRepresentativeRepository RepresentativeRepository { get; }
+        IRepresentativeContactRepository RepresentativeContactRepository { get; }
+        IRepresentativeTypeRepository RepresentativeTypeRepository { get; }
+
+
         void Commit();
         void Rollback();
     }
