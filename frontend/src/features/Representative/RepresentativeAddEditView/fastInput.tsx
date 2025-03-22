@@ -31,61 +31,61 @@ const FastInputView: FC<RepresentativeProps> = observer((props) => {
 
   const columns = [
     {
-                    field: 'first_name',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representativeListView.first_name"),
-                },
-                {
-                    field: 'second_name',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representativeListView.second_name"),
-                },
-                {
-                    field: 'pin',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representativeListView.pin"),
-                },
-                {
-                    field: 'created_at',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representativeListView.created_at"),
-                },
-                {
-                    field: 'updated_at',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representativeListView.updated_at"),
-                },
-                {
-                    field: 'created_by',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representativeListView.created_by"),
-                },
-                {
-                    field: 'updated_by',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representativeListView.updated_by"),
-                },
-                {
-                    field: 'company_idNavName',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representativeListView.company_id"),
-                },
-                {
-                    field: 'has_access',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representativeListView.has_access"),
-                },
-                {
-                    field: 'type_idNavName',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representativeListView.type_id"),
-                },
-                {
-                    field: 'last_name',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representativeListView.last_name"),
-                },
-                
+      field: 'firstName',
+      width: null, //or number from 1 to 12
+      headerName: translate("label:representativeListView.first_name"),
+    },
+    {
+      field: 'secondName',
+      width: null, //or number from 1 to 12
+      headerName: translate("label:representativeListView.second_name"),
+    },
+    {
+      field: 'pin',
+      width: null, //or number from 1 to 12
+      headerName: translate("label:representativeListView.pin"),
+    },
+    {
+      field: 'createdAt',
+      width: null, //or number from 1 to 12
+      headerName: translate("label:representativeListView.created_at"),
+    },
+    {
+      field: 'updatedAt',
+      width: null, //or number from 1 to 12
+      headerName: translate("label:representativeListView.updated_at"),
+    },
+    {
+      field: 'createdBy',
+      width: null, //or number from 1 to 12
+      headerName: translate("label:representativeListView.created_by"),
+    },
+    {
+      field: 'updatedBy',
+      width: null, //or number from 1 to 12
+      headerName: translate("label:representativeListView.updated_by"),
+    },
+    {
+      field: 'companyidNavName',
+      width: null, //or number from 1 to 12
+      headerName: translate("label:representativeListView.company_id"),
+    },
+    {
+      field: 'hasAccess',
+      width: null, //or number from 1 to 12
+      headerName: translate("label:representativeListView.has_access"),
+    },
+    {
+      field: 'typeidNavName',
+      width: null, //or number from 1 to 12
+      headerName: translate("label:representativeListView.type_id"),
+    },
+    {
+      field: 'lastName',
+      width: null, //or number from 1 to 12
+      headerName: translate("label:representativeListView.last_name"),
+    },
+
   ];
 
   return (
@@ -177,76 +177,76 @@ const FastInputView: FC<RepresentativeProps> = observer((props) => {
 
           {storeList.isEdit ? (
             <Grid container spacing={3} sx={{ mt: 2 }}>
-              
-                  <Grid item md={12} xs={12}>
-                    <CustomTextField
-                      value={store.firstName}
-                      onChange={(event) => store.handleChange(event)}
-                      name="firstName"
-                      data-testid="id_f_Representative_firstName"
-                      id='id_f_Representative_firstName'
-                      label={translate('label:RepresentativeAddEditView.firstName')}
-                      helperText={store.errors.firstName}
-                      error={!!store.errors.firstName}
-                    />
-                  </Grid>
-                  <Grid item md={12} xs={12}>
-                    <CustomTextField
-                      value={store.secondName}
-                      onChange={(event) => store.handleChange(event)}
-                      name="secondName"
-                      data-testid="id_f_Representative_secondName"
-                      id='id_f_Representative_secondName'
-                      label={translate('label:RepresentativeAddEditView.secondName')}
-                      helperText={store.errors.secondName}
-                      error={!!store.errors.secondName}
-                    />
-                  </Grid>
-                  <Grid item md={12} xs={12}>
-                    <CustomTextField
-                      value={store.pin}
-                      onChange={(event) => store.handleChange(event)}
-                      name="pin"
-                      data-testid="id_f_Representative_pin"
-                      id='id_f_Representative_pin'
-                      label={translate('label:RepresentativeAddEditView.pin')}
-                      helperText={store.errors.pin}
-                      error={!!store.errors.pin}
-                    />
-                  </Grid>
-                  <Grid item md={12} xs={12}>
-                    <CustomCheckbox
-                      value={store.hasAccess}
-                      onChange={(event) => store.handleChange(event)}
-                      name="hasAccess"
-                      label={translate('label:RepresentativeAddEditView.hasAccess')}
-                      id='id_f_Representative_hasAccess'
-                    />
-                  </Grid>
-                  <Grid item md={12} xs={12}>
-                    <LookUp
-                      value={store.typeId}
-                      onChange={(event) => store.handleChange(event)}
-                      name="typeId"
-                      data={store.representativeTypes}
-                      id='id_f_Representative_typeId'
-                      label={translate('label:RepresentativeAddEditView.typeId')}
-                      helperText={store.errors.typeId}
-                      error={!!store.errors.typeId}
-                    />
-                  </Grid>
-                  <Grid item md={12} xs={12}>
-                    <CustomTextField
-                      value={store.lastName}
-                      onChange={(event) => store.handleChange(event)}
-                      name="lastName"
-                      data-testid="id_f_Representative_lastName"
-                      id='id_f_Representative_lastName'
-                      label={translate('label:RepresentativeAddEditView.lastName')}
-                      helperText={store.errors.lastName}
-                      error={!!store.errors.lastName}
-                    />
-                  </Grid>
+
+              <Grid item md={12} xs={12}>
+                <CustomTextField
+                  value={store.firstName}
+                  onChange={(event) => store.handleChange(event)}
+                  name="firstName"
+                  data-testid="id_f_Representative_firstName"
+                  id='id_f_Representative_firstName'
+                  label={translate('label:RepresentativeAddEditView.firstName')}
+                  helperText={store.errors.firstName}
+                  error={!!store.errors.firstName}
+                />
+              </Grid>
+              <Grid item md={12} xs={12}>
+                <CustomTextField
+                  value={store.secondName}
+                  onChange={(event) => store.handleChange(event)}
+                  name="secondName"
+                  data-testid="id_f_Representative_secondName"
+                  id='id_f_Representative_secondName'
+                  label={translate('label:RepresentativeAddEditView.secondName')}
+                  helperText={store.errors.secondName}
+                  error={!!store.errors.secondName}
+                />
+              </Grid>
+              <Grid item md={12} xs={12}>
+                <CustomTextField
+                  value={store.pin}
+                  onChange={(event) => store.handleChange(event)}
+                  name="pin"
+                  data-testid="id_f_Representative_pin"
+                  id='id_f_Representative_pin'
+                  label={translate('label:RepresentativeAddEditView.pin')}
+                  helperText={store.errors.pin}
+                  error={!!store.errors.pin}
+                />
+              </Grid>
+              <Grid item md={12} xs={12}>
+                <CustomCheckbox
+                  value={store.hasAccess}
+                  onChange={(event) => store.handleChange(event)}
+                  name="hasAccess"
+                  label={translate('label:RepresentativeAddEditView.hasAccess')}
+                  id='id_f_Representative_hasAccess'
+                />
+              </Grid>
+              <Grid item md={12} xs={12}>
+                <LookUp
+                  value={store.typeId}
+                  onChange={(event) => store.handleChange(event)}
+                  name="typeId"
+                  data={store.representativeTypes}
+                  id='id_f_Representative_typeId'
+                  label={translate('label:RepresentativeAddEditView.typeId')}
+                  helperText={store.errors.typeId}
+                  error={!!store.errors.typeId}
+                />
+              </Grid>
+              <Grid item md={12} xs={12}>
+                <CustomTextField
+                  value={store.lastName}
+                  onChange={(event) => store.handleChange(event)}
+                  name="lastName"
+                  data-testid="id_f_Representative_lastName"
+                  id='id_f_Representative_lastName'
+                  label={translate('label:RepresentativeAddEditView.lastName')}
+                  helperText={store.errors.lastName}
+                  error={!!store.errors.lastName}
+                />
+              </Grid>
               <Grid item xs={12} display={"flex"} justifyContent={"flex-end"}>
                 <CustomButton
                   variant="contained"
