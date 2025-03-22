@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities
 {
-    public class RefreshToken : BaseLogDomain
+    public class RefreshToken : BaseLogDomain, IBaseDomain
     {
         public int Id { get; set; }
         public string Token { get; set; }

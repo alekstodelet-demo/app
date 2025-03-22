@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Models
 {
-    public class ContactTypeModel : BaseLogDomain
+    public class ContactTypeModel : BaseLogDomain, IBaseDomain
     {
         public int Id { get; set; }
 		public string Name { get; set; }

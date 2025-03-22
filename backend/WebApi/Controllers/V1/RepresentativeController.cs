@@ -38,8 +38,8 @@ namespace WebApi.Controllers.V1
         {
             return requestDto.ToDomain();
         }
-        
-        
+
+
         [HttpGet]
         [Route("GetByCompanyId")]
         public async Task<IActionResult> GetByCompanyId(int CompanyId)
@@ -48,7 +48,7 @@ namespace WebApi.Controllers.V1
             var res = response.Select(x => EntityToDtoMapper(x)).ToList();
             return Ok(res);
         }
-        
+
         [HttpGet]
         [Route("GetByTypeId")]
         public async Task<IActionResult> GetByTypeId(int TypeId)
@@ -56,7 +56,6 @@ namespace WebApi.Controllers.V1
             var response = await _RepresentativeUseCase.GetByTypeId(TypeId);
             return Ok(response);
         }
-        
 
     }
 }

@@ -1,7 +1,7 @@
 
 namespace Domain.Entities
 {
-    public class OrganizationType : BaseLogDomain
+    public class OrganizationType : BaseLogDomain, IBaseDomain
     {
         public int Id { get; set; }
 		public string DescriptionKg { get; set; }

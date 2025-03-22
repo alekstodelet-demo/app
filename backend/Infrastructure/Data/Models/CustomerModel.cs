@@ -2,7 +2,7 @@ using Domain;
 
 namespace Infrastructure.Data.Models
 {
-    public class CustomerModel : BaseLogDomain
+    public class CustomerModel : BaseLogDomain, IBaseDomain
     {
         public int Id { get; set; }
 		public string Pin { get; set; }

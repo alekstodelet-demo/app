@@ -17,8 +17,8 @@ import CustomCheckbox from "components/Checkbox";
 import DateTimeField from "components/DateTimeField";
 
 type RepresentativeTableProps = {
-  children ?: React.ReactNode;
-  isPopup ?: boolean;
+  children?: React.ReactNode;
+  isPopup?: boolean;
 };
 
 const BaseRepresentativeView: FC<RepresentativeTableProps> = observer((props) => {
@@ -38,36 +38,13 @@ const BaseRepresentativeView: FC<RepresentativeTableProps> = observer((props) =>
               <Divider />
               <CardContent>
                 <Grid container spacing={3}>
-                  
-                  <Grid item md={12} xs={12}>
-                    <CustomTextField
-                      value={store.firstName}
-                      onChange={(event) => store.handleChange(event)}
-                      name="firstName"
-                      data-testid="id_f_Representative_firstName"
-                      id='id_f_Representative_firstName'
-                      label={translate('label:RepresentativeAddEditView.firstName')}
-                      helperText={store.errors.firstName}
-                      error={!!store.errors.firstName}
-                    />
-                  </Grid>
-                  <Grid item md={12} xs={12}>
-                    <CustomTextField
-                      value={store.secondName}
-                      onChange={(event) => store.handleChange(event)}
-                      name="secondName"
-                      data-testid="id_f_Representative_secondName"
-                      id='id_f_Representative_secondName'
-                      label={translate('label:RepresentativeAddEditView.secondName')}
-                      helperText={store.errors.secondName}
-                      error={!!store.errors.secondName}
-                    />
-                  </Grid>
+
                   <Grid item md={12} xs={12}>
                     <CustomTextField
                       value={store.pin}
                       onChange={(event) => store.handleChange(event)}
                       name="pin"
+                      disabled={store.id > 0}
                       data-testid="id_f_Representative_pin"
                       id='id_f_Representative_pin'
                       label={translate('label:RepresentativeAddEditView.pin')}
@@ -75,15 +52,59 @@ const BaseRepresentativeView: FC<RepresentativeTableProps> = observer((props) =>
                       error={!!store.errors.pin}
                     />
                   </Grid>
-                  <Grid item md={12} xs={12}>
-                    <CustomCheckbox
-                      value={store.hasAccess}
-                      onChange={(event) => store.handleChange(event)}
-                      name="hasAccess"
-                      label={translate('label:RepresentativeAddEditView.hasAccess')}
-                      id='id_f_Representative_hasAccess'
-                    />
-                  </Grid>
+
+                  {store.id > 0 && <>
+                    <Grid item md={12} xs={12}>
+                      <CustomTextField
+                        disabled
+                        value={store.lastName}
+                        onChange={(event) => store.handleChange(event)}
+                        name="lastName"
+                        data-testid="id_f_Representative_lastName"
+                        id='id_f_Representative_lastName'
+                        label={translate('label:RepresentativeAddEditView.lastName')}
+                        helperText={store.errors.lastName}
+                        error={!!store.errors.lastName}
+                      />
+                    </Grid>
+                    <Grid item md={12} xs={12}>
+                      <CustomTextField
+                        disabled
+                        value={store.firstName}
+                        onChange={(event) => store.handleChange(event)}
+                        name="firstName"
+                        data-testid="id_f_Representative_firstName"
+                        id='id_f_Representative_firstName'
+                        label={translate('label:RepresentativeAddEditView.firstName')}
+                        helperText={store.errors.firstName}
+                        error={!!store.errors.firstName}
+                      />
+                    </Grid>
+                    <Grid item md={12} xs={12}>
+                      <CustomTextField
+                        disabled
+                        value={store.secondName}
+                        onChange={(event) => store.handleChange(event)}
+                        name="secondName"
+                        data-testid="id_f_Representative_secondName"
+                        id='id_f_Representative_secondName'
+                        label={translate('label:RepresentativeAddEditView.secondName')}
+                        helperText={store.errors.secondName}
+                        error={!!store.errors.secondName}
+                      />
+                    </Grid>
+                    <Grid item md={12} xs={12}>
+                      <CustomCheckbox
+                        disabled
+                        value={store.hasAccess}
+                        onChange={(event) => store.handleChange(event)}
+                        name="hasAccess"
+                        label={translate('label:RepresentativeAddEditView.hasAccess')}
+                        id='id_f_Representative_hasAccess'
+                      />
+                    </Grid>
+                  </>}
+
                   <Grid item md={12} xs={12}>
                     <LookUp
                       value={store.typeId}
@@ -96,18 +117,7 @@ const BaseRepresentativeView: FC<RepresentativeTableProps> = observer((props) =>
                       error={!!store.errors.typeId}
                     />
                   </Grid>
-                  <Grid item md={12} xs={12}>
-                    <CustomTextField
-                      value={store.lastName}
-                      onChange={(event) => store.handleChange(event)}
-                      name="lastName"
-                      data-testid="id_f_Representative_lastName"
-                      id='id_f_Representative_lastName'
-                      label={translate('label:RepresentativeAddEditView.lastName')}
-                      helperText={store.errors.lastName}
-                      error={!!store.errors.lastName}
-                    />
-                  </Grid>
+
                 </Grid>
               </CardContent>
             </Card>

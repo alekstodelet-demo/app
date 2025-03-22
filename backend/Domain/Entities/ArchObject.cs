@@ -1,7 +1,7 @@
 ﻿
 namespace Domain.Entities
 {
-    public class ArchObject : BaseLogDomain
+    public class ArchObject : BaseLogDomain, IBaseDomain
     {
         public int Id { get; set; }
         public string? Address { get; set; }

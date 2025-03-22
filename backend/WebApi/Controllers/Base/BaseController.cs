@@ -23,7 +23,7 @@ namespace WebApi.Controllers
     {
         protected readonly TService _service;
 
-        private readonly ILogger<BaseController<TService, TEntity, TResponseDto, TCreateRequestDto, TUpdateRequestDto>>
+        protected readonly ILogger<BaseController<TService, TEntity, TResponseDto, TCreateRequestDto, TUpdateRequestDto>>
             _logger;
 
         protected BaseController(TService service,

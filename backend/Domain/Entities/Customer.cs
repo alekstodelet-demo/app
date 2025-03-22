@@ -1,7 +1,7 @@
 
 namespace Domain.Entities
 {
-    public class Customer : BaseLogDomain
+    public class Customer : BaseLogDomain, IBaseDomain
     {
         public int Id { get; set; }
 		public string Pin { get; set; }

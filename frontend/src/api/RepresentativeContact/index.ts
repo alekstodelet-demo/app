@@ -22,3 +22,9 @@ export const updateRepresentativeContact = (data: RepresentativeContact): Promis
 };
 
 
+// frontend/src/api/RepresentativeContact/index.ts
+
+// Add this method if it doesn't exist already
+export const getRepresentativeContactsByRepresentativeId = (representativeId: number): Promise<any> => {
+  return http.get(`/api/v1/RepresentativeContact/GetByRepresentativeId?RepresentativeId=${representativeId}`);
+};

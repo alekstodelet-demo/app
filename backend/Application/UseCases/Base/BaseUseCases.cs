@@ -1,11 +1,12 @@
 ﻿using Application.Models;
 using Application.Repositories;
+using Domain;
 using Domain.Entities;
 using FluentResults;
 
 namespace Application.UseCases
 {
-    public abstract class BaseUseCases<TEntity> : IBaseUseCases<TEntity> where TEntity : class
+    public abstract class BaseUseCases<TEntity> : IBaseUseCases<TEntity> where TEntity : class, IBaseDomain
     {
         protected readonly IUnitOfWork _unitOfWork;
         protected abstract IBaseRepository<TEntity> Repository { get; }
@@ -24,6 +25,7 @@ namespace Application.UseCases
             var result = await Repository.Add(domain);
             if (result.IsSuccess)
             {
+                domain.Id = result.Value;
                 _unitOfWork.Commit();
                 return Result.Ok(domain);
             }

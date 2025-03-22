@@ -1,7 +1,7 @@
 
 namespace Domain.Entities
 {
-    public class Representative : BaseLogDomain
+    public class Representative : BaseLogDomain, IBaseDomain
     {
         public int Id { get; set; }
 		public string FirstName { get; set; }

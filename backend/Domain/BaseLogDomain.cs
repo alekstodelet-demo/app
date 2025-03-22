@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
+    public interface IBaseDomain
+    {
+        public int Id { get; set; }
+    }
+
     public class BaseLogDomain
     {
         public DateTime? CreatedAt { get; set; }

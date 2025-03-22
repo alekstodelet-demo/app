@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace Domain.Entities
 {
-    public class Service : BaseLogDomain
+    public class Service : BaseLogDomain, IBaseDomain
     {
         public int Id { get; set; }
         public string? Name { get; set; }

@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from "react";
-import { Card, CardContent, Divider, Paper, Grid, Container, IconButton, Box } from "@mui/material";
+import { Card, CardContent, Divider, Paper, Grid, Container, IconButton, Box, popoverClasses } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import store from "./store";
 import { observer } from "mobx-react";
@@ -16,6 +16,7 @@ type RepresentativeContactProps = {
   children?: React.ReactNode;
   isPopup?: boolean;
   mainId: number;
+  onAdded?: () => void;
 };
 
 const FastInputView: FC<RepresentativeContactProps> = observer((props) => {
@@ -25,52 +26,53 @@ const FastInputView: FC<RepresentativeContactProps> = observer((props) => {
   useEffect(() => {
     if (props.mainId !== 0 && storeList.mainId !== props.mainId) {
       storeList.mainId = props.mainId;
+      store.representativeId = props.mainId;
       storeList.loadRepresentativeContacts();
     }
   }, [props.mainId]);
 
   const columns = [
     {
-                    field: 'value',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representative_contactListView.value"),
-                },
-                {
-                    field: 'allow_notification',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representative_contactListView.allow_notification"),
-                },
-                {
-                    field: 'created_at',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representative_contactListView.created_at"),
-                },
-                {
-                    field: 'updated_at',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representative_contactListView.updated_at"),
-                },
-                {
-                    field: 'created_by',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representative_contactListView.created_by"),
-                },
-                {
-                    field: 'updated_by',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representative_contactListView.updated_by"),
-                },
-                {
-                    field: 'r_type_id',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representative_contactListView.r_type_id"),
-                },
-                {
-                    field: 'representative_idNavName',
-                    width: null, //or number from 1 to 12
-                    headerName: translate("label:representative_contactListView.representative_id"),
-                },
-                
+      field: 'value',
+      width: null, //or number from 1 to 12
+      headerName: translate("label:representative_contactListView.value"),
+    },
+    {
+      field: 'allow_notification',
+      width: null, //or number from 1 to 12
+      headerName: translate("label:representative_contactListView.allow_notification"),
+    },
+    // {
+    //   field: 'created_at',
+    //   width: null, //or number from 1 to 12
+    //   headerName: translate("label:representative_contactListView.created_at"),
+    // },
+    // {
+    //   field: 'updated_at',
+    //   width: null, //or number from 1 to 12
+    //   headerName: translate("label:representative_contactListView.updated_at"),
+    // },
+    // {
+    //   field: 'created_by',
+    //   width: null, //or number from 1 to 12
+    //   headerName: translate("label:representative_contactListView.created_by"),
+    // },
+    // {
+    //   field: 'updated_by',
+    //   width: null, //or number from 1 to 12
+    //   headerName: translate("label:representative_contactListView.updated_by"),
+    // },
+    {
+      field: 'r_type_id',
+      width: null, //or number from 1 to 12
+      headerName: translate("label:representative_contactListView.r_type_id"),
+    },
+    // {
+    //   field: 'representative_idNavName',
+    //   width: null, //or number from 1 to 12
+    //   headerName: translate("label:representative_contactListView.representative_id"),
+    // },
+
   ];
 
   return (
@@ -162,52 +164,52 @@ const FastInputView: FC<RepresentativeContactProps> = observer((props) => {
 
           {storeList.isEdit ? (
             <Grid container spacing={3} sx={{ mt: 2 }}>
-              
-                  <Grid item md={12} xs={12}>
-                    <CustomTextField
-                      value={store.value}
-                      onChange={(event) => store.handleChange(event)}
-                      name="value"
-                      data-testid="id_f_RepresentativeContact_value"
-                      id='id_f_RepresentativeContact_value'
-                      label={translate('label:RepresentativeContactAddEditView.value')}
-                      helperText={store.errors.value}
-                      error={!!store.errors.value}
-                    />
-                  </Grid>
-                  <Grid item md={12} xs={12}>
-                    <CustomCheckbox
-                      value={store.allowNotification}
-                      onChange={(event) => store.handleChange(event)}
-                      name="allowNotification"
-                      label={translate('label:RepresentativeContactAddEditView.allowNotification')}
-                      id='id_f_RepresentativeContact_allowNotification'
-                    />
-                  </Grid>
-                  <Grid item md={12} xs={12}>
-                    <CustomTextField
-                      value={store.rTypeId}
-                      onChange={(event) => store.handleChange(event)}
-                      name="rTypeId"
-                      data-testid="id_f_RepresentativeContact_rTypeId"
-                      id='id_f_RepresentativeContact_rTypeId'
-                      label={translate('label:RepresentativeContactAddEditView.rTypeId')}
-                      helperText={store.errors.rTypeId}
-                      error={!!store.errors.rTypeId}
-                    />
-                  </Grid>
-                  <Grid item md={12} xs={12}>
-                    <LookUp
-                      value={store.representativeId}
-                      onChange={(event) => store.handleChange(event)}
-                      name="representativeId"
-                      data={store.representatives}
-                      id='id_f_RepresentativeContact_representativeId'
-                      label={translate('label:RepresentativeContactAddEditView.representativeId')}
-                      helperText={store.errors.representativeId}
-                      error={!!store.errors.representativeId}
-                    />
-                  </Grid>
+
+              <Grid item md={12} xs={12}>
+                <CustomTextField
+                  value={store.value}
+                  onChange={(event) => store.handleChange(event)}
+                  name="value"
+                  data-testid="id_f_RepresentativeContact_value"
+                  id='id_f_RepresentativeContact_value'
+                  label={translate('label:RepresentativeContactAddEditView.value')}
+                  helperText={store.errors.value}
+                  error={!!store.errors.value}
+                />
+              </Grid>
+              <Grid item md={12} xs={12}>
+                <CustomCheckbox
+                  value={store.allowNotification}
+                  onChange={(event) => store.handleChange(event)}
+                  name="allowNotification"
+                  label={translate('label:RepresentativeContactAddEditView.allowNotification')}
+                  id='id_f_RepresentativeContact_allowNotification'
+                />
+              </Grid>
+              <Grid item md={12} xs={12}>
+                <CustomTextField
+                  value={store.rTypeId}
+                  onChange={(event) => store.handleChange(event)}
+                  name="rTypeId"
+                  data-testid="id_f_RepresentativeContact_rTypeId"
+                  id='id_f_RepresentativeContact_rTypeId'
+                  label={translate('label:RepresentativeContactAddEditView.rTypeId')}
+                  helperText={store.errors.rTypeId}
+                  error={!!store.errors.rTypeId}
+                />
+              </Grid>
+              {/* <Grid item md={12} xs={12}>
+                <LookUp
+                  value={store.representativeId}
+                  onChange={(event) => store.handleChange(event)}
+                  name="representativeId"
+                  data={store.representatives}
+                  id='id_f_RepresentativeContact_representativeId'
+                  label={translate('label:RepresentativeContactAddEditView.representativeId')}
+                  helperText={store.errors.representativeId}
+                  error={!!store.errors.representativeId}
+                />
+              </Grid> */}
               <Grid item xs={12} display={"flex"} justifyContent={"flex-end"}>
                 <CustomButton
                   variant="contained"
@@ -219,6 +221,9 @@ const FastInputView: FC<RepresentativeContactProps> = observer((props) => {
                       storeList.setFastInputIsEdit(false);
                       storeList.loadRepresentativeContacts();
                       store.clearStore();
+
+                      if (props.onAdded)
+                        props.onAdded();
                     });
                   }}
                 >
@@ -246,6 +251,7 @@ const FastInputView: FC<RepresentativeContactProps> = observer((props) => {
                 onClick={() => {
                   storeList.setFastInputIsEdit(true);
                   store.doLoad(0);
+
                   // store.project_id = props.mainId;
                 }}
               >

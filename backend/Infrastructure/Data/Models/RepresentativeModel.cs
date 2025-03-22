@@ -2,7 +2,7 @@ using Domain;
 
 namespace Infrastructure.Data.Models
 {
-    public class RepresentativeModel : BaseLogDomain
+    public class RepresentativeModel : BaseLogDomain, IBaseDomain
     {
         public int Id { get; set; }
 		public string FirstName { get; set; }

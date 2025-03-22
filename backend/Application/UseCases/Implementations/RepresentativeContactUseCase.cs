@@ -15,7 +15,17 @@ namespace Application.UseCases
             _unitOfWork = unitOfWork;
         }
 
-        
+        public override async Task<Result<RepresentativeContact>> Create(RepresentativeContact domain)
+        {
+            var result = await base.Create(domain);
+            var representative = await _unitOfWork.RepresentativeRepository.GetOneByID(domain.RepresentativeId);
+            representative.Value.HasAccess = true;
+            await _unitOfWork.RepresentativeRepository.Update(representative.Value);
+            _unitOfWork.Commit();
+
+            return result;
+        }
+
         public Task<List<RepresentativeContact>> GetByRepresentativeId(int RepresentativeId)
         {
             return _unitOfWork.RepresentativeContactRepository.GetByRepresentativeId(RepresentativeId);

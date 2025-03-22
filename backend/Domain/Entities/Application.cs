@@ -1,7 +1,7 @@
 ﻿
 namespace Domain.Entities
 {
-    public class Application : BaseLogDomain
+    public class Application : BaseLogDomain, IBaseDomain
     {
         public int Id { get; set; }
         public DateTime? RegistrationDate { get; set; }

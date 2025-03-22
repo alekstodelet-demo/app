@@ -1,6 +1,7 @@
 using Domain.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApi.Dtos
 {
@@ -186,4 +187,18 @@ namespace WebApi.Dtos
             };
         }
     }
+
+
+    public class CreateRepresentativeWithPinRequest
+    {
+        [JsonProperty("Pin")]
+        public string Pin { get; set; }
+        [JsonProperty("companyId")]
+        public int CompanyId { get; set; }
+
+        [JsonProperty("typeId")]
+        public int TypeId { get; set; }
+    }
+
+
 }

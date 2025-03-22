@@ -2,7 +2,7 @@ using Domain;
 
 namespace Infrastructure.Data.Models
 {
-    public class OrganizationTypeModel : BaseLogDomain
+    public class OrganizationTypeModel : BaseLogDomain, IBaseDomain
     {
         public int Id { get; set; }
 		public string DescriptionKg { get; set; }

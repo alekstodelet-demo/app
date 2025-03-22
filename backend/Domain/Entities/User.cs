@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities;
 
-public class User : BaseLogDomain
+public class User : BaseLogDomain, IBaseDomain
 {
     public int Id { get; set; }
     public string Email { get; set; }
@@ -18,7 +18,7 @@ public class User : BaseLogDomain
     public string PasswordHash { get; set; }
 }
 
-public class UserModel : BaseLogDomain
+public class UserModel : BaseLogDomain, IBaseDomain
 {
     public int Id { get; set; }
     public string Email { get; set; }

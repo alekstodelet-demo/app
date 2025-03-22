@@ -29,7 +29,6 @@ class RepresentativeStore extends BaseStore {
 
 
   // Справочники
-  @observable customers = []
   @observable representativeTypes = []
 
 
@@ -67,7 +66,7 @@ class RepresentativeStore extends BaseStore {
     }
   }
 
-  async onSaveClick(onSaved: (id: number) => void) {
+  async onSaveClick(onSaved: (id: number, isNew?: boolean) => void) {
     const data: RepresentativeCreateModel = {
 
       id: this.id - 0,
@@ -104,7 +103,7 @@ class RepresentativeStore extends BaseStore {
         } else {
           this.showSuccessSnackbar(i18n.t("message:snackbar.successEdit"));
         }
-        onSaved(response.id || this.id);
+        onSaved(response.id || this.id, data.id === 0);
       }
     );
   };
@@ -112,7 +111,6 @@ class RepresentativeStore extends BaseStore {
   async doLoad(id: number) {
 
     //загрузка справочников
-    await this.loadCustomers();
     await this.loadRepresentativeTypes();
 
 
@@ -139,23 +137,6 @@ class RepresentativeStore extends BaseStore {
         });
       }
     );
-  };
-
-
-  loadCustomers = async () => {
-    try {
-      MainStore.changeLoader(true);
-      const response = await getCustomers();
-      if ((response.status === 201 || response.status === 200) && response?.data !== null) {
-        this.customers = response.data
-      } else {
-        throw new Error();
-      }
-    } catch (err) {
-      MainStore.setSnackbar(i18n.t("message:somethingWentWrong"), "error");
-    } finally {
-      MainStore.changeLoader(false);
-    }
   };
 
   loadRepresentativeTypes = async () => {

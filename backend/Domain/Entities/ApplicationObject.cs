@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class ApplicationObject : BaseLogDomain
+    public class ApplicationObject : BaseLogDomain, IBaseDomain
     {
         public int Id { get; set; }
 		public int ApplicationId { get; set; }

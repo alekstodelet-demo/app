@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace Domain.Entities
 {
-    public class ContactType : BaseLogDomain
+    public class ContactType : BaseLogDomain, IBaseDomain
     {
         public int Id { get; set; }
         public string Name { get; set; }

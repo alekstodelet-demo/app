@@ -5,7 +5,7 @@ using Infrastructure.Security;
 
 namespace Infrastructure.Data.Models
 {
-    public class ServiceModel : BaseLogDomain
+    public class ServiceModel : BaseLogDomain, IBaseDomain
     {
         public int Id { get; set; }
         [Encrypted]

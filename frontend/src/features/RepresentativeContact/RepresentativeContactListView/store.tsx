@@ -5,7 +5,7 @@ import BaseStore from 'core/stores/BaseStore';
 import MainStore from "MainStore";
 import { deleteRepresentativeContact } from "api/RepresentativeContact";
 import { RepresentativeContact } from "constants/RepresentativeContact";
-import { getRepresentativeContacts } from "api/RepresentativeContact";
+import { getRepresentativeContactsByRepresentativeId } from "api/RepresentativeContact";
 
 class RepresentativeContactListStore extends BaseStore {
   @observable data: RepresentativeContact[] = [];
@@ -13,7 +13,7 @@ class RepresentativeContactListStore extends BaseStore {
   @observable currentId: number = 0;
   @observable mainId: number = 0;
   @observable isEdit: boolean = false;
-  
+
 
   constructor() {
     super();
@@ -31,7 +31,7 @@ class RepresentativeContactListStore extends BaseStore {
     });
   }
 
-  
+
 
   onEditClicked(id: number) {
     runInAction(() => {
@@ -46,15 +46,15 @@ class RepresentativeContactListStore extends BaseStore {
       this.currentId = 0;
     });
   }
-  
+
   setFastInputIsEdit = (value: boolean) => {
     this.isEdit = value;
   }
 
   loadRepresentativeContacts = async () => {
-    
+
     this.apiCall(
-      getRepresentativeContacts,
+      () => getRepresentativeContactsByRepresentativeId(this.mainId),
       (data) => {
         if (Array.isArray(data)) {
           runInAction(() => {

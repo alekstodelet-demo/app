@@ -15,7 +15,20 @@ namespace Application.UseCases
             _unitOfWork = unitOfWork;
         }
 
-        
+        public override Task<Result<Representative>> Create(Representative domain)
+        {
+            mockFetchTundukData(domain);
+            return base.Create(domain);
+        }
+
+
+        private void mockFetchTundukData(Representative representative)
+        {
+            representative.LastName = "Иванов";
+            representative.FirstName = "Иван";
+            representative.SecondName = "Иванович";
+        }
+
         public Task<List<Representative>> GetByCompanyId(int CompanyId)
         {
             return _unitOfWork.RepresentativeRepository.GetByCompanyId(CompanyId);
