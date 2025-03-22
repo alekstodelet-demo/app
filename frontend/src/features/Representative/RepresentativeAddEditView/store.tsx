@@ -9,9 +9,9 @@ import { getRepresentative, createRepresentative, updateRepresentative } from "a
 import { Representative, RepresentativeCreateModel } from "constants/Representative";
 
 import { getCustomers } from "api/Customer";
-    
+
 import { getRepresentativeTypes } from "api/RepresentativeType";
-    
+
 
 interface RepresentativeResponse {
   id: number;
@@ -19,19 +19,19 @@ interface RepresentativeResponse {
 
 class RepresentativeStore extends BaseStore {
   @observable id: number = 0
-	@observable firstName: string = ""
-	@observable secondName: string = ""
-	@observable pin: string = ""
-	@observable companyId: number = 0
-	@observable hasAccess: boolean = false
-	@observable typeId: number = 0
-	@observable lastName: string = ""
-	
+  @observable firstName: string = ""
+  @observable secondName: string = ""
+  @observable pin: string = ""
+  @observable companyId: number = 0
+  @observable hasAccess: boolean = false
+  @observable typeId: number = 0
+  @observable lastName: string = ""
+
 
   // Справочники
   @observable customers = []
-	@observable representativeTypes = []
-	
+  @observable representativeTypes = []
+
 
 
   constructor() {
@@ -43,21 +43,25 @@ class RepresentativeStore extends BaseStore {
     super.clearStore();
     runInAction(() => {
       this.id = 0
-		this.firstName = ""
-		this.secondName = ""
-		this.pin = ""
-		this.companyId = 0
-		this.hasAccess = false
-		this.typeId = 0
-		this.lastName = ""
-		
+      this.firstName = ""
+      this.secondName = ""
+      this.pin = ""
+      this.companyId = 0
+      this.hasAccess = false
+      this.typeId = 0
+      this.lastName = ""
+
     });
+  }
+
+  setMainId(id: number) {
+    this.companyId = id;
   }
 
   async validateField(name: string, value: any) {
     const { isValid, error } = await validateField(name, value);
     if (isValid) {
-      this.errors[name] = ""; 
+      this.errors[name] = "";
     } else {
       this.errors[name] = error;
     }
@@ -65,7 +69,7 @@ class RepresentativeStore extends BaseStore {
 
   async onSaveClick(onSaved: (id: number) => void) {
     const data: RepresentativeCreateModel = {
-      
+
       id: this.id - 0,
       firstName: this.firstName,
       secondName: this.secondName,
@@ -109,8 +113,8 @@ class RepresentativeStore extends BaseStore {
 
     //загрузка справочников
     await this.loadCustomers();
-		await this.loadRepresentativeTypes();
-		
+    await this.loadRepresentativeTypes();
+
 
     if (id) {
       this.id = id;
@@ -123,7 +127,7 @@ class RepresentativeStore extends BaseStore {
       () => getRepresentative(id),
       (data: Representative) => {
         runInAction(() => {
-          
+
           this.id = data.id;
           this.firstName = data.firstName;
           this.secondName = data.secondName;
@@ -137,7 +141,7 @@ class RepresentativeStore extends BaseStore {
     );
   };
 
-  
+
   loadCustomers = async () => {
     try {
       MainStore.changeLoader(true);
@@ -153,7 +157,7 @@ class RepresentativeStore extends BaseStore {
       MainStore.changeLoader(false);
     }
   };
-    
+
   loadRepresentativeTypes = async () => {
     try {
       MainStore.changeLoader(true);
@@ -169,7 +173,7 @@ class RepresentativeStore extends BaseStore {
       MainStore.changeLoader(false);
     }
   };
-    
+
 
 }
 

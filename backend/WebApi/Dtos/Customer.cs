@@ -16,28 +16,28 @@ namespace WebApi.Dtos
         [JsonProperty("okpo")]
         public string Okpo { get; set; }
             
-        [JsonProperty("postal_code")]
+        [JsonProperty("postalCode")]
         public string PostalCode { get; set; }
             
         [JsonProperty("ugns")]
         public string Ugns { get; set; }
             
-        [JsonProperty("reg_number")]
+        [JsonProperty("regNumber")]
         public string RegNumber { get; set; }
             
-        [JsonProperty("organization_type_id")]
+        [JsonProperty("organizationTypeId")]
         public int? OrganizationTypeId { get; set; }
             
-        [JsonProperty("created_at")]
+        [JsonProperty("createdAt")]
         public DateTime? CreatedAt { get; set; }
             
-        [JsonProperty("updated_at")]
+        [JsonProperty("updatedAt")]
         public DateTime? UpdatedAt { get; set; }
             
-        [JsonProperty("created_by")]
+        [JsonProperty("createdBy")]
         public int? CreatedBy { get; set; }
             
-        [JsonProperty("updated_by")]
+        [JsonProperty("updatedBy")]
         public int? UpdatedBy { get; set; }
             
         [JsonProperty("name")]
@@ -82,49 +82,48 @@ namespace WebApi.Dtos
         
         [JsonProperty("id")]
         public int Id { get; set; }
-            
         [JsonProperty("pin")]
         public string Pin { get; set; }
-            
+
         [JsonProperty("okpo")]
         public string Okpo { get; set; }
-            
-        [JsonProperty("postal_code")]
+
+        [JsonProperty("postalCode")]
         public string PostalCode { get; set; }
-            
+
         [JsonProperty("ugns")]
         public string Ugns { get; set; }
-            
-        [JsonProperty("reg_number")]
+
+        [JsonProperty("regNumber")]
         public string RegNumber { get; set; }
-            
-        [JsonProperty("organization_type_id")]
+
+        [JsonProperty("organizationTypeId")]
         public int? OrganizationTypeId { get; set; }
-            
-        [JsonProperty("created_at")]
+
+        [JsonProperty("createdAt")]
         public DateTime? CreatedAt { get; set; }
-            
-        [JsonProperty("updated_at")]
+
+        [JsonProperty("updatedAt")]
         public DateTime? UpdatedAt { get; set; }
-            
-        [JsonProperty("created_by")]
+
+        [JsonProperty("createdBy")]
         public int? CreatedBy { get; set; }
-            
-        [JsonProperty("updated_by")]
+
+        [JsonProperty("updatedBy")]
         public int? UpdatedBy { get; set; }
-            
+
         [JsonProperty("name")]
         public string Name { get; set; }
-            
+
         [JsonProperty("address")]
         public string Address { get; set; }
-            
+
         [JsonProperty("director")]
         public string Director { get; set; }
-            
+
         [JsonProperty("nomer")]
         public string Nomer { get; set; }
-            
+
 
         internal Customer ToDomain()
         {
@@ -155,49 +154,49 @@ namespace WebApi.Dtos
         
         [JsonProperty("id")]
         public int Id { get; set; }
-            
+
         [JsonProperty("pin")]
         public string Pin { get; set; }
-            
+
         [JsonProperty("okpo")]
         public string Okpo { get; set; }
-            
-        [JsonProperty("postal_code")]
+
+        [JsonProperty("postalCode")]
         public string PostalCode { get; set; }
-            
+
         [JsonProperty("ugns")]
         public string Ugns { get; set; }
-            
-        [JsonProperty("reg_number")]
+
+        [JsonProperty("regNumber")]
         public string RegNumber { get; set; }
-            
-        [JsonProperty("organization_type_id")]
+
+        [JsonProperty("organizationTypeId")]
         public int? OrganizationTypeId { get; set; }
-            
-        [JsonProperty("created_at")]
+
+        [JsonProperty("createdAt")]
         public DateTime? CreatedAt { get; set; }
-            
-        [JsonProperty("updated_at")]
+
+        [JsonProperty("updatedAt")]
         public DateTime? UpdatedAt { get; set; }
-            
-        [JsonProperty("created_by")]
+
+        [JsonProperty("createdBy")]
         public int? CreatedBy { get; set; }
-            
-        [JsonProperty("updated_by")]
+
+        [JsonProperty("updatedBy")]
         public int? UpdatedBy { get; set; }
-            
+
         [JsonProperty("name")]
         public string Name { get; set; }
-            
+
         [JsonProperty("address")]
         public string Address { get; set; }
-            
+
         [JsonProperty("director")]
         public string Director { get; set; }
-            
+
         [JsonProperty("nomer")]
         public string Nomer { get; set; }
-            
+
 
         internal Customer ToDomain()
         {

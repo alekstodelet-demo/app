@@ -13,25 +13,25 @@ namespace WebApi.Dtos
         [JsonProperty("value")]
         public string Value { get; set; }
             
-        [JsonProperty("allow_notification")]
+        [JsonProperty("allowNotification")]
         public bool? AllowNotification { get; set; }
             
-        [JsonProperty("created_at")]
+        [JsonProperty("createdAt")]
         public DateTime? CreatedAt { get; set; }
             
-        [JsonProperty("updated_at")]
+        [JsonProperty("updatedAt")]
         public DateTime? UpdatedAt { get; set; }
             
-        [JsonProperty("created_by")]
+        [JsonProperty("createdBy")]
         public int? CreatedBy { get; set; }
             
-        [JsonProperty("updated_by")]
+        [JsonProperty("updatedBy")]
         public int? UpdatedBy { get; set; }
             
-        [JsonProperty("r_type_id")]
+        [JsonProperty("rTypeId")]
         public int? RTypeId { get; set; }
             
-        [JsonProperty("organization_id")]
+        [JsonProperty("organizationId")]
         public int OrganizationId { get; set; }
             
 
@@ -62,25 +62,25 @@ namespace WebApi.Dtos
         [JsonProperty("value")]
         public string Value { get; set; }
             
-        [JsonProperty("allow_notification")]
+        [JsonProperty("allowNotification")]
         public bool? AllowNotification { get; set; }
             
-        [JsonProperty("created_at")]
+        [JsonProperty("createdAt")]
         public DateTime? CreatedAt { get; set; }
             
-        [JsonProperty("updated_at")]
+        [JsonProperty("updatedAt")]
         public DateTime? UpdatedAt { get; set; }
             
-        [JsonProperty("created_by")]
+        [JsonProperty("createdBy")]
         public int? CreatedBy { get; set; }
             
-        [JsonProperty("updated_by")]
+        [JsonProperty("updatedBy")]
         public int? UpdatedBy { get; set; }
             
-        [JsonProperty("r_type_id")]
+        [JsonProperty("rTypeId")]
         public int? RTypeId { get; set; }
             
-        [JsonProperty("organization_id")]
+        [JsonProperty("organizationId")]
         public int OrganizationId { get; set; }
             
 
@@ -104,34 +104,34 @@ namespace WebApi.Dtos
 
     public class UpdateCustomerContactRequest
     {
-        
+
         [JsonProperty("id")]
         public int Id { get; set; }
-            
+
         [JsonProperty("value")]
         public string Value { get; set; }
-            
-        [JsonProperty("allow_notification")]
+
+        [JsonProperty("allowNotification")]
         public bool? AllowNotification { get; set; }
-            
-        [JsonProperty("created_at")]
+
+        [JsonProperty("createdAt")]
         public DateTime? CreatedAt { get; set; }
-            
-        [JsonProperty("updated_at")]
+
+        [JsonProperty("updatedAt")]
         public DateTime? UpdatedAt { get; set; }
-            
-        [JsonProperty("created_by")]
+
+        [JsonProperty("createdBy")]
         public int? CreatedBy { get; set; }
-            
-        [JsonProperty("updated_by")]
+
+        [JsonProperty("updatedBy")]
         public int? UpdatedBy { get; set; }
-            
-        [JsonProperty("r_type_id")]
+
+        [JsonProperty("rTypeId")]
         public int? RTypeId { get; set; }
-            
-        [JsonProperty("organization_id")]
+
+        [JsonProperty("organizationId")]
         public int OrganizationId { get; set; }
-            
+
 
         internal CustomerContact ToDomain()
         {

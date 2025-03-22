@@ -45,7 +45,8 @@ namespace WebApi.Controllers.V1
         public async Task<IActionResult> GetByOrganizationId(int OrganizationId)
         {
             var response = await _CustomerRequisiteUseCase.GetByOrganizationId(OrganizationId);
-            return Ok(response);
+            var res = response.Select(x => EntityToDtoMapper(x)).ToList();
+            return Ok(res);
         }
         
 

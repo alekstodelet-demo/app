@@ -9,7 +9,7 @@ import { getCustomerContact, createCustomerContact, updateCustomerContact } from
 import { CustomerContact, CustomerContactCreateModel } from "constants/CustomerContact";
 
 import { getCustomers } from "api/Customer";
-    
+
 
 interface CustomerContactResponse {
   id: number;
@@ -17,15 +17,15 @@ interface CustomerContactResponse {
 
 class CustomerContactStore extends BaseStore {
   @observable id: number = 0
-	@observable value: string = ""
-	@observable allowNotification: boolean = false
-	@observable rTypeId: number = 0
-	@observable organizationId: number = 0
-	
+  @observable value: string = ""
+  @observable allowNotification: boolean = false
+  @observable rTypeId: number = 0
+  @observable organizationId: number = 0
+
 
   // Справочники
   @observable customers = []
-	
+
 
 
   constructor() {
@@ -37,18 +37,22 @@ class CustomerContactStore extends BaseStore {
     super.clearStore();
     runInAction(() => {
       this.id = 0
-		this.value = ""
-		this.allowNotification = false
-		this.rTypeId = 0
-		this.organizationId = 0
-		
+      this.value = ""
+      this.allowNotification = false
+      this.rTypeId = 0
+      this.organizationId = 0
+
     });
+  }
+
+  setMainId(id: number) {
+    this.organizationId = id;
   }
 
   async validateField(name: string, value: any) {
     const { isValid, error } = await validateField(name, value);
     if (isValid) {
-      this.errors[name] = ""; 
+      this.errors[name] = "";
     } else {
       this.errors[name] = error;
     }
@@ -56,7 +60,7 @@ class CustomerContactStore extends BaseStore {
 
   async onSaveClick(onSaved: (id: number) => void) {
     const data: CustomerContactCreateModel = {
-      
+
       id: this.id - 0,
       value: this.value,
       allowNotification: this.allowNotification,
@@ -97,7 +101,7 @@ class CustomerContactStore extends BaseStore {
 
     //загрузка справочников
     await this.loadCustomers();
-		
+
 
     if (id) {
       this.id = id;
@@ -110,7 +114,7 @@ class CustomerContactStore extends BaseStore {
       () => getCustomerContact(id),
       (data: CustomerContact) => {
         runInAction(() => {
-          
+
           this.id = data.id;
           this.value = data.value;
           this.allowNotification = data.allowNotification;
@@ -121,7 +125,7 @@ class CustomerContactStore extends BaseStore {
     );
   };
 
-  
+
   loadCustomers = async () => {
     try {
       MainStore.changeLoader(true);
@@ -137,7 +141,7 @@ class CustomerContactStore extends BaseStore {
       MainStore.changeLoader(false);
     }
   };
-    
+
 
 }
 

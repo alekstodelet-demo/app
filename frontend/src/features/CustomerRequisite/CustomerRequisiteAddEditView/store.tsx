@@ -9,7 +9,7 @@ import { getCustomerRequisite, createCustomerRequisite, updateCustomerRequisite 
 import { CustomerRequisite, CustomerRequisiteCreateModel } from "constants/CustomerRequisite";
 
 import { getCustomers } from "api/Customer";
-    
+
 
 interface CustomerRequisiteResponse {
   id: number;
@@ -17,15 +17,15 @@ interface CustomerRequisiteResponse {
 
 class CustomerRequisiteStore extends BaseStore {
   @observable id: number = 0
-	@observable paymentAccount: string = ""
-	@observable bank: string = ""
-	@observable bik: string = ""
-	@observable organizationId: number = 0
-	
+  @observable paymentAccount: string = ""
+  @observable bank: string = ""
+  @observable bik: string = ""
+  @observable organizationId: number = 0
+
 
   // Справочники
   @observable customers = []
-	
+
 
 
   constructor() {
@@ -37,18 +37,22 @@ class CustomerRequisiteStore extends BaseStore {
     super.clearStore();
     runInAction(() => {
       this.id = 0
-		this.paymentAccount = ""
-		this.bank = ""
-		this.bik = ""
-		this.organizationId = 0
-		
+      this.paymentAccount = ""
+      this.bank = ""
+      this.bik = ""
+      this.organizationId = 0
+
     });
+  }
+
+  setMainId(id: number) {
+    this.organizationId = id;
   }
 
   async validateField(name: string, value: any) {
     const { isValid, error } = await validateField(name, value);
     if (isValid) {
-      this.errors[name] = ""; 
+      this.errors[name] = "";
     } else {
       this.errors[name] = error;
     }
@@ -56,7 +60,7 @@ class CustomerRequisiteStore extends BaseStore {
 
   async onSaveClick(onSaved: (id: number) => void) {
     const data: CustomerRequisiteCreateModel = {
-      
+
       id: this.id - 0,
       paymentAccount: this.paymentAccount,
       bank: this.bank,
@@ -97,7 +101,7 @@ class CustomerRequisiteStore extends BaseStore {
 
     //загрузка справочников
     await this.loadCustomers();
-		
+
 
     if (id) {
       this.id = id;
@@ -110,7 +114,7 @@ class CustomerRequisiteStore extends BaseStore {
       () => getCustomerRequisite(id),
       (data: CustomerRequisite) => {
         runInAction(() => {
-          
+
           this.id = data.id;
           this.paymentAccount = data.paymentAccount;
           this.bank = data.bank;
@@ -121,7 +125,7 @@ class CustomerRequisiteStore extends BaseStore {
     );
   };
 
-  
+
   loadCustomers = async () => {
     try {
       MainStore.changeLoader(true);
@@ -137,7 +141,7 @@ class CustomerRequisiteStore extends BaseStore {
       MainStore.changeLoader(false);
     }
   };
-    
+
 
 }
 

@@ -20,10 +20,10 @@ const CustomerContactListView: FC<CustomerContactListViewProps> = observer((prop
   useEffect(() => {
     store.setMainId(props.mainId)
   }, [props.mainId]);
-  
+
 
   const columns: GridColDef[] = [
-    
+
     {
       field: 'value',
       headerName: translate("label:CustomerContactListView.value"),
@@ -63,6 +63,7 @@ const CustomerContactListView: FC<CustomerContactListViewProps> = observer((prop
       viewMode="popup"
     >
       <CustomerContactPopupForm
+        mainId={store.mainId}
         openPanel={store.openPanel}
         id={store.currentId}
         onBtnCancelClick={() => store.closePanel()}

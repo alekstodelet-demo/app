@@ -9,6 +9,7 @@ import CustomButton from 'components/Button';
 type PopupFormProps = {
   openPanel: boolean;
   id: number;
+  mainId: number;
   onBtnCancelClick: () => void;
   onSaveClick: (id: number) => void;
 }
@@ -24,6 +25,10 @@ const CustomerContactPopupForm: FC<PopupFormProps> = observer((props) => {
       store.clearStore()
     }
   }, [props.openPanel])
+
+  useEffect(() => {
+    store.setMainId(props.mainId);
+  }, [props.mainId])
 
   return (
     <Dialog open={props.openPanel} onClose={props.onBtnCancelClick} maxWidth="sm" fullWidth>

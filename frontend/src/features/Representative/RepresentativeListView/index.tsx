@@ -5,7 +5,7 @@ import { GridColDef } from '@mui/x-data-grid';
 import BaseListView from 'components/common/BaseListView';
 import RepresentativePopupForm from '../RepresentativeAddEditView/popupForm';
 import store from "./store";
-
+import storeAdd from "features/Representative/RepresentativeAddEditView/store"
 
 type RepresentativeListViewProps = {
   mainId: number;
@@ -18,12 +18,13 @@ const RepresentativeListView: FC<RepresentativeListViewProps> = observer((props)
   const translate = t;
 
   useEffect(() => {
-    store.setMainId(props.mainId)
+    store.setMainId(props.mainId);
+    storeAdd.setMainId(props.mainId);
   }, [props.mainId]);
-  
+
 
   const columns: GridColDef[] = [
-    
+
     {
       field: 'firstName',
       headerName: translate("label:RepresentativeListView.firstName"),

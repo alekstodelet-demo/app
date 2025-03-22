@@ -10,37 +10,37 @@ namespace WebApi.Dtos
         [JsonProperty("id")]
         public int Id { get; set; }
             
-        [JsonProperty("first_name")]
+        [JsonProperty("firstName")]
         public string FirstName { get; set; }
             
-        [JsonProperty("second_name")]
+        [JsonProperty("secondName")]
         public string SecondName { get; set; }
             
         [JsonProperty("pin")]
         public string Pin { get; set; }
             
-        [JsonProperty("created_at")]
+        [JsonProperty("createdAt")]
         public DateTime? CreatedAt { get; set; }
             
-        [JsonProperty("updated_at")]
+        [JsonProperty("updatedAt")]
         public DateTime? UpdatedAt { get; set; }
             
-        [JsonProperty("created_by")]
+        [JsonProperty("createdBy")]
         public int? CreatedBy { get; set; }
             
-        [JsonProperty("updated_by")]
+        [JsonProperty("updatedBy")]
         public int? UpdatedBy { get; set; }
             
-        [JsonProperty("company_id")]
+        [JsonProperty("companyId")]
         public int CompanyId { get; set; }
             
-        [JsonProperty("has_access")]
+        [JsonProperty("hasAccess")]
         public bool? HasAccess { get; set; }
             
-        [JsonProperty("type_id")]
+        [JsonProperty("typeId")]
         public int TypeId { get; set; }
             
-        [JsonProperty("last_name")]
+        [JsonProperty("lastName")]
         public string LastName { get; set; }
             
 
@@ -70,40 +70,40 @@ namespace WebApi.Dtos
         
         [JsonProperty("id")]
         public int Id { get; set; }
-            
-        [JsonProperty("first_name")]
+
+        [JsonProperty("firstName")]
         public string FirstName { get; set; }
-            
-        [JsonProperty("second_name")]
+
+        [JsonProperty("secondName")]
         public string SecondName { get; set; }
-            
+
         [JsonProperty("pin")]
         public string Pin { get; set; }
-            
-        [JsonProperty("created_at")]
+
+        [JsonProperty("createdAt")]
         public DateTime? CreatedAt { get; set; }
-            
-        [JsonProperty("updated_at")]
+
+        [JsonProperty("updatedAt")]
         public DateTime? UpdatedAt { get; set; }
-            
-        [JsonProperty("created_by")]
+
+        [JsonProperty("createdBy")]
         public int? CreatedBy { get; set; }
-            
-        [JsonProperty("updated_by")]
+
+        [JsonProperty("updatedBy")]
         public int? UpdatedBy { get; set; }
-            
-        [JsonProperty("company_id")]
+
+        [JsonProperty("companyId")]
         public int CompanyId { get; set; }
-            
-        [JsonProperty("has_access")]
+
+        [JsonProperty("hasAccess")]
         public bool? HasAccess { get; set; }
-            
-        [JsonProperty("type_id")]
+
+        [JsonProperty("typeId")]
         public int TypeId { get; set; }
-            
-        [JsonProperty("last_name")]
+
+        [JsonProperty("lastName")]
         public string LastName { get; set; }
-            
+
 
         internal Representative ToDomain()
         {
@@ -131,40 +131,40 @@ namespace WebApi.Dtos
         
         [JsonProperty("id")]
         public int Id { get; set; }
-            
-        [JsonProperty("first_name")]
+
+        [JsonProperty("firstName")]
         public string FirstName { get; set; }
-            
-        [JsonProperty("second_name")]
+
+        [JsonProperty("secondName")]
         public string SecondName { get; set; }
-            
+
         [JsonProperty("pin")]
         public string Pin { get; set; }
-            
-        [JsonProperty("created_at")]
+
+        [JsonProperty("createdAt")]
         public DateTime? CreatedAt { get; set; }
-            
-        [JsonProperty("updated_at")]
+
+        [JsonProperty("updatedAt")]
         public DateTime? UpdatedAt { get; set; }
-            
-        [JsonProperty("created_by")]
+
+        [JsonProperty("createdBy")]
         public int? CreatedBy { get; set; }
-            
-        [JsonProperty("updated_by")]
+
+        [JsonProperty("updatedBy")]
         public int? UpdatedBy { get; set; }
-            
-        [JsonProperty("company_id")]
+
+        [JsonProperty("companyId")]
         public int CompanyId { get; set; }
-            
-        [JsonProperty("has_access")]
+
+        [JsonProperty("hasAccess")]
         public bool? HasAccess { get; set; }
-            
-        [JsonProperty("type_id")]
+
+        [JsonProperty("typeId")]
         public int TypeId { get; set; }
-            
-        [JsonProperty("last_name")]
+
+        [JsonProperty("lastName")]
         public string LastName { get; set; }
-            
+
 
         internal Representative ToDomain()
         {

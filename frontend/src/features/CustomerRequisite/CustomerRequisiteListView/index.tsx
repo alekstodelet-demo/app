@@ -5,6 +5,7 @@ import { GridColDef } from '@mui/x-data-grid';
 import BaseListView from 'components/common/BaseListView';
 import CustomerRequisitePopupForm from '../CustomerRequisiteAddEditView/popupForm';
 import store from "./store";
+import storeAdd from "features/CustomerRequisite/CustomerRequisiteAddEditView/store";
 
 
 type CustomerRequisiteListViewProps = {
@@ -19,11 +20,12 @@ const CustomerRequisiteListView: FC<CustomerRequisiteListViewProps> = observer((
 
   useEffect(() => {
     store.setMainId(props.mainId)
+    storeAdd.setMainId(props.mainId);
   }, [props.mainId]);
-  
+
 
   const columns: GridColDef[] = [
-    
+
     {
       field: 'paymentAccount',
       headerName: translate("label:CustomerRequisiteListView.paymentAccount"),

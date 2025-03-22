@@ -10,7 +10,7 @@ namespace WebApi.Dtos
         [JsonProperty("id")]
         public int Id { get; set; }
             
-        [JsonProperty("payment_account")]
+        [JsonProperty("paymentAccount")]
         public string PaymentAccount { get; set; }
             
         [JsonProperty("bank")]
@@ -19,19 +19,19 @@ namespace WebApi.Dtos
         [JsonProperty("bik")]
         public string Bik { get; set; }
             
-        [JsonProperty("organization_id")]
+        [JsonProperty("organizationId")]
         public int OrganizationId { get; set; }
             
-        [JsonProperty("created_at")]
+        [JsonProperty("createdAt")]
         public DateTime? CreatedAt { get; set; }
             
-        [JsonProperty("updated_at")]
+        [JsonProperty("updatedAt")]
         public DateTime? UpdatedAt { get; set; }
             
-        [JsonProperty("created_by")]
+        [JsonProperty("createdBy")]
         public int? CreatedBy { get; set; }
             
-        [JsonProperty("updated_by")]
+        [JsonProperty("updatedBy")]
         public int? UpdatedBy { get; set; }
             
 
@@ -58,31 +58,30 @@ namespace WebApi.Dtos
         
         [JsonProperty("id")]
         public int Id { get; set; }
-            
-        [JsonProperty("payment_account")]
+
+        [JsonProperty("paymentAccount")]
         public string PaymentAccount { get; set; }
-            
+
         [JsonProperty("bank")]
         public string Bank { get; set; }
-            
+
         [JsonProperty("bik")]
         public string Bik { get; set; }
-            
-        [JsonProperty("organization_id")]
+
+        [JsonProperty("organizationId")]
         public int OrganizationId { get; set; }
-            
-        [JsonProperty("created_at")]
+
+        [JsonProperty("createdAt")]
         public DateTime? CreatedAt { get; set; }
-            
-        [JsonProperty("updated_at")]
+
+        [JsonProperty("updatedAt")]
         public DateTime? UpdatedAt { get; set; }
-            
-        [JsonProperty("created_by")]
+
+        [JsonProperty("createdBy")]
         public int? CreatedBy { get; set; }
-            
-        [JsonProperty("updated_by")]
+
+        [JsonProperty("updatedBy")]
         public int? UpdatedBy { get; set; }
-            
 
         internal CustomerRequisite ToDomain()
         {
@@ -107,31 +106,30 @@ namespace WebApi.Dtos
         
         [JsonProperty("id")]
         public int Id { get; set; }
-            
-        [JsonProperty("payment_account")]
+
+        [JsonProperty("paymentAccount")]
         public string PaymentAccount { get; set; }
-            
+
         [JsonProperty("bank")]
         public string Bank { get; set; }
-            
+
         [JsonProperty("bik")]
         public string Bik { get; set; }
-            
-        [JsonProperty("organization_id")]
+
+        [JsonProperty("organizationId")]
         public int OrganizationId { get; set; }
-            
-        [JsonProperty("created_at")]
+
+        [JsonProperty("createdAt")]
         public DateTime? CreatedAt { get; set; }
-            
-        [JsonProperty("updated_at")]
+
+        [JsonProperty("updatedAt")]
         public DateTime? UpdatedAt { get; set; }
-            
-        [JsonProperty("created_by")]
+
+        [JsonProperty("createdBy")]
         public int? CreatedBy { get; set; }
-            
-        [JsonProperty("updated_by")]
+
+        [JsonProperty("updatedBy")]
         public int? UpdatedBy { get; set; }
-            
 
         internal CustomerRequisite ToDomain()
         {

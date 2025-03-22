@@ -45,7 +45,8 @@ namespace WebApi.Controllers.V1
         public async Task<IActionResult> GetByCompanyId(int CompanyId)
         {
             var response = await _RepresentativeUseCase.GetByCompanyId(CompanyId);
-            return Ok(response);
+            var res = response.Select(x => EntityToDtoMapper(x)).ToList();
+            return Ok(res);
         }
         
         [HttpGet]
